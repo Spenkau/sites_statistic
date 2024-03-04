@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExampleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +16,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('home');
+//    if (auth()->check()) {
+        return view('home');
+//    }
+
+//    return redirect('/login');
 });
 
+Route::get('register', function () {
+    return view('register');
+})->name('register');
+
 Route::get('login', function () {
-   return view('login');
+    return view('login');
 })->name('login');
 
-Route::get('register', function () {
-   return view('register');
-})->name('register');
