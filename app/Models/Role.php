@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Admin extends Model
+class Role extends Model
 {
     use HasFactory;
 
-    protected $table = 'admins';
+    protected $table = 'roles';
 
-    public function user()
+    public function users()
     {
-        $this->belongsTo(User::class);
+        $this->belongsToMany(User::class);
     }
 }

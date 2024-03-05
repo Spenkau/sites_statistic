@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Site extends Model
+class Page extends Model
 {
     use HasFactory;
 
-    protected $table = 'sites';
+    protected $table = 'pages';
 
     public function children(): HasMany
     {
@@ -26,6 +26,6 @@ class Site extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_site');
+        return $this->belongsToMany(User::class, 'user_page');
     }
 }

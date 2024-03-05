@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_site', function (Blueprint $table) {
+        Schema::create('role_user', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('site_id');
-            $table->unsignedTinyInteger('channel');
+            $table->unsignedBigInteger('role_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
         });
     }
 
@@ -28,6 +27,19 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_site');
+        Schema::dropIfExists('role_user');
     }
 };
+
+/**
+ * V1
+* https://vpodarok.ru
+    * https://vpodarok.ru/certificate
+        * https://vpodarok.ru/certificate/detskiymir
+
+
+ * V2
+* https://vpodarok.ru
+ * https://vpodarok.ru/certificate
+ * https://vpodarok.ru/certificate/detskiymir
+**/

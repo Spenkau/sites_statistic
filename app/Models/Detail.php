@@ -11,6 +11,6 @@ class Detail extends Model
 
     public function site()
     {
-        return $this->belongsTo(Site::class);
+        return $this->belongsTo(Page::class);
     }
 }

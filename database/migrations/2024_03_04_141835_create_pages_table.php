@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('details', function (Blueprint $table) {
+        Schema::create('pages', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('page_id');
-            $table->unsignedSmallInteger('status_code');
-            $table->unsignedInteger('response_time');
+            $table->string('url')->unique();
+            $table->unsignedInteger('threshold_speed');
+            $table->unsignedBigInteger('page_id')->nullable();
+            $table->text('comment')->nullable();
             $table->timestamps();
 
-            $table->foreign('page_id')->references('id')->on('pages');
+
+            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('details');
+        Schema::dropIfExists('pages');
     }
 };

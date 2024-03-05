@@ -5,7 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Admin;
 use App\Models\Detail;
-use App\Models\Site;
+use App\Models\Page;
 use App\Models\User;
 use Database\Factories\PageFactory;
 use Illuminate\Database\Seeder;
@@ -23,10 +23,10 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        Site::factory(30)->create();
+        Page::factory(30)->create();
 
         Detail::factory(30)->create([
-            'site_id' => function () {
+            'page_id' => function () {
                $id = 0;
 
                $id += 1;
@@ -52,11 +52,11 @@ class DatabaseSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
-        Admin::factory()->create([
-            'user_id' => 1,
-            'password' => Hash::make('1234'),
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+//        Admin::factory()->create([
+//            'user_id' => 1,
+//            'password' => Hash::make('1234'),
+//            'created_at' => now(),
+//            'updated_at' => now()
+//        ]);
     }
 }
