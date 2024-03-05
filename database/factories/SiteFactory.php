@@ -5,11 +5,10 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Page>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Site>
  */
-class PageFactory extends Factory
+class SiteFactory extends Factory
 {
-    protected array $responseCodes = [200, 300, 400, 500];
     /**
      * Define the model's default state.
      *
@@ -19,8 +18,7 @@ class PageFactory extends Factory
     {
         return [
             'url' => fake()->unique()->url(),
-            'accessibility' => $this->responseCodes[rand(0, count($this->responseCodes) - 1)],
-            'response_time' => rand(100, 10000)
+            'detail_id' => 1,
         ];
     }
 }
