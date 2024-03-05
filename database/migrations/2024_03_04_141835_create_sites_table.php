@@ -15,12 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('url')->unique();
             $table->unsignedInteger('threshold_speed');
-            $table->unsignedBigInteger('detail_id');
-            $table->unsignedBigInteger('site_id');
+            $table->unsignedBigInteger('site_id')->nullable();
             $table->text('comment')->nullable();
             $table->timestamps();
 
-            $table->foreign('detail_id')->references('id')->on('details')->onDelete('cascade');
 
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
         });

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('page_id');
+            $table->unsignedBigInteger('site_id');
             $table->unsignedSmallInteger('status_code');
             $table->unsignedInteger('response_time');
             $table->timestamps();
 
-            $table->foreign('page_id')->references('id')->on('details');
+            $table->foreign('site_id')->references('id')->on('sites');
         });
     }
 

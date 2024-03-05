@@ -16,9 +16,14 @@ class SiteFactory extends Factory
      */
     public function definition(): array
     {
+        $value = 1;
+
         return [
             'url' => fake()->unique()->url(),
-            'detail_id' => 1,
+            'threshold_speed' => rand(200,10000),
+//            'detail_id' => $value++,
+            'site_id' => null,
+            'comment' => fake()->text(100)
         ];
     }
 }
