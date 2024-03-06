@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ExampleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,19 +14,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-//    if (auth()->check()) {
-        return view('home');
-//    }
 
-//    return redirect('/login');
+// Group of guest routes
+Route::middleware(['guest'])->group(function () {
+    Route::get('register', function () {
+        return view('register');
+    })->name('register');
+
+    Route::get('login', function () {
+        return view('login');
+    })->name('login');
+
+//    Route::post('register', [AuthController::class, 'register']);
+//    Route::post('login', [AuthController::class, 'login']);
+});
+//
+//// Main page is available only for auth users
+
+Route::middleware(['auth:api'])->group(function () {
+    Route::get('/', function () {
+        return view('home');
+    });
 });
 
-Route::get('register', function () {
-    return view('register');
-})->name('register');
-
-Route::get('login', function () {
-    return view('login');
-})->name('login');
-
+//Route::get('/', function () {
+//    return view('home');
+//});
+//
+//Route::get('register', function () {
+//    return view('register');
+//})->name('register');
+//
+//Route::get('login', function () {
+//    return view('login');
+//})->name('login');
+//
