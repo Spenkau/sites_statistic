@@ -2,6 +2,17 @@
 
 @section('content')
     <div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
         <h1>{{ __('Login') }}</h1>
         <form method="POST" action="/api/login" style="text-align: center; margin: auto;">
             @csrf
