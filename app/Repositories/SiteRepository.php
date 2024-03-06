@@ -10,14 +10,14 @@ class SiteRepository
 {
     public function getAll(): AnonymousResourceCollection
     {
-        $sites = Site::paginate(10);
+        $sites = Site::with('pages')->paginate(10);
 
         return SiteResource::collection($sites);
     }
 
     public function getOne(int $id): SiteResource
     {
-        $site = Site::find($id);
+        $site = Site::find($id)->get();
 
         return new SiteResource($site);
     }

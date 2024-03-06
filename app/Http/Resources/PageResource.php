@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SiteResource extends JsonResource
+class PageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,13 @@ class SiteResource extends JsonResource
     {
         return [
             'id' => $this['id'],
-            'name' => $this['name'],
             'url' => $this['url'],
+            'threshold_speed' => $this['threshold_speed'],
+            'page_id' => $this['page_id'],
+            'site_id' => $this['site_id'],
             'comment' => $this['comment'],
             'created_at' => $this['created_at'],
-            'updated_at' => $this['updated_at'],
-            'pages' => PageResource::collection($this->whenLoaded('pages'))
+            'details' => DetailResource::collection($this->whenLoaded('details'))
         ];
     }
 }
