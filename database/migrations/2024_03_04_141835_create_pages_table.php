@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('url')->unique();
             $table->unsignedInteger('threshold_speed');
             $table->unsignedBigInteger('page_id')->nullable();
+            $table->unsignedBigInteger('site_id');
             $table->text('comment')->nullable();
             $table->timestamps();
 
-
+            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
             $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
     }
