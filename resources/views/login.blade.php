@@ -18,14 +18,11 @@
             @csrf
             @method('POST')
             <div>
-                <label for="email">Email</label>
-                <input class="is-invalid" type="email" name="email" id="email" value="{{ old('email') }}">
+                <input placeholder="Введите почту" type="email" name="email" id="email" value="{{ old('email') }}">
             </div>
 
             <div>
-
-                <label for="password">Пароль</label>
-                <input type="password" name="password" id="password">
+                <input type="password" placeholder="Введите пароль" name="password" id="password" value="{{ old('password') }}">
             </div>
 
             <div>
@@ -33,7 +30,7 @@
                 <input type="checkbox" name="remember_me" id="remember_me">
             </div>
 
-            <button type="submit">Вход</button>
+            <button type="submit">Войти</button>
         </form>
     </div>
 

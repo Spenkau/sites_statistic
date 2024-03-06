@@ -16,13 +16,11 @@ class PageFactory extends Factory
      */
     public function definition(): array
     {
-        $value = 1;
-
         return [
             'url' => fake()->unique()->url(),
             'threshold_speed' => rand(200,10000),
-//            'detail_id' => $value++,
             'page_id' => null,
+            'site_id' => rand(1, 30),
             'comment' => fake()->text(100)
         ];
     }
