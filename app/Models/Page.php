@@ -13,6 +13,11 @@ class Page extends Model
 
     protected $table = 'pages';
 
+    public function site()
+    {
+        return $this->belongsTo(Site::class);
+    }
+
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id')
