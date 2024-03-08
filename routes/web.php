@@ -33,8 +33,7 @@ Route::middleware(['guest'])->group(function () {
 });
 //
 //// Main page is available only for auth users
-
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->middleware('auth');
 
 Route::get('site/{site}', [SiteController::class, 'show']);
 
