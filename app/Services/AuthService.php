@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\NotificationEnum;
 use App\Repositories\AuthRepository;
 use Exception;
 

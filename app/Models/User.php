@@ -50,11 +50,11 @@ class User extends Authenticatable
 
     public function sites()
     {
-        return $this->belongsToMany(Site::class, 'user_site');
+        return $this->belongsToMany(Page::class, 'user_page');
     }
 
-    public function admin()
+    public function roles()
     {
-        return $this->hasOne(Admin::class);
+        return $this->belongsToMany(Role::class);
     }
 }

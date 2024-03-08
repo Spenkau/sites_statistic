@@ -9,8 +9,8 @@ class Detail extends Model
 {
     use HasFactory;
 
-    public function site()
+    public function page()
     {
-        return $this->belongsTo(Site::class);
+        return $this->belongsTo(Page::class);
     }
 }

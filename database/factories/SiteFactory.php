@@ -17,8 +17,9 @@ class SiteFactory extends Factory
     public function definition(): array
     {
         return [
-            'url' => fake()->unique()->url(),
-            'detail_id' => 1,
+            'name' => fake()->text,
+            'url' => fake()->url(),
+            'comment' => fake()->realText(256)
         ];
     }
 }

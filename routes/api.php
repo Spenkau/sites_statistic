@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\SiteController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,10 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::group(['namespace' => 'Site', 'prefix' => 'sites'], function () {
+        Route::post('', [SiteController::class, 'index']);
+        Route::post('{site}', [SiteController::class, 'show']);
+    });
 });

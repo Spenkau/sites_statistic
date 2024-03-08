@@ -19,10 +19,7 @@
     </main>
     <footer>
         <ul class="list-unstyled">
-            <li>О нас</li>
-            <li>О нас</li>
-            <li>О нас</li>
-            <li>О нас</li>
+
         </ul>
     </footer>
 </body>

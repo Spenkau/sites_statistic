@@ -2,19 +2,27 @@
 
 @section('content')
     <div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
         <h1>{{ __('Login') }}</h1>
         <form method="POST" action="/api/login" style="text-align: center; margin: auto;">
             @csrf
             @method('POST')
             <div>
-                <label for="email">Email</label>
-                <input class="is-invalid" type="email" name="email" id="email" value="{{ old('email') }}">
+                <input placeholder="Введите почту" type="email" name="email" id="email" value="{{ old('email') }}">
             </div>
 
             <div>
-
-                <label for="password">Пароль</label>
-                <input type="password" name="password" id="password">
+                <input type="password" placeholder="Введите пароль" name="password" id="password" value="{{ old('password') }}">
             </div>
 
             <div>
@@ -22,7 +30,7 @@
                 <input type="checkbox" name="remember_me" id="remember_me">
             </div>
 
-            <button type="submit">Вход</button>
+            <button type="submit">Войти</button>
         </form>
     </div>
 
