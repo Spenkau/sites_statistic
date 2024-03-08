@@ -15,14 +15,14 @@ class SiteRepository
         return SiteResource::collection($sites);
     }
 
-    public function getOne(int $id): SiteResource
+    public function getOne(Site $site): SiteResource
     {
-        $site = Site::find($id)->get();
+//        $site = Site::find($id)->get();
 
         return new SiteResource($site);
     }
 
-    public function store(Site $data): SiteResource
+    public function store(array $data): SiteResource
     {
         return new SiteResource(Site::create($data));
     }

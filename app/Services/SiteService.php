@@ -21,14 +21,9 @@ class SiteService
         return $this->siteRepository->getAll();
     }
 
-    public function getOne(int $id): SiteResource
+    public function getOne($site): SiteResource
     {
-        return $this->siteRepository->getOne($id);
-    }
-
-    public function create()
-    {
-
+        return $this->siteRepository->getOne($site);
     }
 
     public function update()
@@ -41,7 +36,7 @@ class SiteService
 
     }
 
-    public function store(Site $data): SiteResource
+    public function store(array $data): SiteResource
     {
         return $this->siteRepository->store($data);
     }

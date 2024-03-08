@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Site\StoreRequest;
+use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use App\Services\SiteService;
 use Illuminate\Http\JsonResponse;
@@ -17,26 +18,29 @@ class SiteController extends Controller
         $this->siteService = $siteService;
     }
 
-    public function index(): JsonResponse
+    public function index()
     {
         $sites = $this->siteService->getAll();
 
-        try {
-            return response()->json($sites);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to get sites: ' . $e]);
-        }
+        return view('home')->with(['sites' => $sites]);
+
+//        try {
+//            return response()->json($sites);
+//        } catch (\Exception $e) {
+//            return response()->json(['error' => 'Failed to get sites: ' . $e]);
+//        }
     }
 
-    public function show(Site $site): JsonResponse
+    public function show(Site $site)
     {
-        $site = $this->siteService->getOne($site->id);
+        $site = $this->siteService->getOne($site);
 
-        try {
-            return response()->json($site);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to get site: ' . $e]);
-        }
+        return view('site.show')->with(['site' => $site]);
+//        try {
+//            return response()->json($site);
+//        } catch (\Exception $e) {
+//            return response()->json(['error' => 'Failed to get site: ' . $e]);
+//        }
     }
 
     public function store(StoreRequest $request): JsonResponse
