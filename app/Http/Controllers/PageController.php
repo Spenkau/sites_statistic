@@ -29,18 +29,24 @@ class PageController extends Controller
         return view('page.show')->with(['page' => $page]);
     }
 
+    public function show(Page $page)
+    {
+        return view('page.show')->with(['page' => $page]);
+    }
+
     public function create(): View
     {
         return view('page.create');
     }
 
-    public function store(StoreRequest $request)
+    public function store(Site $site, StoreRequest $request)
     {
         $data = $request->validated();
+        $data['site_id'] = $site->id;
 
-        $pages = $this->pageService->store($data);
+        $page = $this->pageService->store($data);
 
-        return to_route('page.show', ['pages' => $pages]);
+        return redirect()->to('/site/' . $site->id);
     }
 
     public function edit(Page $page)

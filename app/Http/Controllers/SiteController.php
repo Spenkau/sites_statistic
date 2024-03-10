@@ -24,24 +24,11 @@ class SiteController extends Controller
         $sites = $this->siteService->getAll();
 
         return view('dashboard')->with(['sites' => $sites]);
-
-//        try {
-//            return response()->json($sites);
-//        } catch (\Exception $e) {
-//            return response()->json(['error' => 'Failed to get sites: ' . $e]);
-//        }
     }
 
     public function show(Site $site)
     {
-        $site = $this->siteService->getOne($site);
-
         return view('site.show')->with(['site' => $site]);
-//        try {
-//            return response()->json($site);
-//        } catch (\Exception $e) {
-//            return response()->json(['error' => 'Failed to get site: ' . $e]);
-//        }
     }
 
     public function create()
@@ -57,7 +44,6 @@ class SiteController extends Controller
 
         try {
             return redirect()->to('/dashboard')->with(['newSite' => $newSite]);
-//            return response()->json($newSite);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to store post: ' . $e]);
         }
@@ -74,8 +60,7 @@ class SiteController extends Controller
 
         $updatedSite = $this->siteService->update($site, $data);
 
-        return redirect()->to('/dashboard');
-//        return response()->json($updatedSite);
+        return redirect()->to('/dashboard')->with(['updatedSite' => $updatedSite]);
     }
 
     public function destroy(Site $site)
