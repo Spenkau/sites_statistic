@@ -1,11 +1,14 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Сайт') }}
+        </h2>
+        <a href="/site/create" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать новый</a>
+    </x-slot>
 
-@section('content')
-    <a href="/pages">Создать новую страницу</a>
+    <h3>Подробности сайта {{ $site->name }}</h3>
 
-    <h4>Подробности сайта {{ $site->name }}</h4>
-
-    <ul class="list-unstyled">
+    <ul class="list-unstyled" style="padding-left: 20px; margin-bottom: 40px">
         <li>URL: <span>{{ $site->url }}</span></li>
         <li>Дата создания: {{ $site->created_at }}</li>
         <li><b>Комментарий: </b>{{ $site->comment }}</li>
@@ -28,7 +31,9 @@
             @endforeach
         </ul>
     @else
-        <h2>Вы еще не добавляли страниц</h2>
-        <a href="/page/create">Добавить</a>
+        <div style="display:flex; justify-content: center; align-items: center; flex-direction: column">
+            <h2>Вы еще не добавляли страниц</h2>
+            <a href="/site/{{$site->id}}/page/create">Добавить</a>
+        </div>
     @endif
-@endsection
+</x-app-layout>

@@ -1,6 +1,9 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Создание страницы') }}
+        </h2>
+    </x-slot>
 {{--    @dump($page)--}}
     <h1>Подробности страницы {{ $page->name }}</h1>
 
@@ -22,4 +25,4 @@
             </li>
         @endforeach
     </ul>
-@endsection
+</x-app-layout>
