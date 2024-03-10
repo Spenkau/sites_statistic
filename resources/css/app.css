@@ -1,18 +1,3 @@
-footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 80px;
-}
-
-.list-unstyled {
-    list-style-type: none;
-}
-
-.alert {
-    position: absolute;
-    padding: 10px 20px;
-    background-color: #791515;
-    border: 2px solid #c20d0d;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

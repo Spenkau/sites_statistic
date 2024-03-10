@@ -29,17 +29,16 @@ class PageRepository
 
     public function store(array $data): PageResource
     {
-        return new PageResource(Site::create($data));
+        return new PageResource(Page::create($data));
     }
 
-    public function update()
+    public function update(Page $page, array $data): PageResource
     {
-
+        return new PageResource($page->update($data));
     }
 
-    public function delete()
+    public function destroy(Page $page)
     {
-
+        return $page->delete();
     }
-
 }

@@ -19,6 +19,7 @@ class SiteFactory extends Factory
         return [
             'name' => fake()->text,
             'url' => fake()->url(),
+            'user_id' => 1,
             'comment' => fake()->realText(256)
         ];
     }

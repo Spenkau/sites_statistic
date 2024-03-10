@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Page\StoreRequest;
+use App\Http\Requests\Page\UpdateRequest;
 use App\Models\Page;
 use App\Models\Site;
 use App\Services\PageService;
@@ -40,5 +41,22 @@ class PageController extends Controller
         $pages = $this->pageService->store($data);
 
         return to_route('page.show', ['pages' => $pages]);
+    }
+
+    public function edit(Page $page)
+    {
+        return view('page.edit')->with(['page' => $page]);
+    }
+
+    public function update(Page $page, UpdateRequest $request)
+    {
+        $data = $request->validated();
+
+        $updatedSite = $this->pageService->update($page, $data);
+    }
+
+    public function destroy(Site $site)
+    {
+        $this->siteService->destroy($site);
     }
 }

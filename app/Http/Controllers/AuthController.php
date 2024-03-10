@@ -42,7 +42,7 @@ class AuthController extends Controller
 
             $token = $user->createToken('MyApp')->accessToken;
 
-            $success['token'] =  $token;
+            $success['token'] = $token;
             $success['name'] =  $user->name;
 
             $request->session()->put('token', $token);
@@ -59,10 +59,12 @@ class AuthController extends Controller
             $user = Auth::user()->token();
             $user->revoke();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Logout successfully'
-            ]);
+
+            return redirect()->to('/login');
+//            return response()->json([
+//                'success' => true,
+//                'message' => 'Logout successfully'
+//            ]);
         }else {
             return response()->json([
                 'success' => false,

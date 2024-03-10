@@ -8,9 +8,15 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class SiteRepository
 {
+    public int | null $user_id;
+    public function __construct()
+    {
+        $this->user_id = auth()->id();
+    }
+
     public function getAll(): AnonymousResourceCollection
     {
-        $sites = Site::with('pages')->paginate(10);
+        $sites = Site::with('pages')->where('user_id', 1)->paginate(10);
 
         return SiteResource::collection($sites);
     }
@@ -24,17 +30,19 @@ class SiteRepository
 
     public function store(array $data): SiteResource
     {
+        $data['user_id'] = $this->user_id;
+
         return new SiteResource(Site::create($data));
     }
 
-    public function update()
+    public function update(Site $site, array $data): SiteResource
     {
-
+        $site->update($data);
+        return new SiteResource($site);
     }
 
-    public function delete()
+    public function destroy(Site $site)
     {
-
+        return $site->delete();
     }
-
 }

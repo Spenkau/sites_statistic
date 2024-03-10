@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Site\StoreRequest;
+use App\Http\Requests\Site\UpdateRequest;
 use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use App\Services\SiteService;
@@ -22,7 +23,7 @@ class SiteController extends Controller
     {
         $sites = $this->siteService->getAll();
 
-        return view('home')->with(['sites' => $sites]);
+        return view('dashboard')->with(['sites' => $sites]);
 
 //        try {
 //            return response()->json($sites);
@@ -43,16 +44,47 @@ class SiteController extends Controller
 //        }
     }
 
-    public function store(StoreRequest $request): JsonResponse
+    public function create()
+    {
+        return view('site.create');
+    }
+
+    public function store(StoreRequest $request)
     {
         $data = $request->validated();
 
         $newSite = $this->siteService->store($data);
 
         try {
-            return response()->json($newSite);
+            return redirect()->to('/dashboard')->with(['newSite' => $newSite]);
+//            return response()->json($newSite);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to store post: ' . $e]);
+        }
+    }
+
+    public function edit(Site $site)
+    {
+        return view('site.edit')->with(['site' => $site]);
+    }
+
+    public function update(Site $site, UpdateRequest $request)
+    {
+        $data = $request->validated();
+
+        $updatedSite = $this->siteService->update($site, $data);
+
+        return redirect()->to('/dashboard');
+//        return response()->json($updatedSite);
+    }
+
+    public function destroy(Site $site)
+    {
+        try {
+            $this->siteService->destroy($site);
+            return response()->json(['message' => 'Site deleted successfully!']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Fatal error: ' . $e]);
         }
     }
 }

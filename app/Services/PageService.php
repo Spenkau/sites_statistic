@@ -34,15 +34,13 @@ class PageService
         return $this->pageRepository->store($data);
     }
 
-    public function update()
+    public function update(Page $page, array $data): PageResource
     {
-
+        return $this->pageRepository->update($page, $data);
     }
 
-    public function delete()
+    public function destroy(Page $page)
     {
-
+        return $this->pageRepository->destroy($page);
     }
-
-
 }

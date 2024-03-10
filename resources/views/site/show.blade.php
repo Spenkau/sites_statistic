@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    <a href="/pages">Создать новую страницу</a>
+
     <h4>Подробности сайта {{ $site->name }}</h4>
 
     <ul class="list-unstyled">
