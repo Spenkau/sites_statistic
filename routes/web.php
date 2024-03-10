@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ Route::get('/dashboard', [SiteController::class, 'index'])->middleware(['auth', 
 
 Route::middleware('auth')->group(function () {
     Route::resource('site', SiteController::class);
+    Route::resource('site/{site}/page', PageController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
