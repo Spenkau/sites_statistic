@@ -5,18 +5,30 @@ namespace App\Repositories;
 use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class SiteRepository
 {
-    public int | null $user_id;
-    public function __construct()
+    public ?int $user_id = null;
+
+    public function __construct() {}
+
+    public function getUserId(): int
     {
-        $this->user_id = auth()->id();
+        if ($this->user_id === null) {
+            if (Auth::check()) {
+                $this->user_id = Auth::user()->id;
+            } else {
+                throw new \Exception('User is not authenticated');
+            }
+        }
+
+        return $this->user_id;
     }
 
     public function getAll(): AnonymousResourceCollection
     {
-        $sites = Site::with('pages')->where('user_id', 1)->paginate(10);
+        $sites = Site::with('pages')->where('user_id', $this->getUserId())->paginate(10);
 
         return SiteResource::collection($sites);
     }
@@ -30,7 +42,7 @@ class SiteRepository
 
     public function store(array $data): SiteResource
     {
-        $data['user_id'] = $this->user_id;
+        $data['user_id'] = $this->getUserId();
 
         return new SiteResource(Site::create($data));
     }
