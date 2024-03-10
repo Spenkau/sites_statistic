@@ -3,7 +3,7 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Сайт') }}
         </h2>
-        <a href="/site/create" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать новый</a>
+        <a href="/page/create" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>
     </x-slot>
 
     <h3>Подробности сайта {{ $site->name }}</h3>
@@ -20,11 +20,7 @@
             @foreach($site->pages as $page)
                 <li>
                     <p>URL: {{ $page->url }}</p>
-                </li>
-                <li>
                     <p>Порог: {{ $page->threshold_speed }} миллисекунд</p>
-                </li>
-                <li>
                     <p><b>Комментарий: </b>{{ strlen($page->comment) > 40 ? mb_substr($page->comment, 0, 40) . '...' : $page->comment}}</p>
                     <a href="/page/{{ $page->id }}">Перейти к деталям</a>
                 </li>
@@ -37,3 +33,4 @@
         </div>
     @endif
 </x-app-layout>
+
