@@ -12,8 +12,15 @@ class Site extends Model
 
     protected $table = 'sites';
 
+    protected $guarded = false;
+
     public function pages(): HasMany
     {
         return $this->hasMany(Page::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Page\StoreRequest;
+use App\Http\Requests\Page\UpdateRequest;
 use App\Models\Page;
 use App\Models\Site;
 use App\Services\PageService;
@@ -21,24 +22,56 @@ class PageController extends Controller
         $this->pageService = $pageService;
     }
 
-    public function index(Page $page)
+    public function index()
     {
-        $page = $this->pageService->getOne($page);
-
-        return view('page.show')->with(['page' => $page]);
+        return redirect()->back();
     }
 
-    public function create(): View
+    public function show(Site $site, Page $page)
     {
-        return view('page.create');
+        $page = $this->pageService->getOne($site, $page);
+
+        return view('page.show')->with(['site' => $site, 'page' => $page]);
     }
 
-    public function store(StoreRequest $request)
+    public function create(Site $site): View
+    {
+        return view('page.create', compact('site'));
+    }
+
+    public function store(Site $site, StoreRequest $request)
+    {
+        try {
+//            $request->merge(['site_id' => $site->id]);
+
+            $data = $request->validated();
+            $data['site_id'] = $site->id;
+            $page = $this->pageService->store($data);
+
+            return redirect('dashboard');
+//            return redirect()->to('/site/' . $site->id . '/page/' . $page->id);
+        } catch (\Exception $e) {
+            return response()->json($e);
+        }
+//        return redirect()->to('/site/' . $site->id);
+    }
+
+    public function edit(Site $site, Page $page)
+    {
+        return view('page.edit')->with(['site' => $site, 'page' => $page]);
+    }
+
+    public function update(Site $site, Page $page, UpdateRequest $request)
     {
         $data = $request->validated();
 
-        $pages = $this->pageService->store($data);
+        $this->pageService->update($page, $data);
 
-        return to_route('page.show', ['pages' => $pages]);
+        return redirect()->route('site.page.show', ['site' => $site, 'page' => $page]);
+    }
+
+    public function destroy(Site $site)
+    {
+        $this->siteService->destroy($site);
     }
 }

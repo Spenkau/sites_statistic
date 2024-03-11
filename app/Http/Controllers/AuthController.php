@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
-use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -39,9 +36,15 @@ class AuthController extends Controller
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $success['token'] =  $user->createToken('MyApp')->accessToken;
+
+            $token = $user->createToken('MyApp')->accessToken;
+
+            $success['token'] = $token;
             $success['name'] =  $user->name;
-            return $this->sendResponse($success, 'User login successfully.');
+
+            $request->session()->put('token', $token);
+
+            return redirect()->to('/')->with($success);
         } else {
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
@@ -53,10 +56,12 @@ class AuthController extends Controller
             $user = Auth::user()->token();
             $user->revoke();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Logout successfully'
-            ]);
+
+            return redirect()->to('/login');
+//            return response()->json([
+//                'success' => true,
+//                'message' => 'Logout successfully'
+//            ]);
         }else {
             return response()->json([
                 'success' => false,

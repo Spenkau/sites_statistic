@@ -9,6 +9,10 @@ class Detail extends Model
 {
     use HasFactory;
 
+    protected $table = 'details';
+
+    protected $guarded = false;
+
     public function page()
     {
         return $this->belongsTo(Page::class);

@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
+use App\Http\Middleware\CheckSiteOwner;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,43 +19,56 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-// Group of guest routes
-Route::middleware(['guest'])->group(function () {
-    Route::get('register', function () {
-        return view('register');
-    })->name('register');
-
-    Route::get('login', function () {
-        return view('login');
-    })->name('login');
-
-//    Route::post('register', [AuthController::class, 'register']);
-//    Route::post('login', [AuthController::class, 'login']);
-});
-//
-//// Main page is available only for auth users
-
-Route::get('/', [HomeController::class, 'index']);
-
-Route::get('site/{site}', [SiteController::class, 'show']);
-
-Route::get('/page/{page}', [PageController::class, 'index']);
-Route::get('/page/create', [PageController::class, 'create']);
-Route::post('/page', [PageController::class, 'store']);
-
-Route::middleware(['auth:api'])->group(function () {
+Route::get('/', function () {
+    return view('welcome');
 });
 
-//Route::get('/', function () {
-//    return view('home');
-//});
-//
-//Route::get('register', function () {
-//    return view('register');
-//})->name('register');
-//
-//Route::get('login', function () {
-//    return view('login');
-//})->name('login');
-//
+Route::get('test', function () {
+
+    $start = microtime(true);
+    try {
+        $response = Http::get('https://vpodarok.ru/');
+
+        $data = [
+            'page_id' => 2,
+            'status_code' => $response->status(),
+            'response_time' => number_format(microtime(true) - $start, 3, '.', '')
+        ];
+
+        $validator = Validator::make($data, [
+            'page_id' => 'required|integer',
+            'status_code' => 'required|integer',
+            'response_time' => 'required|numeric'
+        ]);
+
+        $detail = $validator->validated();
+
+        return $detail;
+    } catch (Exception $exception) {
+        return [$exception->getCode(), $exception->getMessage(), $exception->getTraceAsString()];
+    }
+
+});
+
+Route::get('/dashboard', [SiteController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+
+    Route::middleware('site.owner')->group(function () {
+        Route::resource('site', SiteController::class);
+        Route::resource('site.page', PageController::class)->middleware('site.id');
+    });
+
+    Route::resource('profile', ProfileController::class)->only(['update', 'destroy']);
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::fallback(function () {
+        return redirect()->route('dashboard');
+    });
+
+});
+
+require __DIR__.'/auth.php';
