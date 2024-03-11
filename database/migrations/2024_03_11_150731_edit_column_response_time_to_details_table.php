@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sites', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->after('url');
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        Schema::table('details', function (Blueprint $table) {
+            $table->float('response_time')->change();
         });
     }
 
@@ -23,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sites', function (Blueprint $table) {
-            $table->removeColumn('user_id');
+        Schema::table('details', function (Blueprint $table) {
+            $table->unsignedInteger('response_time')->change();
         });
     }
 };
