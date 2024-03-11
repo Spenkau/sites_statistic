@@ -11,7 +11,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreRequest extends FormRequest
         return [
             'url' => 'string|max:255',
             'threshold_speed' => 'integer|max:50000',
-            'page_id' => 'null|integer'
+            'page_id' => 'null|integer',
+            'site_id' => 'integer'
         ];
     }
 }
