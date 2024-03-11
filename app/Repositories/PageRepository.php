@@ -6,6 +6,7 @@ use App\Http\Resources\PageResource;
 use App\Http\Resources\SiteResource;
 use App\Models\Page;
 use App\Models\Site;
+use Error;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PageRepository
@@ -19,17 +20,19 @@ class PageRepository
         return PageResource::collection($pages);
     }
 
-    public function getOne(Page $page): PageResource
+    public function getOne(Site $site, Page $page): PageResource
     {
         $page->load('details');
+        return new PageResource($page);
 //        $page = Page::find($id)->with('details')->get();
 
-        return new PageResource($page);
     }
 
     public function store(array $data): PageResource
     {
-        return new PageResource(Page::create($data));
+        $newPage = Page::create($data);
+
+        return new PageResource($newPage);
     }
 
     public function update(Page $page, array $data): PageResource

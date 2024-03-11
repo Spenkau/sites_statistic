@@ -31,7 +31,7 @@ class PageController extends Controller
     {
         $page = $this->pageService->getOne($site, $page);
 
-        return view('page.show')->with(['page' => $page]);
+        return view('page.show')->with(['site' => $site, 'page' => $page]);
     }
 
     public function create(Site $site): View
@@ -41,26 +41,33 @@ class PageController extends Controller
 
     public function store(Site $site, StoreRequest $request)
     {
-        $request->merge(['site_id' => $site->id]);
+        try {
+//            $request->merge(['site_id' => $site->id]);
 
-        $data = $request->validated();
+            $data = $request->validated();
+            $data['site_id'] = $site->id;
+            $page = $this->pageService->store($data);
 
-        $page = $this->pageService->store($data);
-
-        return redirect()->to('/site/' . $site->id . '/page/' . $page->id);
+            return redirect('dashboard');
+//            return redirect()->to('/site/' . $site->id . '/page/' . $page->id);
+        } catch (\Exception $e) {
+            return response()->json($e);
+        }
 //        return redirect()->to('/site/' . $site->id);
     }
 
-    public function edit(Page $page)
+    public function edit(Site $site, Page $page)
     {
-        return view('page.edit')->with(['page' => $page]);
+        return view('page.edit')->with(['site' => $site, 'page' => $page]);
     }
 
-    public function update(Page $page, UpdateRequest $request)
+    public function update(Site $site, Page $page, UpdateRequest $request)
     {
         $data = $request->validated();
 
-        $updatedSite = $this->pageService->update($page, $data);
+        $this->pageService->update($page, $data);
+
+        return redirect()->route('site.page.show', ['site' => $site, 'page' => $page]);
     }
 
     public function destroy(Site $site)

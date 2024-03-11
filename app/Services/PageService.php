@@ -24,9 +24,9 @@ class PageService
         return $this->pageRepository->getSitePages($id);
     }
 
-    public function getOne(Page $page): PageResource
+    public function getOne(Site $site, Page $page): PageResource
     {
-        return $this->pageRepository->getOne($page);
+        return $this->pageRepository->getOne($site, $page);
     }
 
     public function store(array $data): PageResource

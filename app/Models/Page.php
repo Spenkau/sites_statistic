@@ -13,6 +13,8 @@ class Page extends Model
 
     protected $table = 'pages';
 
+    protected $guarded = false;
+
     public function site()
     {
         return $this->belongsTo(Site::class);
