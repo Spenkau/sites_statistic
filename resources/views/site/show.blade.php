@@ -2,6 +2,10 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Сайт') }}
+            <test>
+                <br>
+                Владелец {{ $site->user->name }}
+            </test>
         </h2>
         <a href="{{ route('site.page.create', ['site' => $site]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>
     </x-slot>

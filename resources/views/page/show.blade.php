@@ -3,9 +3,10 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Подробности страницы') }}
         </h2>
+        <a href="{{ route('site.page.edit', ['site' => $site, 'page' => $page]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Изменить страницу</a>
     </x-slot>
 {{--    @dump($page)--}}
-    <h1>Подробности страницы {{ $page->id }}</h1>
+    <h1>ID: {{ $page->id }}</h1>
 
     <ul class="list-unstyled">
         <li>URL: <a href="{{ $page->url }}">{{ $page->url }}</a></li>
