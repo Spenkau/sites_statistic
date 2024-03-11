@@ -28,6 +28,8 @@ class SiteController extends Controller
 
     public function show(Site $site)
     {
+        $site = $this->siteService->getOne($site);
+
         return view('site.show')->with(['site' => $site]);
     }
 

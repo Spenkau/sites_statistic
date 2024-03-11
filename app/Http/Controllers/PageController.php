@@ -22,31 +22,33 @@ class PageController extends Controller
         $this->pageService = $pageService;
     }
 
-    public function index(Page $page)
+    public function index()
     {
-        $page = $this->pageService->getOne($page);
+        return redirect()->back();
+    }
+
+    public function show(Site $site, Page $page)
+    {
+        $page = $this->pageService->getOne($site, $page);
 
         return view('page.show')->with(['page' => $page]);
     }
 
-    public function show(Page $page)
+    public function create(Site $site): View
     {
-        return view('page.show')->with(['page' => $page]);
-    }
-
-    public function create(): View
-    {
-        return view('page.create');
+        return view('page.create', compact('site'));
     }
 
     public function store(Site $site, StoreRequest $request)
     {
+        $request->merge(['site_id' => $site->id]);
+
         $data = $request->validated();
-        $data['site_id'] = $site->id;
 
         $page = $this->pageService->store($data);
 
-        return redirect()->to('/site/' . $site->id);
+        return redirect()->to('/site/' . $site->id . '/page/' . $page->id);
+//        return redirect()->to('/site/' . $site->id);
     }
 
     public function edit(Page $page)
