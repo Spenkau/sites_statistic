@@ -4,12 +4,9 @@
             {{ __('Создание страницы') }}
         </h2>
     </x-slot>
-    <form method="POST" action="/page" style="display:flex; justify-content: center; align-items: center; flex-direction: column; gap: 20px;">
+    <form method="POST" action="{{ route('site.page.store', ['site' => $site]) }}" style="display:flex; justify-content: center; align-items: center; flex-direction: column; gap: 20px;">
         @csrf
         @method('POST')
-
-
-
         <div>
             <label for="url">URL: </label>
             <input type="text" placeholder="URL" name="url" id="url" value="{{ old('url') }}">
@@ -25,7 +22,7 @@
             <textarea name="comment" id="comment" placeholder="Комментарий"></textarea>
         </div>
 
-        <input type="hidden" name="">
+{{--        <input type="hidden" name="site_id" value="{{ $site->id }}">--}}
 
         <button type="submit">Создать</button>
     </form>
