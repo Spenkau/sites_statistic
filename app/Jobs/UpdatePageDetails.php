@@ -18,14 +18,13 @@ class UpdatePageDetails implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $startTime;
+    public float $startTime;
 
     /**
      * Create a new job instance.
      */
     public function __construct()
     {
-        $this->startTime = microtime(true);
     }
 
     /**
@@ -38,6 +37,8 @@ class UpdatePageDetails implements ShouldQueue
         foreach ($pages as $page) {
 
             try {
+                $this->startTime = microtime(true);
+
                 $response = Http::get($page->url);
 
                 $this->storeDetail($response, $page);
