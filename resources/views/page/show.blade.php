@@ -4,6 +4,7 @@
             {{ __('Подробности страницы') }}
         </h2>
         <a href="{{ route('site.page.edit', ['site' => $site, 'page' => $page]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Изменить страницу</a>
+        <a href="{{ route('site.page.edit', ['site' => $site, 'page' => $page]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Удалить страницу</a>
     </x-slot>
 {{--    @dump($page)--}}
     <h1>ID: {{ $page->id }}</h1>

@@ -11,7 +11,8 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
+use Illuminate\Validation\Validator;
 
 class UpdatePageDetails implements ShouldQueue
 {
@@ -51,7 +52,7 @@ class UpdatePageDetails implements ShouldQueue
         return (float) number_format(microtime(true) - $this->startTime, 3, '.', '');
     }
 
-    public function validateDetail(Response $response, Page $page)
+    public function validateDetail(Response $response, Page $page): Validator
     {
         $data = [
             'page_id' => $page->id,
@@ -59,7 +60,7 @@ class UpdatePageDetails implements ShouldQueue
             'response_time' => $this->getResponseTime()
         ];
 
-        return Validator::make($data, [
+        return ValidatorFacade::make($data, [
             'page_id' => 'required|integer',
             'status_code' => 'required|integer',
             'response_time' => 'required|numeric'
@@ -79,7 +80,7 @@ class UpdatePageDetails implements ShouldQueue
         }
     }
 
-    public function storeErrorDetail(\Exception $exception, $page)
+    public function storeErrorDetail(\Exception $exception, $page): void
     {
         $statusCode = $exception->getCode();
         $responseTime = $this->getResponseTime();

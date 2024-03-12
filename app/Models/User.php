@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -43,17 +45,17 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function notifications()
+    public function notifications(): HasMany
     {
-        $this->hasMany(Notification::class);
+        return $this->hasMany(Notification::class);
     }
 
-    public function sites()
+    public function sites(): BelongsToMany
     {
         return $this->belongsToMany(Page::class, 'user_page');
     }
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }

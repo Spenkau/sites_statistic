@@ -49,11 +49,9 @@ class PageController extends Controller
             $page = $this->pageService->store($data);
 
             return redirect('dashboard');
-//            return redirect()->to('/site/' . $site->id . '/page/' . $page->id);
         } catch (\Exception $e) {
             return response()->json($e);
         }
-//        return redirect()->to('/site/' . $site->id);
     }
 
     public function edit(Site $site, Page $page)
@@ -72,6 +70,11 @@ class PageController extends Controller
 
     public function destroy(Site $site)
     {
-        $this->siteService->destroy($site);
+        try {
+            $this->siteService->destroy($site);
+            return 'Страница удалена';
+        } catch (\Exception $exception) {
+            return 'Ошибка удаления страницы: ' . $exception;
+        }
     }
 }

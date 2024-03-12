@@ -8,7 +8,9 @@ use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use App\Services\SiteService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SiteController extends Controller
 {
@@ -19,21 +21,21 @@ class SiteController extends Controller
         $this->siteService = $siteService;
     }
 
-    public function index()
+    public function index(): View
     {
         $sites = $this->siteService->getAll();
 
         return view('dashboard')->with(['sites' => $sites]);
     }
 
-    public function show(Site $site)
+    public function show(Site $site): View
     {
         $site = $this->siteService->getOne($site);
 
         return view('site.show')->with(['site' => $site]);
     }
 
-    public function create()
+    public function create(): View
     {
         return view('site.create');
     }
@@ -56,7 +58,7 @@ class SiteController extends Controller
         return view('site.edit')->with(['site' => $site]);
     }
 
-    public function update(Site $site, UpdateRequest $request)
+    public function update(Site $site, UpdateRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
@@ -69,9 +71,11 @@ class SiteController extends Controller
     {
         try {
             $this->siteService->destroy($site);
-            return response()->json(['message' => 'Site deleted successfully!']);
+
+            return 'Сайт удалён';
+
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Fatal error: ' . $e]);
+            return 'Произошла ошибка при удалении сайта';
         }
     }
 }
