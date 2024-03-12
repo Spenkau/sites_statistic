@@ -50,8 +50,14 @@ class PageController extends Controller
 
             return redirect('dashboard');
         } catch (\Exception $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return response()->json(['error' => 'Страница с таким адресом уже существует!']);
+            }
             return response()->json($e);
         }
+
+        // TODO как обрабатывать ошибки по типу "такая страница сайта уже сущесвтует"
+        // нужно ли в pages user_id. Допустим, как получить почту юзера чья страница отвалилась? Пока что $page->site->user['email']
     }
 
     public function edit(Site $site, Page $page)

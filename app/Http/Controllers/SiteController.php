@@ -51,6 +51,7 @@ class SiteController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to store post: ' . $e]);
         }
+
     }
 
     public function edit(Site $site)
@@ -75,7 +76,7 @@ class SiteController extends Controller
             return 'Сайт удалён';
 
         } catch (\Exception $e) {
-            return 'Произошла ошибка при удалении сайта';
+            return 'Произошла ошибка при удалении сайта' . $e;
         }
     }
 }

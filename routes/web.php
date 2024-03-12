@@ -4,7 +4,10 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
 use App\Http\Middleware\CheckSiteOwner;
+use App\Models\Page;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,6 +51,23 @@ Route::get('test', function () {
         return [$exception->getCode(), $exception->getMessage(), $exception->getTraceAsString()];
     }
 
+});
+
+Route::post('/send-mail', function (Request $request) {
+    $email = $request->input('email');
+
+    $page = Page::find(1);
+    try {
+        Mail::to($email)->send(new \App\Mail\PageSummary($page));
+
+        return 'Success';
+    } catch (Exception $e) {
+        return 'Error' . $e;
+    }
+});
+
+Route::get('mail', function () {
+    return view('emails.page');
 });
 
 Route::get('/dashboard', [SiteController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
