@@ -5,6 +5,7 @@
         </h2>
         <div class="d-flex gap-3">
             <a href="{{ route('site.page.edit', ['site' => $site, 'page' => $page]) }}" class="link-light">Изменить страницу</a>
+
             <a href="{{ route('site.page.edit', ['site' => $site, 'page' => $page]) }}" class="link-light">Удалить страницу</a>
         </div>
     </x-slot>
@@ -21,11 +22,14 @@
         @foreach($page->details as $key => $details)
             <li>
                 <p>Проверка №{{ $key + 1 }}</p>
-                <pre>
-                    Статус-код: {{ $details->status_code }}
-                    Время отклика: {{ $details->response_time }}
-                    Время проверки: {{ $details->created_at }}
-                </pre>
+<pre>
+Статус-код: {{ $details->status_code }}
+Время отклика: {{ $details->response_time }}
+Время проверки: {{ $details->created_at }}
+@if(isset($details->error))
+{{ $details->error }}
+@endif
+</pre>
             </li>
         @endforeach
     </ul>

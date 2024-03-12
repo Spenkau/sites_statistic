@@ -58,6 +58,7 @@ class PageController extends Controller
 
         // TODO как обрабатывать ошибки по типу "такая страница сайта уже сущесвтует"
         // нужно ли в pages user_id. Допустим, как получить почту юзера чья страница отвалилась? Пока что $page->site->user['email']
+        // как сохранять деталь и уведомление одновременно
     }
 
     public function edit(Site $site, Page $page)

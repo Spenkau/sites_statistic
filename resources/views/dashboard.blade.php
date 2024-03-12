@@ -5,7 +5,7 @@
         </h2>
         <div class="d-flex">
             <label for="mail" class="input-group text-white w-auto m-3">Почта</label>
-            <input type="text" id="mail" class="input-group">
+            <input type="text" id="mail" class="input-group" value="kholyavskij@mail.ru">
             <button class="btn text-white" id="send-mail">Отправить</button>
         </div>
         <a href="/site/create" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать новый</a>

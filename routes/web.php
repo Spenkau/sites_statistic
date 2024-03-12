@@ -58,7 +58,7 @@ Route::post('/send-mail', function (Request $request) {
 
     $page = Page::find(1);
     try {
-        Mail::to($email)->send(new \App\Mail\PageSummary($page));
+        Mail::to($email)->send(new \App\Mail\PageMail());
 
         return 'Success';
     } catch (Exception $e) {
