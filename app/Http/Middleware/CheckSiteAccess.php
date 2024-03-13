@@ -3,12 +3,13 @@
 namespace App\Http\Middleware;
 
 use App\Models\Page;
+use App\Models\Site;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckSiteOwner
+class CheckSiteAccess
 {
     /**
      * Handle an incoming request.
@@ -17,13 +18,13 @@ class CheckSiteOwner
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $site = $request->route('site');
+        $siteId = $request->route('site');
+        $site = Site::find($siteId);
+        $userId = Auth::id();
 
-        if ($site && $site->user->id != Auth::id()) {
-            return redirect('dashboard')->with('error', 'Unauthorized action.');
+        if ($site && ($site->user_id == $userId || $site->users->contains($userId))) {
+            return $next($request);
         }
-
         return $next($request);
-
     }
 }
