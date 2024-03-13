@@ -3,7 +3,7 @@
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
-use App\Http\Middleware\CheckSiteOwner;
+use App\Http\Middleware\CheckSiteAccess;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -79,7 +79,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('site.page', PageController::class)->middleware('site.id');
     });
 
-    Route::resource('profile', ProfileController::class)->only(['update', 'destroy']);
+//    Route::resource('profile', ProfileController::class)->only(['update', 'destroy']);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

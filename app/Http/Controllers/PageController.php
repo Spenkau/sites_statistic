@@ -48,7 +48,7 @@ class PageController extends Controller
             $data['site_id'] = $site->id;
             $page = $this->pageService->store($data);
 
-            return redirect('dashboard');
+            return redirect()->route('site.page.show', ['site' => $site, 'page' => $page]);
         } catch (\Exception $e) {
             if ($e->errorInfo[1] == 1062) {
                 return response()->json(['error' => 'Страница с таким адресом уже существует!']);
@@ -56,11 +56,7 @@ class PageController extends Controller
             return response()->json($e);
         }
 
-        // TODO как обрабатывать ошибки по типу "такая страница сайта уже сущесвтует"
-        // нужно ли в pages user_id. Допустим, как получить почту юзера чья страница отвалилась? Пока что $page->site->user['email']
-        // как сохранять деталь и уведомление одновременно
     }
-
     public function edit(Site $site, Page $page)
     {
         return view('page.edit')->with(['site' => $site, 'page' => $page]);
@@ -75,11 +71,11 @@ class PageController extends Controller
         return redirect()->route('site.page.show', ['site' => $site, 'page' => $page]);
     }
 
-    public function destroy(Site $site)
+    public function destroy(Site $site, Page $page)
     {
         try {
-            $this->siteService->destroy($site);
-            return 'Страница удалена';
+            $this->pageService->destroy($page);
+            return redirect()->route('site.show', ['site' => $site]);
         } catch (\Exception $exception) {
             return 'Ошибка удаления страницы: ' . $exception;
         }

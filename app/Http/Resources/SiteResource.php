@@ -19,9 +19,10 @@ class SiteResource extends JsonResource
             'name' => $this['name'],
             'url' => $this['url'],
             'comment' => $this['comment'],
+            'user_id' => $this['user_id'],
             'created_at' => $this['created_at'],
             'updated_at' => $this['updated_at'],
-            'pages' => PageResource::collection($this->whenLoaded('pages'))
+            'pages' => PageResource::collection($this['pages'])
         ];
     }
 }
