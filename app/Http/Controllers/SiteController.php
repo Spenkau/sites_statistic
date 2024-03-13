@@ -23,14 +23,14 @@ class SiteController extends Controller
 
     public function index(): View
     {
-        $sites = $this->siteService->getAll();
+        $sites = $this->siteService->all();
 
-        return view('dashboard')->with(['sites' => $sites]);
+        return view('dashboard', ['sites' => $sites]);
     }
 
-    public function show(Site $site): View
+    public function show(int $siteId): View
     {
-        $site = $this->siteService->getOne($site);
+        $site = $this->siteService->findById($siteId);
 
         return view('site.show')->with(['site' => $site]);
     }
@@ -40,7 +40,7 @@ class SiteController extends Controller
         return view('site.create');
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse|RedirectResponse
     {
         $data = $request->validated();
 
@@ -54,7 +54,7 @@ class SiteController extends Controller
 
     }
 
-    public function edit(Site $site)
+    public function edit(Site $site): View
     {
         return view('site.edit')->with(['site' => $site]);
     }
@@ -74,9 +74,22 @@ class SiteController extends Controller
             $this->siteService->destroy($site);
 
             return 'Сайт удалён';
-
         } catch (\Exception $e) {
             return 'Произошла ошибка при удалении сайта' . $e;
         }
+    }
+
+    public function addCollaborator(int $siteId, int $userId)
+    {
+        $response = $this->siteService->addCollaborator($siteId, $userId);
+
+        return $response ? 'Good' : 'Not good';
+    }
+
+    public function removeCollaborator(int $siteId, int $userId)
+    {
+        $response = $this->siteService->removeCollaborator($siteId, $userId);
+
+        return $response ? 'Good' : 'Not good';
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use App\Repositories\SiteRepository;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class SiteService
 {
@@ -16,30 +17,38 @@ class SiteService
         $this->siteRepository = $siteRepository;
     }
 
-    public function getAll(): AnonymousResourceCollection
+    public function all(): JsonResource
     {
-        return $this->siteRepository->getAll();
+        return $this->siteRepository->all();
     }
 
-    public function getOne($site): SiteResource
+    public function findById(int $id): SiteResource
     {
-        return $this->siteRepository->getOne($site);
+        return $this->siteRepository->findById($id);
     }
 
     public function store(array $data): SiteResource
     {
-//        $data->user_id = $this->user_id;
-
         return $this->siteRepository->store($data);
     }
 
-    public function update(Site $site, array $data)
+    public function update(Site $site, array $data): JsonResource
     {
         return $this->siteRepository->update($site, $data);
     }
 
-    public function destroy(Site $site)
+    public function destroy(Site $site): ?bool
     {
         return $this->siteRepository->destroy($site);
+    }
+
+    public function addCollaborator($siteId, $userId): bool
+    {
+        return $this->siteRepository->addCollaborator($siteId, $userId);
+    }
+
+    public function removeCollaborator($siteId, $userId): bool
+    {
+        return $this->siteRepository->removeCollaborator($siteId, $userId);
     }
 }
