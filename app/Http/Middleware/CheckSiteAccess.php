@@ -22,7 +22,7 @@ class CheckSiteAccess
         $site = Site::find($siteId);
         $userId = Auth::id();
 
-        if ($site && ($site->user_id == $userId || $site->users->contains($userId))) {
+        if ($site && ($siteId == $userId || $site->users->contains($userId))) {
             return $next($request);
         }
         return $next($request);

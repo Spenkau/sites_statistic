@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl py-3 text-white">
             {{ __('Подробности страницы') }}
         </h2>
         <div class="d-flex gap-3">
@@ -13,7 +13,6 @@
             </form>
         </div>
     </x-slot>
-{{--    @dump($page)--}}
     <h1>ID: {{ $page->id }}</h1>
 
     <ul class="list-unstyled">

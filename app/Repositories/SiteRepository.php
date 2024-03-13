@@ -53,7 +53,7 @@ class SiteRepository
      */
     public function findById(int $id): JsonResource
     {
-        $site = Site::whereId($id)->with('owner')->get();
+        $site = Site::whereId($id)->with('owner')->first();
 
         return new SiteResource($site);
     }

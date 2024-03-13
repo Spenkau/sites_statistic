@@ -20,11 +20,11 @@ class PageRepository
         return PageResource::collection($pages);
     }
 
-    public function getOne(Site $site, Page $page): PageResource
+    public function findOne(int $pageId): PageResource
     {
-        $page->load('details');
+        $page = Page::whereId($pageId)->with('details')->first();
+
         return new PageResource($page);
-//        $page = Page::find($id)->with('details')->get();
 
     }
 
@@ -35,13 +35,17 @@ class PageRepository
         return new PageResource($newPage);
     }
 
-    public function update(Page $page, array $data): PageResource
+    public function update(int $pageId, array $data): PageResource
     {
+        $page = Page::find($pageId);
+
         return new PageResource($page->update($data));
     }
 
-    public function destroy(Page $page)
+    public function destroy(int $pageId)
     {
+        $page = Page::find($pageId);
+
         return $page->delete();
     }
 }

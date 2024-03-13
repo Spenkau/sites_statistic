@@ -1,25 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Сайт') }}
-            <test>
-                <br>
-                @dump($site)
-            </test>
+        <h2 class="font-semibold text-xl py-3">
+            {{ __('Сайт') }} <span>{{ $site->name }}</span>
         </h2>
-{{--        <a href="{{ route('site.page.create', ['site' => $site['id']]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>--}}
+                <a href="{{ route('site.page.create', ['site' => $site->id]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>
     </x-slot>
-
-    <h3>Подробности сайта {{ $site->name }}</h3>
 
     <details class="user-select-none">
         <summary>
             Детали сайта
         </summary>
         <ul class="list-group mb-4">
-            <li>URL: <span>{{ $site->url }}</span></li>
+            <li>Адрес: <a href="{{ $site->url }}" class="link-dark">{{ $site->url }}</a></li>
             <li>Дата создания: {{ $site->created_at }}</li>
-            <li><b>Комментарий: </b>{{ $site->comment }}</li>
+            <li>Комментарий: {{ $site->comment }}</li>
         </ul>
     </details>
 

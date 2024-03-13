@@ -23,7 +23,7 @@ class CheckSiteId
         $page = Page::find($pageId);
 
         if ($page && $page->site_id != $siteId) {
-            return redirect('dashboard');
+            return redirect('');
         }
 
         return $next($request);

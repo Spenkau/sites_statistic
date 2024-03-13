@@ -47,7 +47,7 @@ class SiteController extends Controller
         $newSite = $this->siteService->store($data);
 
         try {
-            return redirect()->to('/dashboard')->with(['newSite' => $newSite]);
+            return redirect()->route('site.show', ['site' => $newSite]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to store post: ' . $e]);
         }
