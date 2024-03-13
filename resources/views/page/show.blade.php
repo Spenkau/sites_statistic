@@ -6,7 +6,11 @@
         <div class="d-flex gap-3">
             <a href="{{ route('site.page.edit', ['site' => $site, 'page' => $page]) }}" class="link-light">Изменить страницу</a>
 
-            <a href="{{ route('site.page.edit', ['site' => $site, 'page' => $page]) }}" class="link-light">Удалить страницу</a>
+            <form action="{{ route('site.page.destroy', ['site' => $site, 'page' => $page]) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="link-light">Удалить страницу</button>
+            </form>
         </div>
     </x-slot>
 {{--    @dump($page)--}}

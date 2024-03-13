@@ -4,10 +4,10 @@
             {{ __('Сайт') }}
             <test>
                 <br>
-                Владелец {{ $site->user->name }}
+                @dump($site)
             </test>
         </h2>
-        <a href="{{ route('site.page.create', ['site' => $site]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>
+{{--        <a href="{{ route('site.page.create', ['site' => $site['id']]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>--}}
     </x-slot>
 
     <h3>Подробности сайта {{ $site->name }}</h3>

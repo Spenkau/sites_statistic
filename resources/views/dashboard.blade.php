@@ -11,7 +11,7 @@
         <a href="/site/create" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать новый</a>
     </x-slot>
 
-    <ul class="list-unstyled" id="sites-list" style="margin: 20px">
+    <ul class="list-unstyled m-5" id="sites-list">
         @foreach($sites as $site)
             <li class="position-relative d-flex border-dark border-1 rounded-3 flex-column gap-3 mb-4 p-4">
                 <div class="d-flex justify-content-between">
@@ -29,7 +29,7 @@
 
 
                 @if(count($site->pages) > 0)
-                    <ul>
+                    <ul class="list-group-flush">
                         Страницы:
                         @foreach($site->pages as $page)
                             <li>
@@ -105,11 +105,12 @@
         const deleteBtn = document.querySelector('.delete-btn');
 
         sitesList.addEventListener('click', (event) => {
-            if (event.target.id === 'delete-btn') {
+            if (event.target.classList.contains('delete-btn')) {
                 // data.show = true;
                 // modal.setAttribute('x-data', JSON.stringify(data));
 
                 const siteId = event.target.getAttribute('data-id');
+
 
                 axios.delete(`/site/${siteId}`);
             }
