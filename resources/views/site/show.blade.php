@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl py-3">
+        <h2 class="font-semibold text-xl py-3 text-white m-0">
             {{ __('Сайт') }} <span>{{ $site->name }}</span>
         </h2>
-                <a href="{{ route('site.page.create', ['site' => $site->id]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>
+        <a href="{{ route('site.page.create', ['site' => $site->id]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>
     </x-slot>
 
     <details class="user-select-none">

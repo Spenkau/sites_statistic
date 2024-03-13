@@ -45,7 +45,7 @@ class PageController extends Controller
 //            $request->merge(['site_id' => $site->id]);
 
             $data = $request->validated();
-            $data['site_id'] = $siteId;
+
             $page = $this->pageService->store($data);
 
             return redirect()->route('site.page.show', ['site' => $siteId, 'page' => $page]);

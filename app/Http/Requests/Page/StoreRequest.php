@@ -25,7 +25,8 @@ class StoreRequest extends FormRequest
             'url' => 'string|max:255',
             'threshold_speed' => 'integer|max:50000',
             'page_id' => 'null|integer',
-            'site_id' => 'integer'
+            'site_id' => 'integer',
+            'comment' => 'string|max:255'
         ];
     }
 }
