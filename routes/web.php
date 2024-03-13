@@ -74,7 +74,7 @@ Route::get('/dashboard', [SiteController::class, 'index'])->middleware(['auth', 
 
 Route::middleware('auth')->group(function () {
 
-    Route::middleware('site.owner')->group(function () {
+    Route::middleware('site.access')->group(function () {
         Route::resource('site', SiteController::class);
         Route::resource('site.page', PageController::class)->middleware('site.id');
     });
