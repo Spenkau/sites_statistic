@@ -5,14 +5,13 @@ namespace App\Repositories;
 use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use App\Models\User;
+use App\Repositories\Interfaces\SiteRepositoryInterface;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-class SiteRepository
+class SiteRepository implements SiteRepositoryInterface
 {
-    private int $userId;
-
     public function __construct()
     {
     }
@@ -53,7 +52,7 @@ class SiteRepository
      */
     public function findById(int $id): JsonResource
     {
-        $site = Site::whereId($id)->with('owner')->first();
+        $site = Site::whereId($id)->with('owner', 'pages')->first();
 
         return new SiteResource($site);
     }
@@ -69,7 +68,9 @@ class SiteRepository
     {
         $data['user_id'] = $this->getUserId();
 
-        return new SiteResource(Site::create($data));
+        $site = Site::create($data);
+
+        return new SiteResource($site);
     }
 
     /**
@@ -79,9 +80,12 @@ class SiteRepository
      * @param array $data
      * @return SiteResource
      */
-    public function update(Site $site, array $data): SiteResource
+    public function update(int $siteId, array $data): SiteResource
     {
+        $site = $this->findById($siteId);
+
         $site->update($data);
+
         return new SiteResource($site);
     }
 
@@ -91,12 +95,23 @@ class SiteRepository
      * @param Site $site
      * @return bool|null
      */
-    public function destroy(Site $site): ?bool
+    public function destroy(int $siteId): ?bool
     {
+        $site = $this->findById($siteId);
+
         return $site->delete();
     }
 
-    public function addCollaborator(int $siteId, int|array $userIds = []): bool
+    public function findByCollaborator(): JsonResource
+    {
+        $user = User::find($this->getUserId());
+
+        $sites = $user->sites('pages')->paginate(SITES_PER_PAGE);
+
+        return SiteResource::collection($sites);
+    }
+
+    public function storeCollaborators(int $siteId, array $userIds = []): bool
     {
         $site = Site::find($siteId);
 

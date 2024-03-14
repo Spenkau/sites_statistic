@@ -6,10 +6,11 @@ use App\Http\Resources\PageResource;
 use App\Http\Resources\SiteResource;
 use App\Models\Page;
 use App\Models\Site;
+use App\Repositories\Interfaces\PageRepositoryInterface;
 use Error;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class PageRepository
+class PageRepository implements PageRepositoryInterface
 {
     public function getSitePages(int $id): AnonymousResourceCollection
     {
