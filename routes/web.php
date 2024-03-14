@@ -3,8 +3,10 @@
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckSiteAccess;
 use App\Models\Page;
+use GuzzleHttp\TransferStats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -27,29 +29,15 @@ Route::get('/', function () {
 });
 
 Route::get('test', function () {
+    $client = new GuzzleHttp\Client();
 
-    $start = microtime(true);
-    try {
-        $response = Http::get('https://vpodarok.ru/');
+    $response = $client->request('GET', 'https://vpodarok.ru', [
+        'on_stats' => function (TransferStats $stats) {
+            echo $stats->getTransferTime() . '    ' . gettype($stats->getTransferTime());
+        }
+    ]);
 
-        $data = [
-            'page_id' => 2,
-            'status_code' => $response->status(),
-            'response_time' => number_format(microtime(true) - $start, 3, '.', '')
-        ];
-
-        $validator = Validator::make($data, [
-            'page_id' => 'required|integer',
-            'status_code' => 'required|integer',
-            'response_time' => 'required|numeric'
-        ]);
-
-        $detail = $validator->validated();
-
-        return $detail;
-    } catch (Exception $exception) {
-        return [$exception->getCode(), $exception->getMessage(), $exception->getTraceAsString()];
-    }
+    echo '\n status_code' . $response->getStatusCode();
 
 });
 
@@ -75,11 +63,15 @@ Route::get('/dashboard', [SiteController::class, 'index'])->middleware(['auth', 
 Route::middleware('auth')->group(function () {
 
     Route::middleware('site.access')->group(function () {
+        Route::get('site/party', [SiteController::class, 'findByCollaborator'])->name('site/party');
         Route::resource('site', SiteController::class);
         Route::resource('site.page', PageController::class)->middleware('site.id');
+
+        Route::get('site/{site}/add-user', [SiteController::class, 'addCollaborator'])->name('site.add-user');
+        Route::post('site/{site}/store-collaborator', [SiteController::class, 'storeCollaborators']);
     });
 
-//    Route::resource('profile', ProfileController::class)->only(['update', 'destroy']);
+    Route::get('user', [UserController::class, 'index'])->name('user');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
