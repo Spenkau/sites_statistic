@@ -8,6 +8,7 @@
             <input type="text" id="mail" class="input-group" value="kholyavskij@mail.ru">
             <button class="btn text-white" id="send-mail">Отправить</button>
         </div>
+        <a href="{{ route('site/party') }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Совместные сайты</a>
         <a href="/site/create" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать новый</a>
     </x-slot>
 
@@ -96,18 +97,11 @@
             // writeResult();
         })
 
-        // const modal = document.querySelector('[x-data][name="confirm-site-deletion"]');
-        //
-        // const data = JSON.parse(modal.getAttribute('x-data'));
-        //
-        // const showModal = false;
         const sitesList = document.getElementById('sites-list');
         const deleteBtn = document.querySelector('.delete-btn');
 
         sitesList.addEventListener('click', (event) => {
             if (event.target.classList.contains('delete-btn')) {
-                // data.show = true;
-                // modal.setAttribute('x-data', JSON.stringify(data));
 
                 const siteId = event.target.getAttribute('data-id');
 

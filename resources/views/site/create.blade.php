@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <form method="POST" action="{{ route('site') }}" class="d-flex justify-content-center align-items-center flex-column gap-5">
+    <form method="POST" action="{{ route('site.store') }}" class="d-flex justify-content-center align-items-center flex-column gap-5">
         @csrf
         @method('POST')
 

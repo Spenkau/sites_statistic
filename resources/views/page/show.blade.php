@@ -24,11 +24,10 @@
     <ul class="list-unstyled">
         @foreach($page->details as $key => $details)
             <li>
-                <p>Проверка №{{ $key + 1 }}</p>
+                <p>Проверка №{{ $key + 1 }} от {{ $details->created_at }}</p>
 <pre>
 Статус-код: {{ $details->status_code }}
-Время отклика: {{ $details->response_time }}
-Время проверки: {{ $details->created_at }}
+<span class="{{ $details->response_time > $page->threshold_speed ? 'bg-danger' : 'bg-success'}} text-white p-1">Время отклика: {{ $details->response_time }}</span>
 @if(isset($details->error))
 {{ $details->error }}
 @endif
