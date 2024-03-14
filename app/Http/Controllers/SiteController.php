@@ -32,7 +32,7 @@ class SiteController extends Controller
     {
         $site = $this->siteService->findById($siteId);
 
-        return view('site.show')->with(['site' => $site]);
+        return view('site.show', ['site' => $site]);
     }
 
     public function create(): View
@@ -54,42 +54,66 @@ class SiteController extends Controller
 
     }
 
-    public function edit(Site $site): View
+    public function edit(int $siteId): View
     {
-        return view('site.edit')->with(['site' => $site]);
+        $site = $this->siteService->findById($siteId);
+
+        return view('site.edit', ['site' => $site]);
     }
 
-    public function update(Site $site, UpdateRequest $request): RedirectResponse
+    public function update(int $siteId, UpdateRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
-        $updatedSite = $this->siteService->update($site, $data);
+        $updatedSite = $this->siteService->update($siteId, $data);
 
         return redirect()->to('/dashboard')->with(['updatedSite' => $updatedSite]);
     }
 
-    public function destroy(Site $site)
+    public function destroy(int $siteId)
     {
         try {
-            $this->siteService->destroy($site);
+            $this->siteService->destroy($siteId);
 
-            return 'Сайт удалён';
+            return response()->json(['message' => 'Сайт удалён']);
         } catch (\Exception $e) {
-            return 'Произошла ошибка при удалении сайта' . $e;
+            return response()->json(['error' => 'Произошла ошибка при удалении сайта' . $e]);
         }
     }
 
-    public function addCollaborator(int $siteId, int $userId)
+    public function findByCollaborator()
     {
-        $response = $this->siteService->addCollaborator($siteId, $userId);
+        $sites = $this->siteService->findByCollaborator();
 
-        return $response ? 'Good' : 'Not good';
+        return view('site.party', ['sites' => $sites]);
     }
 
-    public function removeCollaborator(int $siteId, int $userId)
+    public function addCollaborator(int $siteId): View
     {
-        $response = $this->siteService->removeCollaborator($siteId, $userId);
+        $site = $this->siteService->findById($siteId);
 
-        return $response ? 'Good' : 'Not good';
+        return view('site.add_user', ['site' => $site]);
+    }
+
+    public function storeCollaborators(int $siteId, array $userIds)
+    {
+        try {
+            $response = $this->siteService->storeCollaborators($siteId, $userIds);
+
+            return response()->json(['message' => 'Соучастник добавлен успешно!']);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Произошла ошибка: ' . $exception]);
+        }
+    }
+
+    public function destroyCollaborator(int $siteId, int $userId)
+    {
+        try {
+            $response = $this->siteService->removeCollaborator($siteId, $userId);
+
+            return response()->json(['message' => 'Соучастник удален успешно!']);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Произошла ошибка: ' . $exception]);
+        }
     }
 }
