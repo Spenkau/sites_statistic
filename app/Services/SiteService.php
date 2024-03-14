@@ -32,19 +32,24 @@ class SiteService
         return $this->siteRepository->store($data);
     }
 
-    public function update(Site $site, array $data): JsonResource
+    public function update(int $siteId, array $data): JsonResource
     {
-        return $this->siteRepository->update($site, $data);
+        return $this->siteRepository->update($siteId, $data);
     }
 
-    public function destroy(Site $site): ?bool
+    public function destroy(int $siteId): ?bool
     {
-        return $this->siteRepository->destroy($site);
+        return $this->siteRepository->destroy($siteId);
     }
 
-    public function addCollaborator($siteId, $userId): bool
+    public function findByCollaborator()
     {
-        return $this->siteRepository->addCollaborator($siteId, $userId);
+        return $this->siteRepository->findByCollaborator();
+    }
+
+    public function storeCollaborators(int $siteId, array $userIds): bool
+    {
+        return $this->siteRepository->storeCollaborators($siteId, $userIds);
     }
 
     public function removeCollaborator($siteId, $userId): bool
