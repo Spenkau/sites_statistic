@@ -3,7 +3,10 @@
         <h2 class="font-semibold text-xl py-3 text-white m-0">
             {{ __('Сайт') }} <span>{{ $site->name }}</span>
         </h2>
-        <a href="{{ route('site.page.create', ['site' => $site->id]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>
+        <div>
+            <a href="{{ route('site.add-user', ['site' => $site->id]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100 mx-4">Добавить коллегу</a>
+            <a href="{{ route('site.page.create', ['site' => $site->id]) }}" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать страницу</a>
+        </div>
     </x-slot>
 
     <details class="user-select-none">

@@ -111,7 +111,6 @@
 
                 const siteId = event.target.getAttribute('data-id');
 
-
                 axios.delete(`/site/${siteId}`);
             }
         })
