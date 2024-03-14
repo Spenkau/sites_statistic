@@ -2,15 +2,16 @@
 
 namespace App\Jobs;
 
-use App\Models\Detail;
 use App\Models\Page;
+use App\Repositories\DetailRepository;
+use App\Repositories\Interfaces\DetailRepositoryInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\TransferStats;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Client\Response;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Illuminate\Validation\Validator;
 
@@ -18,13 +19,18 @@ class UpdatePageDetails implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public float $startTime;
+    public DetailRepositoryInterface $detailRepository;
+
+    public float $responseTime;
+
+    public int $statusCode;
 
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(DetailRepositoryInterface $detailRepository)
     {
+        $this->detailRepository = $detailRepository;
     }
 
     /**
@@ -32,68 +38,59 @@ class UpdatePageDetails implements ShouldQueue
      */
     public function handle(): void
     {
-        $pages = Page::all();
+        $pages = Page::query()->get();
 
         foreach ($pages as $page) {
 
             try {
-                $this->startTime = microtime(true);
+                $client = new Client();
 
-                $response = Http::get($page->url);
+                $response = $client->request('GET', 'https://vpodarok.ru', [
+                    'on_stats' => function (TransferStats $stats) {
+                        $this->responseTime = $stats->getTransferTime();
+                    }
+                ]);
 
-                $this->storeDetail($response, $page);
+                $this->statusCode = $response->getStatusCode();
+
+                $this->storeDetail($page);
             } catch (\Exception $exception) {
-                $this->storeErrorDetail($exception, $page);
+                $this->storeDetail($page, $exception);
             }
         }
     }
 
-    public function getResponseTime(): float
+    public function storeDetail(Page $page, string $error = null): void
     {
-        return (float) number_format(microtime(true) - $this->startTime, 3, '.', '');
-    }
+        $detail = [];
 
-    public function validateDetail(Response $response, Page $page): Validator
-    {
-        $data = [
-            'page_id' => $page->id,
-            'status_code' => $response->status(),
-            'response_time' => $this->getResponseTime()
-        ];
+        if (!empty($error)) {
+            $detail['error'] = $error;
+        }
 
-        return ValidatorFacade::make($data, [
-            'page_id' => 'required|integer',
-            'status_code' => 'required|integer',
-            'response_time' => 'required|numeric'
-        ]);
-    }
-
-    public function storeDetail(Response $response, Page $page): void
-    {
-        $validDetails = $this->validateDetail($response, $page);
+        $validDetails = $this->validateDetail($page);
 
         if ($validDetails->fails()) {
             return;
         } else {
             $detail = $validDetails->validated();
 
-            Detail::create($detail);
+            $this->detailRepository->storeJobResult($detail);
         }
     }
 
-    public function storeErrorDetail(\Exception $exception, $page): void
+    public function validateDetail(Page $page): Validator
     {
-        $statusCode = $exception->getCode();
-        $responseTime = $this->getResponseTime();
-        $errorMessage = $exception->getMessage();
-
         $data = [
             'page_id' => $page->id,
-            'status_code' => $statusCode,
-            'response_time' => $responseTime,
-            'error' => $errorMessage
+            'status_code' => $this->statusCode,
+            'response_time' => $this->responseTime
         ];
 
-        Detail::create($data);
+        return ValidatorFacade::make($data, [
+            'page_id' => 'required|numeric',
+            'status_code' => 'required|numeric',
+            'response_time' => 'required|numeric'
+        ]);
     }
 }
