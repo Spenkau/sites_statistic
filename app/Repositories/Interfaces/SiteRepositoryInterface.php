@@ -22,7 +22,7 @@ interface SiteRepositoryInterface
 
     public function findByCollaborator();
 
-    public function storeCollaborators(int $siteId, array $userIds = []): bool;
+    public function storeCollaborators(int $siteId, array $userIds = []): array;
 
     public function removeCollaborator(int $siteId, int $userId): bool;
 }

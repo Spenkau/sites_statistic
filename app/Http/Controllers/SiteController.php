@@ -95,12 +95,15 @@ class SiteController extends Controller
         return view('site.add_user', ['site' => $site]);
     }
 
-    public function storeCollaborators(int $siteId, array $userIds)
+    public function storeCollaborators(Request $request)
     {
+        $siteId = $request->input('site_id');
+        $userIds = $request->input('user_ids');
+
         try {
             $response = $this->siteService->storeCollaborators($siteId, $userIds);
 
-            return response()->json(['message' => 'Соучастник добавлен успешно!']);
+            return response()->json(['message' => 'Соучастник добавлен успешно! Отклик: ' . serialize($response)]);
         } catch (\Exception $exception) {
             return response()->json(['error' => 'Произошла ошибка: ' . $exception]);
         }

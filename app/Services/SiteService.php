@@ -47,7 +47,7 @@ class SiteService
         return $this->siteRepository->findByCollaborator();
     }
 
-    public function storeCollaborators(int $siteId, array $userIds): bool
+    public function storeCollaborators(int $siteId, array $userIds): array
     {
         return $this->siteRepository->storeCollaborators($siteId, $userIds);
     }
