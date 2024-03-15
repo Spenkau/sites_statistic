@@ -29,6 +29,28 @@ class SiteTest extends TestCase
             'password' => Hash::make('1234'),
             'remember_token' => Str::random(10),
         ]);
+
+        User::firstOrCreate([
+            'name' => 'test2',
+            'email' => 'test2@example.com',
+        ], [
+            'name' => 'test2',
+            'email' => 'test2@example.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('1234'),
+            'remember_token' => Str::random(10),
+        ]);
+
+        User::firstOrCreate([
+            'name' => 'test3',
+            'email' => 'test3@example.com',
+        ], [
+            'name' => 'test3',
+            'email' => 'test3@example.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('1234'),
+            'remember_token' => Str::random(10),
+        ]);
     }
 
     /**
@@ -157,6 +179,32 @@ class SiteTest extends TestCase
 
         !$this->assertDatabaseHas('sites', ['name' => $site->name]);
 
+        $response->assertOk();
+    }
+
+    public function test_user_can_visit_add_user_page()
+    {
+        $user = $this->user;
+
+        $site = $user->sites()->first();
+
+        $response = $this->actingAs($user)->get('/site/' . $site->id . '/add-user');
+
+        $response->assertOk();
+    }
+
+    public function test_user_can_add_user_to_own_site()
+    {
+        $user = $this->user;
+
+        $collaborators = User::where('id', '!=', $user->id)->take(2)->pluck('id');
+
+        $site = $user->sites()->first();
+
+        $response = $this->actingAs($user)->withoutMiddleware()->post('/site/' . $site->id . '/store-user', [
+            'site_id' => $site->id,
+            'user_ids' => $collaborators->toArray()
+        ]);
         $response->assertOk();
     }
 }
