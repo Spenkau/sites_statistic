@@ -52,28 +52,11 @@
     </ul>
     {{ $sites->links('layouts.pagination') }}
 
-    {{--    <x-modal name="confirm-site-deletion" focusable>--}}
-    {{--        <form method="post" action="{{ route('site') }}" class="p-6">--}}
-    {{--            @csrf--}}
-    {{--            @method('delete')--}}
-
-    {{--            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">--}}
-    {{--                {{ __('Вы уверены что хотите удалить сайт?') }}--}}
-    {{--            </h2>--}}
-
-    {{--            <div class="mt-6 flex justify-end">--}}
-    {{--                <x-secondary-button x-on:click="$dispatch('close')">--}}
-    {{--                    {{ __('Отменить') }}--}}
-    {{--                </x-secondary-button>--}}
-
-    {{--                <x-danger-button class="ms-3">--}}
-    {{--                    {{ __('Удалить') }}--}}
-    {{--                </x-danger-button>--}}
-    {{--            </div>--}}
-    {{--        </form>--}}
-    {{--    </x-modal>--}}
     <script>
         const sendMail = document.getElementById('send-mail');
+        const sitesList = document.getElementById('sites-list');
+        const deleteBtn = document.querySelector('.delete-btn');
+
         let mail = document.getElementById('mail');
 
 
@@ -82,16 +65,10 @@
 
             console.log(mail.value)
             const result = await axios.post('/send-mail', data)
-            //
-            // const resData = await result.data;
-            //
-            // const writeResult = () => ({ mail: `${resData}`,  })
-            //
-            // writeResult();
+
         })
 
-        const sitesList = document.getElementById('sites-list');
-        const deleteBtn = document.querySelector('.delete-btn');
+
 
         sitesList.addEventListener('click', (event) => {
             if (event.target.classList.contains('delete-btn')) {

@@ -6,7 +6,7 @@ use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use App\Models\User;
 use App\Repositories\Interfaces\SiteRepositoryInterface;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,14 +20,14 @@ class SiteRepository implements SiteRepositoryInterface
      * Returns current authenticated user id
      *
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function getUserId(): int
     {
         if (Auth::check()) {
             return Auth::id();
         } else {
-            throw new \Exception('User is not authenticated');
+            throw new Exception('User is not authenticated');
         }
     }
 
@@ -35,7 +35,7 @@ class SiteRepository implements SiteRepositoryInterface
      * Returns user sites with pages
      *
      * @return JsonResource
-     * @throws \Exception
+     * @throws Exception
      */
     public function all(): JsonResource
     {
@@ -62,7 +62,7 @@ class SiteRepository implements SiteRepositoryInterface
      *
      * @param array $data
      * @return SiteResource
-     * @throws \Exception
+     * @throws Exception
      */
     public function store(array $data): SiteResource
     {
@@ -76,7 +76,7 @@ class SiteRepository implements SiteRepositoryInterface
     /**
      * Updates selected site
      *
-     * @param Site $site
+     * @param int $siteId
      * @param array $data
      * @return SiteResource
      */
@@ -92,7 +92,7 @@ class SiteRepository implements SiteRepositoryInterface
     /**
      * Removes selected site
      *
-     * @param Site $site
+     * @param int $siteId
      * @return bool|null
      */
     public function destroy(int $siteId): ?bool
@@ -111,7 +111,7 @@ class SiteRepository implements SiteRepositoryInterface
         return SiteResource::collection($sites);
     }
 
-    public function storeCollaborators(int $siteId, array $userIds = []): bool
+    public function storeCollaborators(int $siteId, array $userIds = []): array
     {
         $site = Site::find($siteId);
 

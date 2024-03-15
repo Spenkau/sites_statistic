@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('site.page', PageController::class)->middleware('site.id');
 
         Route::get('site/{site}/add-user', [SiteController::class, 'addCollaborator'])->name('site.add-user');
-        Route::post('site/{site}/store-collaborator', [SiteController::class, 'storeCollaborators']);
+        Route::post('site/{site}/store-user', [SiteController::class, 'storeCollaborators'])->name('site.store-user');
     });
 
     Route::get('user', [UserController::class, 'index'])->name('user');
