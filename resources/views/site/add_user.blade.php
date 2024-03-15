@@ -37,13 +37,13 @@
 
         <div class="col">
             <form id="add-collaborators_form" class="border-dark border-1 p-4 rounded-3 d-flex justify-content-center align-items-center flex-column gap-5">
-                <ul class="list-group">
-                    <li><p class="text-center">Список пользователей на добавление в коллабораторы</p></li>
-                    @if(!empty($users))
-                        @foreach($users as $user)
-                            <li class="list-group-item">{{ $user->name }}</li>
-                        @endforeach
-                    @endif
+                <p class="text-center">Список пользователей на добавление в коллабораторы</p>
+                <ul class="list-group d-flex flex-wrap" id="collaborators-list">
+{{--                    @if(!empty($users))--}}
+{{--                        @foreach($users as $user)--}}
+{{--                            <li class="list-group-item">{{ $user->name }}</li>--}}
+{{--                        @endforeach--}}
+{{--                    @endif--}}
                 </ul>
 
                 <button type="submit">Добавить</button>
@@ -55,7 +55,9 @@
         const searchButton = document.getElementById('search-user-btn');
         const searchUserForm = document.getElementById('search-user_form');
         const usersList = document.getElementById('users-list');
+        const collaboratorsList = document.getElementById('collaborators-list');
         const modal = document.getElementById('show-users-modal');
+        const addCollaboratorsForm = document.getElementById('add-collaborators_form');
 
         const collaborators = [];
 
@@ -69,13 +71,12 @@
             axios.get(`/user/?${queryString}`)
                 .then((res) => {
                     const users = res.data;
-                    usersList.innerHTML = renderUsers(users);
-                    console.log((users))
+                    usersList.innerHTML = renderUsers(users, 'search');
+                    console.log(users)
                 })
         })
 
-        const addUserBtn = document.querySelector('.add-collaborator-btn');
-        const addCollaboratorsForm = document.getElementById('add-collaborators_form');
+
 
         usersList.addEventListener('click', (event) => {
             if (event.target.matches('.add-collaborator-btn')) {
@@ -85,22 +86,32 @@
                 const userId = input.getAttribute('data-id');
                 const userName = input.getAttribute('data-name');
 
-                collaborators.push({
-                    id: userId,
-                    name: userName
-                })
+                if (!collaborators.find(item => item.id === userId)) {
+                    collaborators.push({
+                        id: userId,
+                        name: userName
+                    })
+                }
+
+                collaboratorsList.innerHTML = renderUsers(collaborators, 'add')
             }
         })
 
-        addCollaboratorsForm.addEventListener('submit', () => {
+        addCollaboratorsForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
             const userIds = [];
 
             collaborators.map((collaborator) => {
-                userIds.push(collaborator.id)
+                userIds.push(+collaborator.id)
             })
 
             if (userIds.length > 0) {
-                axios.post(`site/${{ $site->id }}/store-collaborator`, userIds)
+                const siteId = {{ $site->id }};
+                axios.post(`/site/${siteId}/store-user`, {
+                    'site_id': siteId,
+                    'user_ids': userIds
+                })
             } else {
                 alert('Список пользователей пуст!')
             }
@@ -141,9 +152,9 @@
 
         const getAddUsersMarkup = (user) => {
             return `
-                <li class="list-group-item">
-                    <p>Ник-нейм: ${user.name}</p>
-                    <button class="add-collaborator-btn btn btn-primary">Удалить</button>
+                <li class="list-group-item d-flex text-center gap-3">
+                    <p class="m-0">Ник-нейм: ${user.name}</p>
+                    <button class="add-collaborator-btn btn btn-close"></button>
                 </li>
             `
         }
