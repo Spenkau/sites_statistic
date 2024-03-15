@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,7 @@ class SiteFactory extends Factory
         return [
             'name' => fake()->text,
             'url' => fake()->url(),
-            'user_id' => 1,
+            'user_id' => User::where('name', 'test')->first()->id,
             'comment' => fake()->realText(256)
         ];
     }

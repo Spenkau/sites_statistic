@@ -39,7 +39,7 @@ class SiteRepository implements SiteRepositoryInterface
      */
     public function all(): JsonResource
     {
-        $sites = Site::with('pages')->where('user_id', $this->getUserId())->paginate(SITES_PER_PAGE);
+        $sites = Site::with('pages')->where('user_id', $this->getUserId())->paginate(10);
 
         return SiteResource::collection($sites);
     }
@@ -106,7 +106,7 @@ class SiteRepository implements SiteRepositoryInterface
     {
         $user = User::find($this->getUserId());
 
-        $sites = $user->sites('pages')->paginate(SITES_PER_PAGE);
+        $sites = $user->sites('pages')->paginate(10);
 
         return SiteResource::collection($sites);
     }
