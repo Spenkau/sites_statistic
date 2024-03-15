@@ -4,25 +4,28 @@
             {{ __('Создание страницы') }}
         </h2>
     </x-slot>
-    <form method="POST" action="{{ route('site.page.store', ['site' => $site]) }}" style="display:flex; justify-content: center; align-items: center; flex-direction: column; gap: 20px;">
+    <form method="POST" action="{{ route('site.page.store', ['site' => $site]) }}" class="d-flex justify-content-center align-items-center flex-column gap-5">
         @csrf
         @method('POST')
         <div>
             <label for="url">URL: </label>
-            <input type="text" placeholder="URL" name="url" id="url" value="{{ old('url') }}">
+            <input type="text" placeholder="Адрес страницы" name="url" id="url" value="{{ old('url') }}">
         </div>
 
         <div>
-            <label for="threshold_speed">Порог: </label>
-            <input type="text" placeholder="Порог скорости" name="threshold_speed" id="threshold_speed" value="{{ old('threshold_speed') }}">
+            <label for="threshold_speed">
+                Порог
+                <input type="text" class="w-25" name="threshold_speed" id="threshold_speed" value="{{ old('threshold_speed') }}">
+                в миллисекундах
+            </label>
         </div>
 
         <div>
             <label for="comment">Комментарий: </label>
-            <textarea name="comment" id="comment" placeholder="Комментарий"></textarea>
+            <textarea name="comment" id="comment" placeholder="Оставьте ваш комментарий к странице"></textarea>
         </div>
 
-{{--        <input type="hidden" name="site_id" value="{{ $site->id }}">--}}
+        <input type="hidden" name="site_id" value="{{ $site }}">
 
         <button type="submit">Создать</button>
     </form>

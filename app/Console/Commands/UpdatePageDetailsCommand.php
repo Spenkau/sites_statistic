@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\UpdatePageDetails;
+use App\Repositories\Interfaces\DetailRepositoryInterface;
 use Illuminate\Console\Command;
 
 class UpdatePageDetailsCommand extends Command
@@ -26,6 +27,6 @@ class UpdatePageDetailsCommand extends Command
      */
     public function handle()
     {
-        UpdatePageDetails::dispatch();
+        UpdatePageDetails::dispatch(app(DetailRepositoryInterface::class));
     }
 }

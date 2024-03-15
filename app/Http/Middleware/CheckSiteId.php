@@ -17,17 +17,15 @@ class CheckSiteId
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $site = $request->route('site');
-        $page = $request->route('page');
+        $siteId = $request->route('site');
+        $pageId = $request->route('page');
 
-        if (isset($page)) {
-            if ($page && $page->site_id != $site->id) {
-                return redirect('dashboard')->with('error', 'Unauthorized action.');
-            }
+        $page = Page::find($pageId);
 
-            return $next($request);
-        } else {
-            return $next($request);
+        if ($page && $page->site_id != $siteId) {
+            return redirect('');
         }
+
+        return $next($request);
     }
 }

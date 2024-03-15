@@ -24,9 +24,9 @@ class PageService
         return $this->pageRepository->getSitePages($id);
     }
 
-    public function getOne(Site $site, Page $page): PageResource
+    public function findOne(int $pageId): PageResource
     {
-        return $this->pageRepository->getOne($site, $page);
+        return $this->pageRepository->findOne($pageId);
     }
 
     public function store(array $data): PageResource
@@ -34,13 +34,13 @@ class PageService
         return $this->pageRepository->store($data);
     }
 
-    public function update(Page $page, array $data): PageResource
+    public function update(int $pageId, array $data): PageResource
     {
-        return $this->pageRepository->update($page, $data);
+        return $this->pageRepository->update($pageId, $data);
     }
 
-    public function destroy(Page $page)
+    public function destroy(int $pageId)
     {
-        return $this->pageRepository->destroy($page);
+        return $this->pageRepository->destroy($pageId);
     }
 }

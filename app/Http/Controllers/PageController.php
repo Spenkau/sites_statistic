@@ -27,51 +27,59 @@ class PageController extends Controller
         return redirect()->back();
     }
 
-    public function show(Site $site, Page $page)
+    public function show(int $siteId, int $pageId): View
     {
-        $page = $this->pageService->getOne($site, $page);
+        $page = $this->pageService->findOne($pageId);
 
-        return view('page.show')->with(['site' => $site, 'page' => $page]);
+        return view('page.show', ['site' => $siteId, 'page' => $page]);
     }
 
-    public function create(Site $site): View
+    public function create(int $siteId): View
     {
-        return view('page.create', compact('site'));
+        return view('page.create', ['site' => $siteId]);
     }
 
-    public function store(Site $site, StoreRequest $request)
+    public function store(int $siteId, StoreRequest $request)
     {
         try {
 //            $request->merge(['site_id' => $site->id]);
 
             $data = $request->validated();
-            $data['site_id'] = $site->id;
+
             $page = $this->pageService->store($data);
 
-            return redirect('dashboard');
-//            return redirect()->to('/site/' . $site->id . '/page/' . $page->id);
+            return redirect()->route('site.page.show', ['site' => $siteId, 'page' => $page]);
         } catch (\Exception $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return response()->json(['error' => 'Страница с таким адресом уже существует!']);
+            }
             return response()->json($e);
         }
-//        return redirect()->to('/site/' . $site->id);
-    }
 
-    public function edit(Site $site, Page $page)
+    }
+    public function edit(int $siteId, int $pageId)
     {
-        return view('page.edit')->with(['site' => $site, 'page' => $page]);
+        $page = $this->pageService->findOne($pageId);
+
+        return view('page.edit', ['site' => $siteId, 'page' => $page]);
     }
 
-    public function update(Site $site, Page $page, UpdateRequest $request)
+    public function update(int $siteId, int $pageId, UpdateRequest $request)
     {
         $data = $request->validated();
 
-        $this->pageService->update($page, $data);
+        $this->pageService->update($pageId, $data);
 
-        return redirect()->route('site.page.show', ['site' => $site, 'page' => $page]);
+        return redirect()->route('site.page.show', ['site' => $siteId, 'page' => $pageId]);
     }
 
-    public function destroy(Site $site)
+    public function destroy(int $siteId,int $pageId)
     {
-        $this->siteService->destroy($site);
+        try {
+            $this->pageService->destroy($pageId);
+            return redirect()->route('site.show', ['site' => $siteId]);
+        } catch (\Exception $exception) {
+            return 'Ошибка удаления страницы: ' . $exception;
+        }
     }
 }

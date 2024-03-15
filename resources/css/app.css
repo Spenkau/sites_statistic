@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.dark-bg-gray {
+    background-color: rgb(31 41 55 / 1);
+}
+
+@media (min-width: 640px) {
+    .nav-menu {
+        display: flex!important;
+    }
+
+    .settings-dropdown {
+        display: none!important;
+    }
+}

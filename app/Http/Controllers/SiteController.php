@@ -8,7 +8,9 @@ use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use App\Services\SiteService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SiteController extends Controller
 {
@@ -19,59 +21,102 @@ class SiteController extends Controller
         $this->siteService = $siteService;
     }
 
-    public function index()
+    public function index(): View
     {
-        $sites = $this->siteService->getAll();
+        $sites = $this->siteService->all();
 
-        return view('dashboard')->with(['sites' => $sites]);
+        return view('dashboard', ['sites' => $sites]);
     }
 
-    public function show(Site $site)
+    public function show(int $siteId): View
     {
-        $site = $this->siteService->getOne($site);
+        $site = $this->siteService->findById($siteId);
 
-        return view('site.show')->with(['site' => $site]);
+        return view('site.show', ['site' => $site]);
     }
 
-    public function create()
+    public function create(): View
     {
         return view('site.create');
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse|RedirectResponse
     {
         $data = $request->validated();
 
         $newSite = $this->siteService->store($data);
 
         try {
-            return redirect()->to('/dashboard')->with(['newSite' => $newSite]);
+            return redirect()->route('site.show', ['site' => $newSite]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to store post: ' . $e]);
         }
+
     }
 
-    public function edit(Site $site)
+    public function edit(int $siteId): View
     {
-        return view('site.edit')->with(['site' => $site]);
+        $site = $this->siteService->findById($siteId);
+
+        return view('site.edit', ['site' => $site]);
     }
 
-    public function update(Site $site, UpdateRequest $request)
+    public function update(int $siteId, UpdateRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
-        $updatedSite = $this->siteService->update($site, $data);
+        $updatedSite = $this->siteService->update($siteId, $data);
 
         return redirect()->to('/dashboard')->with(['updatedSite' => $updatedSite]);
     }
 
-    public function destroy(Site $site)
+    public function destroy(int $siteId)
     {
         try {
-            $this->siteService->destroy($site);
-            return response()->json(['message' => 'Site deleted successfully!']);
+            $this->siteService->destroy($siteId);
+
+            return response()->json(['message' => 'Сайт удалён']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Fatal error: ' . $e]);
+            return response()->json(['error' => 'Произошла ошибка при удалении сайта' . $e]);
+        }
+    }
+
+    public function findByCollaborator()
+    {
+        $sites = $this->siteService->findByCollaborator();
+
+        return view('site.party', ['sites' => $sites]);
+    }
+
+    public function addCollaborator(int $siteId): View
+    {
+        $site = $this->siteService->findById($siteId);
+
+        return view('site.add_user', ['site' => $site]);
+    }
+
+    public function storeCollaborators(Request $request)
+    {
+        $siteId = $request->input('site_id');
+        $userIds = $request->input('user_ids');
+
+        try {
+            $response = $this->siteService->storeCollaborators($siteId, $userIds);
+
+            return response()->json(['message' => 'Соучастник добавлен успешно! Отклик: ' . serialize($response)]);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Произошла ошибка: ' . $exception]);
+        }
+    }
+
+    public function destroyCollaborator(int $siteId, int $userId)
+    {
+        try {
+            $response = $this->siteService->removeCollaborator($siteId, $userId);
+
+            return response()->json(['message' => 'Соучастник удален успешно!']);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Произошла ошибка: ' . $exception]);
         }
     }
 }
