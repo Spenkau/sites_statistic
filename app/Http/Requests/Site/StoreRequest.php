@@ -27,4 +27,9 @@ class StoreRequest extends FormRequest
             'comment' => 'string|max:255'
         ];
     }
+
+    protected function prepareForValidation()
+    {
+
+    }
 }

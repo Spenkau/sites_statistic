@@ -7,6 +7,7 @@ use App\Models\Site;
 use App\Repositories\SiteRepository;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class SiteService
 {
@@ -29,6 +30,8 @@ class SiteService
 
     public function store(array $data): SiteResource
     {
+        $data['user_id'] = Auth::id();
+
         return $this->siteRepository->store($data);
     }
 

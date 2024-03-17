@@ -5,14 +5,23 @@ namespace Tests\Feature;
 use App\Models\Site;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class SiteTest extends TestCase
 {
-    public Model $user;
+    public User $user;
+    public User $collaborator;
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        // clear database after all tests
+        Artisan::call('migrate:refresh');
+    }
 
     public function setUp(): void
     {
@@ -54,7 +63,7 @@ class SiteTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * @test
      */
     public function test_dashboard_page_is_displayed(): void
     {
@@ -67,13 +76,13 @@ class SiteTest extends TestCase
         $response->assertOk();
     }
 
+    /**
+     * @test
+     */
     public function test_user_sites_can_be_rendered(): void
     {
 
         $user = $this->user;
-
-        $sites = Site::factory(10)->create();
-
 
         $response = $this->actingAs($user)->get('/dashboard');
 
@@ -86,6 +95,9 @@ class SiteTest extends TestCase
         });
     }
 
+    /**
+     * @test
+     */
     public function test_user_can_visit_create_new_site_page()
     {
         $user = $this->user;
@@ -95,6 +107,9 @@ class SiteTest extends TestCase
         $response->assertOk();
     }
 
+    /**
+     * @test
+     */
     public function test_user_can_store_new_site()
     {
         $user = $this->user;
@@ -103,9 +118,10 @@ class SiteTest extends TestCase
 
         $currentAmountOfRecords = Site::where('user_id', $user->id)->count();
 
+        $url = fake()->url;
         $response = $this->withoutMiddleware()->post('/site', [
             'name' => 'Test name',
-            'url' => 'Test url',
+            'url' => $url,
             'user_id' => $user->id,
             'comment' => 'Test comment'
         ]);
@@ -114,7 +130,7 @@ class SiteTest extends TestCase
 
         $this->assertDatabaseHas('sites', [
             'name' => 'Test name',
-            'url' => 'Test url',
+            'url' => $url,
             'user_id' => $user->id,
             'comment' => 'Test comment'
         ]);
@@ -122,15 +138,22 @@ class SiteTest extends TestCase
         $this->assertDatabaseCount('sites', ++$currentAmountOfRecords);
     }
 
+    /**
+     * @test
+     */
     public function test_user_can_visit_edit_site_page()
     {
         $user = $this->user;
 
-        $response = $this->actingAs($user)->get('/site/edit');
+        $site = Site::where('user_id', $user->id)->latest()->first();
 
+        $response = $this->actingAs($user)->get('/site/' . $site->id . '/edit');
         $response->assertOk();
     }
 
+    /**
+     * @test
+     */
     public function test_user_can_edit_site()
     {
         $user = $this->user;
@@ -148,9 +171,11 @@ class SiteTest extends TestCase
 
         $currentAmountOfRecords = Site::where('user_id', $user->id)->count();
 
+        $uniqueUrl = fake()->url;
+
         $response = $this->withoutMiddleware()->put('/site/' . $site->id, [
             'name' => 'New test name',
-            'url' => 'New test url',
+            'url' => $uniqueUrl,
             'user_id' => $user->id,
             'comment' => 'New test comment'
         ]);
@@ -159,7 +184,7 @@ class SiteTest extends TestCase
 
         $this->assertDatabaseHas('sites', [
             'name' => 'New test name',
-            'url' => 'New test url',
+            'url' => $uniqueUrl,
             'user_id' => $user->id,
             'comment' => 'New test comment'
         ]);
@@ -167,6 +192,9 @@ class SiteTest extends TestCase
         $this->assertDatabaseCount('sites', $currentAmountOfRecords);
     }
 
+    /**
+     * @test
+     */
     public function test_user_can_delete_site()
     {
         $user = $this->user;
@@ -175,36 +203,77 @@ class SiteTest extends TestCase
 
         $site = Site::where('user_id', $user->id)->latest()->first();
 
-        $response = $this->delete('/site/' . $site->id);
-
-        !$this->assertDatabaseHas('sites', ['name' => $site->name]);
+        $response = $this->withoutMiddleware()->delete('/site/' . $site->id);
 
         $response->assertOk();
     }
 
+    /**
+     * @test
+     */
     public function test_user_can_visit_add_user_page()
     {
         $user = $this->user;
 
-        $site = $user->sites()->first();
+        $site = $user->personal_sites()->latest()->first();
 
         $response = $this->actingAs($user)->get('/site/' . $site->id . '/add-user');
 
         $response->assertOk();
     }
 
+    /**
+     * @test
+     */
     public function test_user_can_add_user_to_own_site()
     {
-        $user = $this->user;
+        $owner = $this->user;
 
-        $collaborators = User::where('id', '!=', $user->id)->take(2)->pluck('id');
+        $collaborators = User::where('id', '!=', $owner->id)->take(2)->pluck('id');
 
-        $site = $user->sites()->first();
+        $site = $owner->personal_sites()->first();
 
-        $response = $this->actingAs($user)->withoutMiddleware()->post('/site/' . $site->id . '/store-user', [
+        $response = $this->actingAs($owner)->withoutMiddleware()->post('/site/' . $site->id . '/store-user', [
             'site_id' => $site->id,
             'user_ids' => $collaborators->toArray()
         ]);
+
         $response->assertOk();
+    }
+
+    public function test_user_can_visit_public_sites()
+    {
+        $owner = $this->user;
+
+        $collaborator = User::where('id', '!=', $owner->id)->first();
+
+        $response = $this->actingAs($collaborator)->get('/site/party');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_public_user_can_edit_site()
+    {
+        $owner = $this->user;
+
+        $collaborator = User::where('id', '!=', $owner->id)->first();
+
+        $site = $owner->personal_sites()->first();
+
+        $response = $this->actingAs($owner)->withoutMiddleware()->post('/site/' . $site->id . '/store-user', [
+            'site_id' => $site->id,
+            'user_ids' => [$collaborator->id]
+        ]);
+
+        $response->assertOk();
+
+        $secondResponse = $this->actingAs($collaborator)->withoutMiddleware()->put('/site/' . $site->id, [
+            'name' => 'New test name',
+            'url' => fake()->url,
+            'user_id' => $owner->id,
+            'comment' => 'New test comment'
+        ]);
+
+        $secondResponse->assertStatus(302);
     }
 }

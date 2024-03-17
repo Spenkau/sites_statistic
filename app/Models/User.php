@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -45,14 +44,30 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * @return HasMany
+     */
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class);
     }
 
-    public function sites(): BelongsToMany
+    /**
+     * @return HasMany
+     */
+    public function personal_sites(): HasMany
     {
-        return $this->belongsToMany(Site::class, 'site_user');
+        return $this->hasMany(Site::class);
+    }
+
+    /**
+     * @param array $relations
+     * @return BelongsToMany
+     */
+    public function public_sites(array $relations = []): BelongsToMany
+    {
+        return $this->belongsToMany(Site::class, 'site_user')
+            ->with($relations);
     }
 
     public function roles(): BelongsToMany

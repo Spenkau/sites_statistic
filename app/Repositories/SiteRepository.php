@@ -66,8 +66,6 @@ class SiteRepository implements SiteRepositoryInterface
      */
     public function store(array $data): SiteResource
     {
-        $data['user_id'] = $this->getUserId();
-
         $site = Site::create($data);
 
         return new SiteResource($site);
@@ -106,7 +104,7 @@ class SiteRepository implements SiteRepositoryInterface
     {
         $user = User::find($this->getUserId());
 
-        $sites = $user->sites('pages')->paginate(10);
+        $sites = $user->public_sites(['pages'])->paginate(10);
 
         return SiteResource::collection($sites);
     }
