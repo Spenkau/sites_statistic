@@ -9,5 +9,5 @@ interface DetailRepositoryInterface
 {
     public function getAllDetails(): JsonResource;
 
-    public function storeJobResult(array $data): JsonResource;
+    public function store(array $data): JsonResource;
 }
