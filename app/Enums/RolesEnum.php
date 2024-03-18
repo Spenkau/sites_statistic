@@ -2,7 +2,8 @@
 
 namespace App\Enums;
 
-enum RolesEnum {
+enum RolesEnum
+{
     case USER;
     case ADMIN;
 }
