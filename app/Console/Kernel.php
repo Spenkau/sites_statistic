@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('update:page-details')
             ->everyMinute();
+        $schedule->command('update:api-point-details')
+            ->everyMinute();
     }
 
     /**
