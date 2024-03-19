@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Http\Resources\ApiPointResource;
 use App\Http\Resources\DetailResource;
+use App\Models\ApiPoint;
 use App\Models\Detail;
 use App\Repositories\Interfaces\ApiPointRepositoryInterface;
 use App\Repositories\Interfaces\DetailRepositoryInterface;
@@ -15,11 +17,13 @@ class ApiPointRepository implements ApiPointRepositoryInterface
 {
     public function all()
     {
-        return DetailResource::collection(Detail::query()->get());
+        return ApiPointResource::collection(ApiPoint::query()->get());
     }
 
     public function store(array $data)
     {
-        return new DetailResource(Detail::create($data));
+        $newApiPoint = ApiPoint::create($data);
+
+        return new ApiPointResource($newApiPoint);
     }
 }
