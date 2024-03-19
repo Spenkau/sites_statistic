@@ -16,4 +16,5 @@
             {{ $slot }}
         </main>
     </div>
+    @yield('script')
 </x-html-layout>

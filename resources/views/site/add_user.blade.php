@@ -49,95 +49,96 @@
         </div>
     </div>
 
-    <script async>
-        const searchButton = document.getElementById('search-user-btn');
-        const searchUserForm = document.getElementById('search-user_form');
-        const usersList = document.getElementById('users-list');
-        const collaboratorsList = document.getElementById('collaborators-list');
-        const modal = document.getElementById('show-users-modal');
-        const addCollaboratorsForm = document.getElementById('add-collaborators_form');
+    @section('script')
+        <script async>
+            const searchButton = document.getElementById('search-user-btn');
+            const searchUserForm = document.getElementById('search-user_form');
+            const usersList = document.getElementById('users-list');
+            const collaboratorsList = document.getElementById('collaborators-list');
+            const modal = document.getElementById('show-users-modal');
+            const addCollaboratorsForm = document.getElementById('add-collaborators_form');
 
-        const collaborators = [];
+            const collaborators = [];
 
-        searchUserForm.addEventListener('submit', (event) => {
-            event.preventDefault();
+            searchUserForm.addEventListener('submit', (event) => {
+                event.preventDefault();
 
-            const formData = new FormData(searchUserForm);
+                const formData = new FormData(searchUserForm);
 
-            const queryString = new URLSearchParams(formData).toString();
+                const queryString = new URLSearchParams(formData).toString();
 
-            axios.get(`/user/?${queryString}`)
-                .then((res) => {
-                    const users = res.data;
-                    usersList.innerHTML = renderUsers(users, 'search');
-                    console.log(users)
-                })
-        })
-
-
-        usersList.addEventListener('click', (event) => {
-            if (event.target.matches('.add-collaborator-btn')) {
-                const btn = event.target;
-                const input = btn.previousElementSibling
-
-                const userId = input.getAttribute('data-id');
-                const userName = input.getAttribute('data-name');
-
-                if (!collaborators.find(item => item.id === userId)) {
-                    collaborators.push({
-                        id: userId,
-                        name: userName
+                axios.get(`/user/?${queryString}`)
+                    .then((res) => {
+                        const users = res.data;
+                        usersList.innerHTML = renderUsers(users, 'search');
+                        console.log(users)
                     })
-                }
-
-                collaboratorsList.innerHTML = renderUsers(collaborators, 'add')
-            }
-        })
-
-        addCollaboratorsForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const userIds = [];
-
-            collaborators.map((collaborator) => {
-                userIds.push(+collaborator.id)
             })
 
-            if (userIds.length > 0) {
-                const siteId = {{ $site->id }};
-                axios.post(`/site/${siteId}/store-user`, {
-                    'site_id': siteId,
-                    'user_ids': userIds
+
+            usersList.addEventListener('click', (event) => {
+                if (event.target.matches('.add-collaborator-btn')) {
+                    const btn = event.target;
+                    const input = btn.previousElementSibling
+
+                    const userId = input.getAttribute('data-id');
+                    const userName = input.getAttribute('data-name');
+
+                    if (!collaborators.find(item => item.id === userId)) {
+                        collaborators.push({
+                            id: userId,
+                            name: userName
+                        })
+                    }
+
+                    collaboratorsList.innerHTML = renderUsers(collaborators, 'add')
+                }
+            })
+
+            addCollaboratorsForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const userIds = [];
+
+                collaborators.map((collaborator) => {
+                    userIds.push(+collaborator.id)
                 })
-            } else {
-                alert('Список пользователей пуст!')
+
+                if (userIds.length > 0) {
+                    const siteId = {{ $site->id }};
+                    axios.post(`/site/${siteId}/store-user`, {
+                        'site_id': siteId,
+                        'user_ids': userIds
+                    })
+                } else {
+                    alert('Список пользователей пуст!')
+                }
+            })
+
+            function renderUsers(users, aim) {
+                let userListMarkup = '';
+
+                switch (aim) {
+                    case 'search':
+                        if (users && users.length > 0) {
+                            users.map((user) => {
+                                userListMarkup += getSearchUsersMarkup(user);
+                            })
+                        }
+                        return userListMarkup;
+                    case 'add':
+                        if (collaborators && collaborators.length > 0) {
+                            collaborators.map((collaborator) => {
+                                userListMarkup += getAddUsersMarkup(collaborator)
+                            })
+                        }
+                }
+
+                return userListMarkup;
             }
-        })
 
-        function renderUsers(users, aim) {
-            let userListMarkup = '';
-
-            switch (aim) {
-                case 'search':
-                    if (users && users.length > 0) {
-                        users.map((user) => {
-                            userListMarkup += getSearchUsersMarkup(user);
-                        })
-                    }
-                    return userListMarkup;
-                case 'add':
-                    if (collaborators && collaborators.length > 0) {
-                        collaborators.map((collaborator) => {
-                            userListMarkup += getAddUsersMarkup(collaborator)
-                        })
-                    }
-            }
-
-            return userListMarkup;
-        }
-
-        const getSearchUsersMarkup = (user) => {
-            return `
+            const getSearchUsersMarkup = (user) => {
+                return `
                 <li class="list-group-item">
                     <p>Ник-нейм: ${user.name}</p>
                     <p>Почта: ${user.email}</p>
@@ -145,17 +146,18 @@
                     <button class="add-collaborator-btn btn btn-primary">Добавить в список</button>
                 </li>
             `
-        }
+            }
 
-        const getAddUsersMarkup = (user) => {
-            return `
+            const getAddUsersMarkup = (user) => {
+                return `
                 <li class="list-group-item d-flex text-center gap-3">
                     <p class="m-0">Ник-нейм: ${user.name}</p>
                     <button class="add-collaborator-btn btn btn-close"></button>
                 </li>
             `
-        }
-    </script>
+            }
+        </script>
+    @endsection
 </x-app-layout>
 
 

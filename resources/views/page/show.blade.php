@@ -26,6 +26,7 @@
         @foreach($page->details as $key => $details)
             <li>
                 <p>Проверка №{{ $key + 1 }} от {{ $details->created_at }}</p>
+
 <pre>
 Статус-код: {{ $details->status_code }}
 <span class="{{ $details->response_time > $page->threshold_speed ? 'bg-danger' : 'bg-success'}} text-white p-1">
@@ -35,6 +36,7 @@
     {{ $details->error }}
 @endif
 </pre>
+
             </li>
         @endforeach
     </ul>
