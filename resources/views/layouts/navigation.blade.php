@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="d-flex flex-shrink-0 align-items-center">
                     <a href="{{ route('dashboard') }}" title="SiteAnalyst" class="link-light">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"/>
                     </a>
                 </div>
 
@@ -22,12 +22,18 @@
             <div class="settings-dropdown d-flex align-items-center ml-4">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="bg-dark d-inline-flex justify-items-center align-items-center rounded-3 px-3 py-2 text-light link-opacity-75-hover">
+                        <button
+                            class="bg-dark d-inline-flex justify-items-center
+                            align-items-center rounded-3 px-3 py-2 text-light
+                            link-opacity-75-hover">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                          clip-rule="evenodd"/>
                                 </svg>
                             </div>
                         </button>
@@ -43,7 +49,7 @@
                             @csrf
 
                             <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
+                                             onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 {{ __('Выйти') }}
                             </x-dropdown-link>

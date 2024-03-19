@@ -87,7 +87,11 @@ return [
         'parameters' => ['page', 'date_from', 'date_to', 'update_from', 'update_to'],
         'headers' => $headers,
         'response' => [
-            'success' => ['code', 'count', 'page', 'pages', 'order_item', 'product_type', 'pull_card_id', 'supplier_id', 'date', 'type_id', 'item_id', 'quantity', 'nominal', 'number', 'price', 'status', 'payment_method_id', 'send_date'],
+            'success' => [
+                'code', 'count', 'page', 'pages', 'order_item', 'product_type', 'pull_card_id',
+                'supplier_id', 'date', 'type_id', 'item_id', 'quantity', 'nominal', 'number',
+                'price', 'status', 'payment_method_id', 'send_date'
+            ],
             'error' => ['error' => true, 'code' => 10]
         ]
     ],
@@ -96,7 +100,11 @@ return [
         'parameters' => ['page', 'date_from', 'date_to', 'update_from', 'update_to'],
         'headers' => $headers,
         'response' => [
-            'success' => ['code', 'count', 'page', 'pages', 'order_item', 'product_type', 'pull_card_id', 'supplier_id', 'date', 'type_id', 'item_id', 'quantity', 'nominal', 'number', 'price', 'status', 'payment_method_id', 'send_date', 'type_of_space', 'type_of_space_item_id'],
+            'success' => [
+                'code', 'count', 'page', 'pages', 'order_item', 'product_type', 'pull_card_id',
+                'supplier_id', 'date', 'type_id', 'item_id', 'quantity', 'nominal', 'number',
+                'price', 'status', 'payment_method_id', 'send_date', 'type_of_space', 'type_of_space_item_id'
+            ],
             'error' => ['error' => true, 'code' => 14]
         ]
     ],
@@ -105,16 +113,24 @@ return [
         'parameters' => ['page', 'date_from', 'date_to', 'update_from', 'update_to'],
         'headers' => $headers,
         'response' => [
-            'success' => ['code', 'count', 'page', 'pages', 'replenishment_id', 'type', 'status', 'operation', 'date', 'type_of_space', 'type_of_space_item_id'],
+            'success' => [
+                'code', 'count', 'page', 'pages', 'replenishment_id', 'type', 'status',
+                'operation', 'date', 'type_of_space', 'type_of_space_item_id'
+            ],
             'error' => ['error' => true, 'code' => 14]
         ]
     ],
     'pull' => [
         'method' => 'GET',
-        'parameters' => ['id', 'validity_from', 'validity_to', 'activation_from', 'activation_to', 'disable_from', 'disable_to', 'type_id', 'page', 'date_from', 'date_to', 'update_from', 'update_to'],
+        'parameters' => [
+            'id', 'validity_from', 'validity_to', 'activation_from', 'activation_to',
+            'disable_from', 'disable_to', 'type_id', 'page', 'date_from', 'date_to', 'update_from', 'update_to'
+        ],
         'headers' => $headers,
         'response' => [
-            'success' => ['code', 'code', 'supplier_id', 'page', 'pages', 'user_balance_id', 'status', 'type_id', 'item_id'],
+            'success' => [
+                'code', 'code', 'supplier_id', 'page', 'pages', 'user_balance_id', 'status', 'type_id', 'item_id'
+            ],
             'error' => ['error' => true, 'code' => 11]
         ]
     ],

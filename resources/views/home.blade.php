@@ -23,7 +23,8 @@
                 <p><b>URL: </b><a href="{{ $site->url }}" target="_blank">{{ $site->url }}</a></p>
 
                 <p>
-                    <b>Комментарий:</b>{{ strlen($site->comment) > 40 ? mb_substr($site->comment, 0, 40) . '...' : $site->comment}}
+                    Комментарий:
+                    {{ strlen($site->comment) > 40 ? mb_substr($site->comment, 0, 40) . '...' : $site->comment}}
                 </p>
 
 
@@ -35,7 +36,8 @@
                                 <p>URL: {{ $page->url }}</p>
                                 <p>Порог: {{ $page->threshold_speed }} миллисекунд</p>
                                 <p>
-                                    <b>Комментарий: </b>{{ strlen($page->comment) > 40 ? mb_substr($page->comment, 0, 40) . '...' : $page->comment}}
+                                    Комментарий:
+                                    {{ strlen($page->comment) > 40 ? mb_substr($page->comment, 0, 40) . '...' : $page->comment}}
                                 </p>
                             </li>
                         @endforeach
@@ -46,9 +48,9 @@
                     <a href="/site/{{ $site->id }}/edit" style="margin-right: 10px;">Изменить</a>
                     <input type="hidden" value="{{ $site->id }}" id="site_id">
                     <button
-                        class="delete-btn"
-                        style="border: none; outline: none; background-color: white; cursor: pointer"
-                        data-id="{{ $site->id }}"
+                            class="delete-btn"
+                            style="border: none; outline: none; background-color: white; cursor: pointer"
+                            data-id="{{ $site->id }}"
                     >
                         Удалить
                     </button>
@@ -81,6 +83,5 @@
                     })
             });
         });
-
     </script>
 @endsection

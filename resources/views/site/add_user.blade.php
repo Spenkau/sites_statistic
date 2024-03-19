@@ -36,15 +36,13 @@
         </div>
 
         <div class="col">
-            <form id="add-collaborators_form" class="border-dark border-1 p-4 rounded-3 d-flex justify-content-center align-items-center flex-column gap-5">
+            <form
+                id="add-collaborators_form"
+                class="border-dark border-1 p-4
+                        rounded-3 d-flex justify-content-center
+                        align-items-center flex-column gap-5">
                 <p class="text-center">Список пользователей на добавление в коллабораторы</p>
-                <ul class="list-group d-flex flex-wrap" id="collaborators-list">
-{{--                    @if(!empty($users))--}}
-{{--                        @foreach($users as $user)--}}
-{{--                            <li class="list-group-item">{{ $user->name }}</li>--}}
-{{--                        @endforeach--}}
-{{--                    @endif--}}
-                </ul>
+                <ul class="list-group d-flex flex-wrap" id="collaborators-list"></ul>
 
                 <button type="submit">Добавить</button>
             </form>
@@ -75,7 +73,6 @@
                     console.log(users)
                 })
         })
-
 
 
         usersList.addEventListener('click', (event) => {

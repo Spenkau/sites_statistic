@@ -33,7 +33,10 @@
                                     <p>URL: {{ $page->url }}</p>
                                     <p>Порог: {{ $page->threshold_speed }} миллисекунд</p>
                                     <p>
-                                        <b>Комментарий: </b>{{ strlen($page->comment) > 40 ? mb_substr($page->comment, 0, 40) . '...' : $page->comment}}
+                                        Комментарий:
+                                        {{ strlen($page->comment) > 40 ?
+                                             mb_substr($page->comment, 0, 40) . '...' :
+                                             $page->comment }}
                                     </p>
                                 </li>
                             @endforeach
@@ -57,22 +60,8 @@
     @endif
 
     <script>
-        const sendMail = document.getElementById('send-mail');
         const sitesList = document.getElementById('sites-list');
         const deleteBtn = document.querySelector('.delete-btn');
-
-        let mail = document.getElementById('mail');
-
-
-        sendMail.addEventListener('click', async () => {
-            const data = { email: mail.value, page: {'name': 'NamePage'} }
-
-            console.log(mail.value)
-            const result = await axios.post('/send-mail', data)
-
-        })
-
-
 
         sitesList.addEventListener('click', (event) => {
             if (event.target.classList.contains('delete-btn')) {

@@ -1,30 +1,62 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl m-0 py-3">
+        <h2 class="font-semibold text-xl text-white m-0 py-3">
             {{ __('Изменить страницу') }}
         </h2>
     </x-slot>
 
-    <form method="POST" action="{{ route('site.page.update', ['site' => $site, 'page' => $page]) }}" style="display:flex; justify-content: center; align-items: center; flex-direction: column; gap: 20px;">
+    <form
+        method="POST"
+        action="{{ route('site.page.update', ['site' => $site, 'page' => $page]) }}"
+        class="m-auto w-50">
         @csrf
         @method('PUT')
 
-        <div>
-            <label for="url">URL: </label>
-            <input type="text" placeholder="URL" name="url" id="url" value="{{ old('url', $page->url) }}">
+
+
+        <!-- URL -->
+        <div class="mt-4">
+            <x-input-label for="url" :value="__('URL')"/>
+            <x-text-input id="url" class="block mt-1 w-full"
+                          type="text"
+                          name="url"
+                          :value="old('url', $page->url)"
+                          required/>
+
+            <x-input-error :messages="$errors->get('url')" class="mt-2"/>
         </div>
 
+        <!-- URL -->
         <div>
-            <label for="threshold_speed">Порог: </label>
-            <input type="text" placeholder="Порог скорости" style="width: 70px" name="threshold_speed" id="threshold_speed" value="{{ old('threshold_speed', $page->threshold_speed) }}">
-            миллисек.
+            <x-input-label for="threshold_speed" :value="__('Порог')"/>
+            <x-text-input
+                id="threshold_speed"
+                class="block mt-1 w-full"
+                type="text"
+                name="threshold_speed"
+                :value="old('threshold_speed', $page->threshold_speed)"
+                required
+                autofocus/>
+            <x-input-error :messages="$errors->get('threshold_speed')" class="mt-2"/>
         </div>
 
-        <div>
-            <label for="comment">Комментарий: </label>
-            <textarea name="comment" id="comment" placeholder="Комментарий">{{ $page->comment }}</textarea>
+        <div class="mt-4">
+            <x-input-label for="comment" :value="__('Комментарий')"/>
+            <x-text-input
+                id="comment"
+                class="block mt-1 w-full"
+                type="text"
+                name="comment"
+                :value="old('comment', $page->comment)"
+                required
+                autofocus/>
+            <x-input-error :messages="$errors->get('comment')" class="mt-2"/>
         </div>
 
-        <button type="submit">Изменить</button>
+        <div class="flex items-center justify-end mt-4">
+            <button class="btn btn-dark ms-3">
+                {{ __('Изменить') }}
+            </button>
+        </div>
     </form>
 </x-app-layout>

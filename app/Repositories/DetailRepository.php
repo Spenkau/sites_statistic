@@ -17,8 +17,6 @@ class DetailRepository implements DetailRepositoryInterface
         return DetailResource::collection(Detail::query()->get());
     }
 
-
-
     public function store(array $data): JsonResource
     {
         return new DetailResource(Detail::create($data));

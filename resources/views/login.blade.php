@@ -22,7 +22,8 @@
             </div>
 
             <div>
-                <input type="password" placeholder="Введите пароль" name="password" id="password" value="{{ old('password') }}">
+                <input type="password" placeholder="Введите пароль" name="password" id="password"
+                       value="{{ old('password') }}">
             </div>
 
             <div>
