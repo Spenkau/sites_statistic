@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 interface DetailRepositoryInterface
 {
-    public function getAllDetails(): JsonResource;
+    public function all(): JsonResource;
 
     public function store(array $data): JsonResource;
 }

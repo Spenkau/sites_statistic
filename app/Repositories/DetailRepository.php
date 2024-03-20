@@ -8,17 +8,29 @@ use App\Repositories\Interfaces\DetailRepositoryInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\TransferStats;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailRepository implements DetailRepositoryInterface
+class DetailRepository extends BaseRepository implements DetailRepositoryInterface
 {
-    public function getAllDetails(): JsonResource
+    public Model $model;
+
+    public function __construct(Detail $model)
     {
-        return DetailResource::collection(Detail::query()->get());
+        $this->model = $model;
+    }
+
+    public function all(): JsonResource
+    {
+        $details = $this->allModels();
+
+        return DetailResource::collection($details);
     }
 
     public function store(array $data): JsonResource
     {
-        return new DetailResource(Detail::create($data));
+        $newDetail = $this->storeModel($data);
+
+        return new DetailResource($newDetail);
     }
 }

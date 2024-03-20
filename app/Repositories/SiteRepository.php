@@ -7,13 +7,17 @@ use App\Models\Site;
 use App\Models\User;
 use App\Repositories\Interfaces\SiteRepositoryInterface;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-class SiteRepository implements SiteRepositoryInterface
+class SiteRepository extends BaseRepository implements SiteRepositoryInterface
 {
-    public function __construct()
+    public Model $model;
+
+    public function __construct(Site $model)
     {
+        $this->model = $model;
     }
 
     /**
@@ -39,7 +43,9 @@ class SiteRepository implements SiteRepositoryInterface
      */
     public function all(): JsonResource
     {
-        $sites = Site::with('pages')->where('user_id', $this->getUserId())->paginate(10);
+        $criteria = ['user_id', $this->getUserId()];
+
+        $sites = $this->allModels('pages', $criteria);
 
         return SiteResource::collection($sites);
     }
@@ -52,7 +58,9 @@ class SiteRepository implements SiteRepositoryInterface
      */
     public function findById(int $id): JsonResource
     {
-        $site = Site::whereId($id)->with('owner', 'pages')->first();
+        $relations = ['owner', 'pages'];
+
+        $site = $this->findModel($id, $relations);
 
         return new SiteResource($site);
     }
@@ -66,9 +74,9 @@ class SiteRepository implements SiteRepositoryInterface
      */
     public function store(array $data): SiteResource
     {
-        $site = Site::create($data);
+        $newSite = $this->storeModel($data);
 
-        return new SiteResource($site);
+        return new SiteResource($newSite);
     }
 
     /**
@@ -78,9 +86,9 @@ class SiteRepository implements SiteRepositoryInterface
      * @param array $data
      * @return SiteResource
      */
-    public function update(int $siteId, array $data): SiteResource
+    public function update(int $id, array $data): SiteResource
     {
-        $site = $this->findById($siteId);
+        $site = $this->findModel($id, $data);
 
         $site->update($data);
 
@@ -93,11 +101,10 @@ class SiteRepository implements SiteRepositoryInterface
      * @param int $siteId
      * @return bool|null
      */
-    public function destroy(int $siteId): ?bool
+    public function destroy(int $id): ?bool
     {
-        $site = $this->findById($siteId);
 
-        return $site->delete();
+        return $this->destroyModel($id);
     }
 
     public function findByCollaborator(): JsonResource
@@ -109,16 +116,16 @@ class SiteRepository implements SiteRepositoryInterface
         return SiteResource::collection($sites);
     }
 
-    public function storeCollaborators(int $siteId, array $userIds = []): array
+    public function storeCollaborators(int $id, array $userIds = []): array
     {
-        $site = Site::find($siteId);
+        $site = $this->findModel($id);
 
         return $site->users()->syncWithoutDetaching($userIds);
     }
 
-    public function removeCollaborator(int $siteId, int $userId): bool
+    public function removeCollaborator(int $id, int $userId): bool
     {
-        $site = Site::find($siteId);
+        $site = $this->findModel($id);
 
         return $site->users()->detach($userId);
     }

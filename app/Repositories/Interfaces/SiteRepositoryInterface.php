@@ -16,13 +16,13 @@ interface SiteRepositoryInterface
 
     public function store(array $data): SiteResource;
 
-    public function update(int $siteId, array $data): SiteResource;
+    public function update(int $id, array $data): SiteResource;
 
-    public function destroy(int $siteId): ?bool;
+    public function destroy(int $id): ?bool;
 
     public function findByCollaborator();
 
-    public function storeCollaborators(int $siteId, array $userIds = []): array;
+    public function storeCollaborators(int $id, array $userIds = []): array;
 
-    public function removeCollaborator(int $siteId, int $userId): bool;
+    public function removeCollaborator(int $id, int $userId): bool;
 }

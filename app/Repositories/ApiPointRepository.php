@@ -3,34 +3,38 @@
 namespace App\Repositories;
 
 use App\Http\Resources\ApiPointResource;
-use App\Http\Resources\DetailResource;
 use App\Models\ApiPoint;
-use App\Models\Detail;
 use App\Repositories\Interfaces\ApiPointRepositoryInterface;
-use App\Repositories\Interfaces\DetailRepositoryInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\TransferStats;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ApiPointRepository implements ApiPointRepositoryInterface
+class ApiPointRepository extends BaseRepository implements ApiPointRepositoryInterface
 {
+    public Model $model;
+
+    public function __construct(ApiPoint $model)
+    {
+        $this->model = $model;
+    }
+
     public function all()
     {
-        return ApiPoint::query()->with('api_history')->get();
+        $relations = ['api_history'];
+
+        return $this->allModels($relations);
     }
 
     public function show(int $id): JsonResource
     {
-        $model = ApiPoint::whereId($id)->with('api_history')->first();
+        $apiPoint = $this->findModel($id, 'api_history');
 
-        return new ApiPointResource($model);
+        return new ApiPointResource($apiPoint);
     }
 
     public function store(array $data): JsonResource
     {
-        $model = ApiPoint::create($data);
+        $newApiPoint = $this->storeModel($data);
 
-        return new ApiPointResource($model);
+        return new ApiPointResource($newApiPoint);
     }
 }
