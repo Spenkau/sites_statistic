@@ -9,5 +9,7 @@ interface ApiPointRepositoryInterface
 {
     public function all();
 
+    public function show(int $id);
+
     public function store(array $data);
 }

@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ApiPointService;
 use Illuminate\Http\Request;
 
 class ApiPointController extends Controller
 {
+    public ApiPointService $apiPointService;
+
+    public function __construct(ApiPointService $apiPointService)
+    {
+        $this->apiPointService = $apiPointService;
+    }
+
     public function index()
     {
+        $apiPoints = $this->apiPointService->all();
 
+        return view('api_point.index', ['apiPoints' => $apiPoints]);
     }
 
-    public function show()
+    public function show(int $id)
     {
+        $apiPoint = $this->apiPointService->show($id);
 
-    }
-
-    public function create()
-    {
-
-    }
-
-    public function store()
-    {
-
+        return view('api_point.show', ['apiPoint' => $apiPoint]);
     }
 
     public function edit()

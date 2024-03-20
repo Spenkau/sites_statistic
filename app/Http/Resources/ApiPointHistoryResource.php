@@ -14,6 +14,13 @@ class ApiPointHistoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this['id'],
+//            'api_point' => $this['api_point'],
+            'status_code' => $this['status_code'],
+            'response_time' => $this['response_time'],
+            'created_at' => $this['created_at'],
+            'updated_at' => $this['updated_at'],
+        ];
     }
 }

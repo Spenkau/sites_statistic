@@ -15,18 +15,8 @@ class ApiPoint extends Model
 
     protected $guarded = false;
 
-    public function api_history():HasMany
+    public function api_history(): HasMany
     {
         return $this->hasMany(ApiPointHistory::class);
-    }
-
-    public function owner(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
     }
 }

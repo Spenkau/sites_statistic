@@ -47,7 +47,7 @@ class ApiPointHistoryService
     public function update($apiPointId, $response)
     {
         $details = [
-            'api_point' => 1,
+            'api_point_id' => $apiPointId,
             'status_code' => $response->status(),
             'response_time' => $response->transferStats->getTransferTime()
         ];
@@ -58,7 +58,7 @@ class ApiPointHistoryService
     public function validateApiPointHistory(array $data): Validator
     {
         return ValidatorFacade::make($data, [
-            'api_point' => 'required|numeric',
+            'api_point_id' => 'required|numeric',
             'status_code' => 'nullable|numeric',
             'response_time' => 'nullable|numeric',
         ]);

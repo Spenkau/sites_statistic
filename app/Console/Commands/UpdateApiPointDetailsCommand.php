@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\UpdateApiPointDetails;
+use App\Services\ApiPointService;
 use Illuminate\Console\Command;
 
 class UpdateApiPointDetailsCommand extends Command
@@ -23,8 +25,8 @@ class UpdateApiPointDetailsCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
-        //
+        UpdateApiPointDetails::dispatch(app(ApiPointService::class));
     }
 }

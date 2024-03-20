@@ -33,6 +33,11 @@ class ApiPointService
         return $this->apiPointRepository->all();
     }
 
+    public function show(int $id)
+    {
+        return $this->apiPointRepository->show($id);
+    }
+
     public function store($data)
     {
         $request = $this->validate($data);
@@ -47,41 +52,50 @@ class ApiPointService
     }
 
 
-    public function update(array $services)
+    public function update(array $service, string $serviceName, array $headers, string $url)
     {
-        $service = $services[$serviceName];
-
         $method = $service['method'] ?? 'GET';
-        $headers = $this->headers;
-        $url = $this->url . $serviceName;
+        $serviceUrl = $url . $serviceName;
         $params = $service['parameters'] ?? null;
 
         $response = null;
         if ($method == 'GET') {
             $response = Http::withHeaders($headers)
-                ->get($url, $params);
+                ->get($serviceUrl, $params);
         } else if ($method == 'POST') {
             $response = Http::withHeaders($headers)
-                ->post($url, $params);
+                ->post($serviceUrl, $params);
         }
 
-        $newApiPoint = $this->store($response);
+        $data = [
+            'name' => $url,
+            'url' => $serviceUrl,
+            'request_data' => json_encode($params),
+            'response_data' => $response->body(),
+            'service' => $serviceName ?? "NONE"
+        ];
 
-        if (!empty($newApiPoint)) {
-            $this->apiPointHistoryService->update($newApiPoint->id, $response);
+        try {
+            $newApiPoint = $this->store($data);
+
+            if (!empty($newApiPoint)) {
+                $this->apiPointHistoryService->update($newApiPoint->id, $response);
+            }
+        } catch (Exception $exception) {
+            throw new Exception($exception);
         }
     }
 
     public function validate(array $data): Validator
     {
         return ValidatorFacade::make($data, [
-            'name' => 'required|string',
-            'url' => 'required|string',
-            'user_id' => 'nullable|numeric',
+            'name' => 'nullable|string',
+            'url' => 'nullable|string',
             'request_data' => 'nullable|string',
-            'response_data' => 'nullable|string'
+            'response_data' => 'nullable|string',
+            'service' => 'nullable|string',
+            'error' => 'nullable|boolean',
+            'code' => 'nullable|numeric'
         ]);
     }
-
-
 }

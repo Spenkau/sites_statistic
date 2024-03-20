@@ -17,13 +17,20 @@ class ApiPointRepository implements ApiPointRepositoryInterface
 {
     public function all()
     {
-        return ApiPointResource::collection(ApiPoint::query()->get());
+        return ApiPoint::query()->with('api_history')->get();
     }
 
-    public function store(array $data)
+    public function show(int $id): JsonResource
     {
-        $newApiPoint = ApiPoint::create($data);
+        $model = ApiPoint::whereId($id)->with('api_history')->first();
 
-        return new ApiPointResource($newApiPoint);
+        return new ApiPointResource($model);
+    }
+
+    public function store(array $data): JsonResource
+    {
+        $model = ApiPoint::create($data);
+
+        return new ApiPointResource($model);
     }
 }

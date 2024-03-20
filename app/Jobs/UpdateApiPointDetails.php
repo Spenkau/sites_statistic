@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\ApiServiceEnum;
+use App\Services\ApiPointService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,28 +17,31 @@ class UpdateApiPointDetails implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private array $services;
+    const API_V1_URL = 'https://preprod-vpdrk.hellishworld.ru/api/v1/';
+    const API_V2_URL = 'https://preprod-vpdrk.hellishworld.ru/api/v2/';
+    const API_V3_URL = 'https://preprod-vpdrk.hellishworld.ru/api/v3/';
+
+    public ApiPointService $apiPointService;
+
+    private mixed $services;
 
     private array $headers;
 
-    private string $url = 'https://preprod-vpdrk.hellishworld.ru/api/v2/';
-
-    private int $user_id;
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(ApiPointService $apiPointService)
     {
-        $this->services = Config::get('api_services');
+        $this->apiPointService = $apiPointService;
 
-        $this->authenticateSession();
+        $this->services = Config::get('api_v2_services');
     }
 
     public function authenticateSession(): void
     {
-        $response = Http::get($this->url . 'login', [
-            'email' => env('API_ACCOUNT_EMAIL'),
-            'password' => env('API_ACCOUNT_PASSWORD')
+        $response = Http::get(static::API_V2_URL. 'login', [
+            'email' => env('API_ACCOUNT_EMAIL', 'danyat@test.ru'),
+            'password' => env('API_ACCOUNT_PASSWORD', 'test')
         ]);
 
         $bearerToken = $response['token'];
@@ -47,7 +51,6 @@ class UpdateApiPointDetails implements ShouldQueue
             'Authorization' => 'Bearer ' . $bearerToken
         ];
 
-        $this->user_id = Auth::id();
     }
 
     /**
@@ -55,41 +58,14 @@ class UpdateApiPointDetails implements ShouldQueue
      */
     public function handle(): void
     {
+        $this->authenticateSession();
 
         $serviceNames = array_column(ApiServiceEnum::cases(), 'value');
-
-        $data = [];
 
         foreach ($serviceNames as $serviceName) {
             $service = $this->services[$serviceName];
 
-            $method = $service['method'] ?? 'GET';
-            $headers = $this->headers;
-            $url = $this->url . $serviceName;
-            $params = $service['parameters'] ?? null;
-
-            $response = null;
-            if ($method == 'GET') {
-                $response = Http::withHeaders($headers)
-                    ->get($url, $params);
-            } else if ($method == 'POST') {
-                $response = Http::withHeaders($headers)
-                    ->post($url, $params);
-            }
-
-            $data[] = [
-                'name' => fake()->colorName,
-                'url' => $url,
-                'user_id' => $this->user_id,
-                'request_data' => json_encode($params),
-                'response_data' => $response->body()
-            ];
-
-            $details = [
-                'api_point' => 1,
-                'status_code' => $response->status(),
-                'response_time' => $response->transferStats->getTransferTime()
-            ];
+            $this->apiPointService->update($service, $serviceName, $this->headers, static::API_V2_URL);
         }
     }
 }
