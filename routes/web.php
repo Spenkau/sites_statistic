@@ -6,6 +6,8 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\UserController;
+use App\Http\Resources\ApiPointResource;
+use App\Models\ApiPoint;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::prefix('api-point')->group(function () {
+    Route::get('/', [ApiPointController::class, 'index'])->name('api-point');
+    Route::get('/{id}', [ApiPointController::class, 'show']);
+});
+
+Route::controller(ApiPointController::class)
+    ->name('api-point')
+    ->prefix('/api-point')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show')->name('.show');
+    });
+
 Route::get('/dashboard', [SiteController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
@@ -42,7 +57,7 @@ Route::middleware('auth')->group(function () {
             });
         });
 
-    Route::resource('api-point', ApiPointController::class);
+
 
     Route::get('user', [UserController::class, 'index'])->name('user');
 
@@ -63,7 +78,12 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
+Route::get('test2', function () {
+    $model = ApiPoint::whereId(1)->with('api_history')->first();
 
+    return new ApiPointResource($model);
+
+});
 Route::get('test', function () {
     $url = 'https://preprod-vpdrk.hellishworld.ru/api/v2/';
 
@@ -75,39 +95,38 @@ Route::get('test', function () {
     ];
 
     $serviceNames = array_column(ApiServiceEnum::cases(), 'value');
-    $services = Config::get('api_services');
+    $services = Config::get('api_v2_services');
 
     $responses = [];
 
     foreach ($serviceNames as $serviceName) {
-        try {
-            $service = $services[$serviceName];
+        $service = $services[$serviceName];
 
-            $method = $service['method'] ?? 'GET';
-            $newUrl = $url . $serviceName;
-            $params = $service['parameters'] ?? [];
+        $method = $service['method'] ?? 'GET';
+        $serviceUrl = $url . $serviceName;
+        $params = $service['parameters'] ?? null;
 
-            $responseTemplate = "Http::withHeaders(" . json_encode($headers) . ")->send('" . $method . "','" . $newUrl . "'," . json_encode($params) . ");";
-
-            if ($method == 'GET') {
-                $response = Http::withHeaders($headers)
-                    ->get($newUrl, $params);
-            } else if ($method == 'POST') {
-                $response = Http::withHeaders($headers)
-                    ->post($newUrl, $params);
-            }
-
-            $responses[] = [
-                'res' => $response->successful() ? json_decode($response->body()) : false,
-                'error' => $response->failed() ? $response->body() : false,
-                'template' => $responseTemplate,
-                'params' => $params
-            ];
-        } catch (Exception $exception) {
-            continue;
+        $response = null;
+        if ($method == 'GET') {
+            $response = Http::withHeaders($headers)
+                ->get($serviceUrl, $params);
+        } else if ($method == 'POST') {
+            $response = Http::withHeaders($headers)
+                ->post($serviceUrl, $params);
         }
+
+        $data = [
+            'name' => $url,
+            'url' => $serviceUrl,
+            'user_id' => 1,
+            'request_data' => $params,
+            'response_data' => json_decode($response->body()),
+            'service' => $serviceName ?? "NONE"
+        ];
+
+        $responses[] = $data;
     }
 
-//    return Config::get('auth_api_services');
-    return $responses;
+    return ($responses);
+
 });
