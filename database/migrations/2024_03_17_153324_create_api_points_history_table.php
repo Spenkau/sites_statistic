@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('api_points_history', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('api_point');
+            $table->unsignedBigInteger('api_point_id');
             $table->unsignedSmallInteger('status_code');
-            $table->unsignedInteger('response_time');
+            $table->unsignedFloat('response_time');
             $table->timestamps();
 
-            $table->foreign('api_point')->references('id')->on('api_points')->onDelete('cascade');
+            $table->foreign('api_point_id')->references('id')->on('api_points')->onDelete('cascade');
         });
     }
 

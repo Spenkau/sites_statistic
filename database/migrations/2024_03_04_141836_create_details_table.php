@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('page_id');
             $table->unsignedSmallInteger('status_code');
-            $table->unsignedInteger('response_time');
+            $table->unsignedFloat('response_time');
             $table->timestamps();
 
             $table->foreign('page_id')->references('id')->on('pages');

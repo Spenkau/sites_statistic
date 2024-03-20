@@ -15,16 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('url');
-            $table->unsignedBigInteger('user_id');
             $table->text('request_data');
-            $table->text('response_data');
+            $table->mediumText('response_data');
             $table->string('service');
 
             $table->timestamps();
-
-            $table->unique(['user_id', 'url']);
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
