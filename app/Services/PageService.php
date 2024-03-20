@@ -19,9 +19,9 @@ class PageService
         $this->pageRepository = $pageRepository;
     }
 
-    public function getSitePages(int $id): AnonymousResourceCollection
+    public function all(int $id): AnonymousResourceCollection
     {
-        return $this->pageRepository->getSitePages($id);
+        return $this->pageRepository->all($id);
     }
 
     public function findOne(int $pageId): PageResource

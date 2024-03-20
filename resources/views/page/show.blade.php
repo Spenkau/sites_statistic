@@ -19,7 +19,7 @@
     <ul class="list-unstyled">
         <li>URL: <a href="{{ $page->url }}">{{ $page->url }}</a></li>
         <li>Порог: {{ $page->threshold_speed }} миллисекунд</li>
-        <li><b>Комментарий: </b>{{ $page->comment }}</li>
+        <li>Комментарий: {{ $page->comment }}</li>
     </ul>
 
     <ul class="list-unstyled">
