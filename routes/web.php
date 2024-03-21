@@ -27,39 +27,36 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('api-point')->group(function () {
-    Route::get('/', [ApiPointController::class, 'index'])->name('api-point');
-    Route::get('/{id}', [ApiPointController::class, 'show']);
-});
 
-Route::controller(ApiPointController::class)
-    ->name('api-point')
-    ->prefix('/api-point')
-    ->group(function () {
-        Route::get('/', 'index');
-        Route::get('/{id}', 'show')->name('.show');
-    });
 
 Route::get('/dashboard', [SiteController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::controller(ApiPointController::class)
+        ->name('api-point')
+        ->prefix('/api-point')
+        ->group(function () {
+            Route::get('/', 'index');
+            Route::get('/{id}', 'show')->name('.show');
+        });
+
     Route::middleware('site.access')
-        ->controller(SiteController::class)->
-        group(function () {
-            Route::get('site/party', [SiteController::class, 'findByCollaborator'])->name('site/party');
+        ->controller(SiteController::class)
+        ->group(function () {
             Route::resource('site', SiteController::class);
             Route::resource('site.page', PageController::class)->middleware('site.id');
 
+            Route::get('site/party', [SiteController::class, 'findByCollaborator'])->name('site.party');
             Route::name('site.')->prefix('site/{site}')->group(function () {
                 Route::get('/add-user', 'addCollaborator')->name('add-user');
+                Route::post('/store-user', [SiteController::class, 'storeCollaborators'])->name('site.store-user');
             });
         });
 
 
-
-    Route::get('user', [UserController::class, 'index'])->name('user');
+//    Route::get('user', [UserController::class, 'index'])->name('user');
 
     Route::controller(ProfileController::class)
         ->name('profile.')
@@ -102,31 +99,40 @@ Route::get('test', function () {
     foreach ($serviceNames as $serviceName) {
         $service = $services[$serviceName];
 
-        $method = $service['method'] ?? 'GET';
-        $serviceUrl = $url . $serviceName;
-        $params = $service['parameters'] ?? null;
-
-        $response = null;
-        if ($method == 'GET') {
-            $response = Http::withHeaders($headers)
-                ->get($serviceUrl, $params);
-        } else if ($method == 'POST') {
-            $response = Http::withHeaders($headers)
-                ->post($serviceUrl, $params);
+        if (empty($service['method'])) {
+            foreach ($service as $subService) {
+                $responses[] = makeJob($url, $serviceName, $headers, $subService);
+            }
+        } else {
+            $responses[] = makeJob($url, $serviceName, $headers, $service);
         }
-
-        $data = [
-            'name' => $url,
-            'url' => $serviceUrl,
-            'user_id' => 1,
-            'request_data' => $params,
-            'response_data' => json_decode($response->body()),
-            'service' => $serviceName ?? "NONE"
-        ];
-
-        $responses[] = $data;
     }
 
-    return ($responses);
+    return $responses;
 
 });
+
+function makeJob($url, $serviceName, $headers, $service)
+{
+    $method = $service['method'] ?? 'GET';
+    $serviceUrl = $url . $serviceName;
+    $params = $service['parameters'] ?? null;
+
+    $response = null;
+    if ($method == 'GET') {
+        $response = Http::withHeaders($headers)
+            ->get($serviceUrl, $params);
+    } else if ($method == 'POST') {
+        $response = Http::withHeaders($headers)
+            ->post($serviceUrl, $params);
+    }
+
+    return [
+        'method' => $method,
+        'name' => $url,
+        'url' => $serviceUrl,
+        'request_data' => $params,
+        'response_data' => json_decode($response->body()),
+        'service' => $serviceName
+    ];
+}
