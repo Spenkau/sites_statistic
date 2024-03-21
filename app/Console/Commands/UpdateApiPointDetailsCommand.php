@@ -28,5 +28,7 @@ class UpdateApiPointDetailsCommand extends Command
     public function handle(): void
     {
         UpdateApiPointDetails::dispatch(app(ApiPointService::class));
+
+        $this->info('API points details stored successfully');
     }
 }

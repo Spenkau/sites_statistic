@@ -65,7 +65,14 @@ class UpdateApiPointDetails implements ShouldQueue
         foreach ($serviceNames as $serviceName) {
             $service = $this->services[$serviceName];
 
-            $this->apiPointService->update($service, $serviceName, $this->headers, static::API_V2_URL);
+            if (empty($service['method'])) {
+                foreach ($service as $subService) {
+                    $this->apiPointService->update($subService, $serviceName, $this->headers, static::API_V2_URL);
+                }
+            } else {
+                $this->apiPointService->update($service, $serviceName, $this->headers, static::API_V2_URL);
+            }
+
         }
     }
 }
