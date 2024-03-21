@@ -38,13 +38,11 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
     /**
      * Returns user sites with pages
      *
+     * @param array $criteria
      * @return JsonResource
-     * @throws Exception
      */
-    public function all(): JsonResource
+    public function all(array $criteria = []): JsonResource
     {
-        $criteria = ['user_id', $this->getUserId()];
-
         $sites = $this->allModels('pages', $criteria);
 
         return SiteResource::collection($sites);
@@ -72,7 +70,7 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
      * @return SiteResource
      * @throws Exception
      */
-    public function store(array $data): SiteResource
+    public function store(array $data): JsonResource
     {
         $newSite = $this->storeModel($data);
 
@@ -82,15 +80,13 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
     /**
      * Updates selected site
      *
-     * @param int $siteId
+     * @param int $id
      * @param array $data
-     * @return SiteResource
+     * @return JsonResource
      */
-    public function update(int $id, array $data): SiteResource
+    public function update(int $id, array $data): JsonResource
     {
-        $site = $this->findModel($id, $data);
-
-        $site->update($data);
+        $site = $this->updateModel($id, $data);
 
         return new SiteResource($site);
     }
@@ -98,7 +94,7 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
     /**
      * Removes selected site
      *
-     * @param int $siteId
+     * @param int $id
      * @return bool|null
      */
     public function destroy(int $id): ?bool
@@ -107,9 +103,9 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
         return $this->destroyModel($id);
     }
 
-    public function findByCollaborator(): JsonResource
+    public function findByCollaborator(array $criteria = []): JsonResource
     {
-        $user = User::find($this->getUserId());
+        $user = User::query()->where($criteria)->get();
 
         $sites = $user->public_sites(['pages'])->paginate(10);
 

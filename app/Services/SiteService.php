@@ -20,7 +20,9 @@ class SiteService
 
     public function all(): JsonResource
     {
-        return $this->siteRepository->all();
+        $criteria = ['user_id' => Auth::id()];
+
+        return $this->siteRepository->all($criteria);
     }
 
     public function findById(int $id): SiteResource
@@ -45,9 +47,11 @@ class SiteService
         return $this->siteRepository->destroy($siteId);
     }
 
-    public function findByCollaborator()
+    public function findByCollaborator(): JsonResource
     {
-        return $this->siteRepository->findByCollaborator();
+        $criteria = ['user_id' => Auth::id()];
+
+        return $this->siteRepository->findByCollaborator($criteria);
     }
 
     public function storeCollaborators(int $siteId, array $userIds): array

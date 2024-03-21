@@ -10,13 +10,13 @@ interface SiteRepositoryInterface
 {
     public function getUserId(): int;
 
-    public function all(): JsonResource;
+    public function all(array $criteria = []): JsonResource;
 
     public function findById(int $id): JsonResource;
 
-    public function store(array $data): SiteResource;
+    public function store(array $data): JsonResource;
 
-    public function update(int $id, array $data): SiteResource;
+    public function update(int $id, array $data): JsonResource;
 
     public function destroy(int $id): ?bool;
 
