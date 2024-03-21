@@ -5,7 +5,7 @@
         </h2>
         <div>
             <a
-                href="{{ route('site/party') }}"
+                href="/site/party"
                 class="text-xl text-gray-800 dark:text-gray-200 border-gray-100 mx-3">
                 Совместные сайты
             </a>
@@ -17,7 +17,7 @@
         @foreach($sites as $site)
             <li class="position-relative d-flex border-dark border-1 rounded-3 flex-column gap-3 mb-4 p-4">
                 <div class="d-flex justify-content-between">
-                    <a class="text-dark" href="/site/{{ $site->id }}">{{ $site->id }} | {{ $site->name }}</a>
+                    <a class="text-dark" href="{{ route('site.show', $site->id) }}">{{ $site->id }} | {{ $site->name }}</a>
                     <span class="p-4">Дата создания: {{ $site->created_at }}</span>
                 </div>
                 <p>
@@ -53,7 +53,7 @@
                 <div class="position-absolute" style="bottom: 20px; right: 20px;">
                     <a
                         class="link-dark"
-                        href="/site/{{ $site->id }}/edit"
+                        href="{{ route('site.edit', $site->id) }}"
                         style="margin-right: 10px;">
                         Изменить
                     </a>

@@ -4,7 +4,6 @@
             {{ __('Совместные сайты') }}
         </h2>
     </x-slot>
-
     @if ($sites && count($sites) == 0)
         <h1 class="text-center">Вы не являетесь участником ни одного сайта!</h1>
     @else
@@ -12,7 +11,7 @@
             @foreach($sites as $site)
                 <li class="position-relative d-flex border-dark border-1 rounded-3 flex-column gap-3 mb-4 p-4">
                     <div class="d-flex justify-content-between">
-                        <a class="text-dark" href="/site/{{ $site->id }}">{{ $site->id }} | {{ $site->name }}</a>
+                        <a class="text-dark" href="{{ route('site.show', $site->id) }}">{{ $site->id }} | {{ $site->name }}</a>
                         <span class="p-4">Дата создания: {{ $site->created_at }}</span>
                     </div>
                     <p>
@@ -23,7 +22,6 @@
                         <span class="fw-bold">Комментарий:</span>
                         {{ strlen($site->comment) > 40 ? mb_substr($site->comment, 0, 40) . '...' : $site->comment}}
                     </p>
-
 
                     @if(count($site->pages) > 0)
                         <ul class="list-group-flush">
@@ -44,12 +42,11 @@
                     @endif
 
                     <div class="position-absolute" style="bottom: 20px; right: 20px;">
-                        <a class="link-dark" href="/site/{{ $site->id }}/edit" style="margin-right: 10px;">Изменить</a>
+                        <a class="link-dark" href="{{ route('site.page.edit', [$site->id, $page->id]) }}" style="margin-right: 10px;">Изменить</a>
                         <input type="hidden" value="{{ $site->id }}" id="site_id">
                         <button
                             class="delete-btn link-dark"
-                            data-id="{{ $site->id }}"
-                        >
+                            data-id="{{ $site->id }}">
                             Удалить
                         </button>
                     </div>
