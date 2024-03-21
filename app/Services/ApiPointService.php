@@ -51,12 +51,28 @@ class ApiPointService
         $params = $service['parameters'] ?? null;
 
         $response = null;
-        if ($method == 'GET') {
-            $response = Http::withHeaders($headers)
-                ->get($serviceUrl, $params);
-        } else if ($method == 'POST') {
-            $response = Http::withHeaders($headers)
-                ->post($serviceUrl, $params);
+        switch ($method) {
+            case 'GET':
+                $response = Http::withHeaders($headers)
+                    ->get($serviceUrl, $params);
+                break;
+            case 'POST':
+                $response = Http::withHeaders($headers)
+                    ->post($serviceUrl, $params);
+                break;
+            case 'PUT':
+                $response = Http::withHeaders($headers)
+                    ->put($serviceUrl, $params);
+                break;
+            case 'PATCH':
+                $response = Http::withHeaders($headers)
+                    ->patch($serviceUrl, $params);
+                break;
+            case 'DELETE':
+                $response = Http::withHeaders($headers)
+                    ->delete($serviceUrl, $params);
+                break;
+
         }
 
         $data = [
