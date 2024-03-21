@@ -28,7 +28,6 @@ class PageTest extends TestCase
     {
         parent::setUp();
 
-
         $this->user = User::firstOrCreate([
             'name' => 'test',
             'email' => 'test@example.com',
@@ -118,8 +117,6 @@ class PageTest extends TestCase
                     return $page->user_id === $site->id;
                 })->contains(false);
         });
-
-        $response->assertOk();
     }
 
     /**
@@ -199,12 +196,17 @@ class PageTest extends TestCase
         $this->actingAs($user);
 
         $url = fake()->url;
-        $response = $this->followingRedirects()->withoutMiddleware()->post('/site/' . $site->id . '/page', [
-            'url' => $url,
-            'threshold_speed' => 600,
-            'site_id' => $site->id,
-            'comment' => 'Test comment for page'
-        ]);
+        $response = $this->followingRedirects()
+            ->withoutMiddleware()
+            ->post(
+                '/site/' . $site->id . '/page',
+                [
+                    'url' => $url,
+                    'threshold_speed' => 600,
+                    'site_id' => $site->id,
+                    'comment' => 'Test comment for page'
+                ]
+            );
 
         $response->assertOk();
 
@@ -213,12 +215,17 @@ class PageTest extends TestCase
         $newPage = Page::where('url', $url)->first();
 
         $newUrl = fake()->url;
-        $response = $this->followingRedirects()->withoutMiddleware()->put('/site/' . $site->id . '/page/' . $newPage->id, [
-            'url' => $newUrl,
-            'threshold_speed' => 800,
-            'site_id' => $site->id,
-            'comment' => 'New test comment'
-        ]);
+        $response = $this->followingRedirects()
+            ->withoutMiddleware()
+            ->put(
+                '/site/' . $site->id . '/page/' . $newPage->id,
+                [
+                    'url' => $newUrl,
+                    'threshold_speed' => 800,
+                    'site_id' => $site->id,
+                    'comment' => 'New test comment'
+                ]
+            );
 
         $response->assertOk();
 

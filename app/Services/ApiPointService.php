@@ -2,16 +2,8 @@
 
 namespace App\Services;
 
-use App\Enums\NotificationEnum;
-use App\Models\ApiPoint;
-use App\Models\Page;
-use App\Repositories\ApiPointHistoryRepository;
 use App\Repositories\ApiPointRepository;
-use App\Repositories\DetailRepository;
-use App\Repositories\UserRepository;
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\TransferStats;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -28,17 +20,17 @@ class ApiPointService
         $this->apiPointHistoryService = $apiPointHistoryService;
     }
 
-    public function all()
+    public function all(): JsonResource
     {
         return $this->apiPointRepository->all();
     }
 
-    public function show(int $id)
+    public function show(int $id): JsonResource
     {
         return $this->apiPointRepository->show($id);
     }
 
-    public function store($data)
+    public function store($data): ?JsonResource
     {
         $request = $this->validate($data);
 
@@ -52,7 +44,7 @@ class ApiPointService
     }
 
 
-    public function update(array $service, string $serviceName, array $headers, string $url)
+    public function update(array $service, string $serviceName, array $headers, string $url): void
     {
         $method = $service['method'] ?? 'GET';
         $serviceUrl = $url . $serviceName;
@@ -72,7 +64,7 @@ class ApiPointService
             'url' => $serviceUrl,
             'request_data' => json_encode($params),
             'response_data' => $response->body(),
-            'service' => $serviceName ?? "NONE"
+            'service' => $serviceName
         ];
 
         try {

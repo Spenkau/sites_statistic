@@ -21,7 +21,7 @@ class ApiPointRepository extends BaseRepository implements ApiPointRepositoryInt
     {
         $relations = ['api_history'];
 
-        return $this->allModels($relations);
+        return ApiPointResource::collection($this->allModels($relations));
     }
 
     public function show(int $id): JsonResource
