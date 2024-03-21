@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\ApiPointService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class ApiPointTest extends TestCase
@@ -18,7 +19,22 @@ class ApiPointTest extends TestCase
         parent::setUp();
 
         $this->apiPointService = app(ApiPointService::class);
+    }
 
+    public function test()
+    {
+        $services = Config::get('api_v2_services');
+        $serviceKeys = array_keys($services);
+
+        $apiPoints = ApiPoint::whereIn('service', $serviceKeys)->chunk(100)->get()->groupBy('service')->toArray();
+
+        $res = [];
+        foreach ($serviceKeys as $key) {
+            $res[] = [$key => $apiPoints[$key] ?? []];
+        }
+
+
+        dump($res);
     }
 
     public function test_api_points_can_retrieved()
