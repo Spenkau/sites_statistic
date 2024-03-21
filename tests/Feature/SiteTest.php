@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Site;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -60,6 +59,8 @@ class SiteTest extends TestCase
             'password' => Hash::make('1234'),
             'remember_token' => Str::random(10),
         ]);
+
+        Site::factory(10)->create();
     }
 
     /**
@@ -232,12 +233,15 @@ class SiteTest extends TestCase
         $collaborators = User::where('id', '!=', $owner->id)->take(2)->pluck('id');
 
         $site = $owner->personal_sites()->first();
-
-        $response = $this->actingAs($owner)->withoutMiddleware()->post('/site/' . $site->id . '/store-user', [
-            'site_id' => $site->id,
-            'user_ids' => $collaborators->toArray()
-        ]);
-
+        $response = $this->withoutMiddleware()
+            ->actingAs($owner)
+            ->post(
+                '/site/' . $site->id . '/store-user',
+                [
+                    'site_id' => $site->id,
+                    'user_ids' => $collaborators->toArray()
+                ]
+            );
         $response->assertOk();
     }
 
