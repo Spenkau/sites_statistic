@@ -25,7 +25,7 @@ class ProfileTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this
+        $response = $this->withoutMiddleware()
             ->actingAs($user)
             ->patch('/profile', [
                 'name' => 'Test User',
@@ -47,7 +47,7 @@ class ProfileTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this
+        $response = $this->withoutMiddleware()
             ->actingAs($user)
             ->patch('/profile', [
                 'name' => 'Test User',
@@ -65,7 +65,7 @@ class ProfileTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this
+        $response = $this->withoutMiddleware()
             ->actingAs($user)
             ->delete('/profile', [
                 'password' => 'password',
@@ -83,7 +83,7 @@ class ProfileTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this
+        $response = $this->withoutMiddleware()
             ->actingAs($user)
             ->from('/profile')
             ->delete('/profile', [

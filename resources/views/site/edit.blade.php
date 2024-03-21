@@ -4,26 +4,55 @@
             {{ __('Изменить сайт') }}
         </h2>
     </x-slot>
-
-    <form method="POST" action="/site/{{ $site->id }}" style="display:flex; justify-content: center; align-items: center; flex-direction: column; gap: 20px;">
+    <form method="POST" action="{{ route('site.update', $site->id) }}" class="m-auto w-50">
         @csrf
         @method('PUT')
 
+        <!-- Name -->
         <div>
-            <label for="name">Название</label>
-            <input type="text" placeholder="Название сайта" name="name" id="name" value="{{ old('name', $site->name) }}">
+            <x-input-label for="name" :value="__('Название')"/>
+            <x-text-input
+                id="name"
+                class="block mt-1 w-full"
+                type="text"
+                name="name"
+                :value="old('name', $site->name)"
+                required
+                autofocus/>
+            <x-input-error :messages="$errors->get('name')" class="mt-2"/>
         </div>
 
-        <div>
-            <label for="url">URL</label>
-            <input type="text" placeholder="URL" name="url" id="url" value="{{ old('url', $site->url) }}">
+        <!-- URL -->
+        <div class="mt-4">
+            <x-input-label for="url" :value="__('URL')"/>
+            <x-text-input id="url" class="block mt-1 w-full"
+                          type="text"
+                          name="url"
+                          :value="old('url', $site->url)"
+                          required/>
+
+            <x-input-error :messages="$errors->get('url')" class="mt-2"/>
         </div>
 
-        <div>
-            <label for="comment">Комментарий</label>
-            <textarea name="comment" id="comment" placeholder="Комментарий">{{ $site->comment }}</textarea>
+        <div class="mt-4">
+            <x-input-label for="comment" :value="__('Комментарий')"/>
+            <x-text-input
+                id="comment"
+                class="block mt-1 w-full"
+                type="text"
+                name="comment"
+                :value="old('comment', $site->comment)"
+                required
+                autofocus/>
+            <x-input-error :messages="$errors->get('comment')" class="mt-2"/>
         </div>
 
-        <button type="submit">Изменить</button>
+        <input type="hidden" name="site_id" value="{{ $site->id }}">
+
+        <div class="flex items-center justify-end mt-4">
+            <button class="btn btn-dark ms-3">
+                {{ __('Изменить') }}
+            </button>
+        </div>
     </form>
 </x-app-layout>

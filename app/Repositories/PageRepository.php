@@ -8,45 +8,50 @@ use App\Models\Page;
 use App\Models\Site;
 use App\Repositories\Interfaces\PageRepositoryInterface;
 use Error;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class PageRepository implements PageRepositoryInterface
+class PageRepository extends BaseRepository implements PageRepositoryInterface
 {
-    public function getSitePages(int $id): AnonymousResourceCollection
-    {
-        $site = Site::find($id);
+    public Model $model;
 
-        $pages = ($site->pages)->load('details');
+    public function __construct(Page $model)
+    {
+        $this->model = $model;
+    }
+
+    public function all(int $id): AnonymousResourceCollection
+    {
+        $criteria = ['site_id', $id];
+
+        $pages = $this->allModels('details', $criteria);
 
         return PageResource::collection($pages);
     }
 
-    public function findOne(int $pageId): PageResource
+    public function findOne(int $id): PageResource
     {
-        $page = Page::whereId($pageId)->with('details')->first();
+        $page = $this->findModel($id, 'details');
 
         return new PageResource($page);
-
     }
 
     public function store(array $data): PageResource
     {
-        $newPage = Page::create($data);
+        $newPage = $this->storeModel($data);
 
         return new PageResource($newPage);
     }
 
     public function update(int $pageId, array $data): PageResource
     {
-        $page = Page::find($pageId);
+        $updatedPage = $this->updateModel($pageId, $data);
 
-        return new PageResource($page->update($data));
+        return new PageResource($updatedPage);
     }
 
-    public function destroy(int $pageId)
+    public function destroy(int $pageId): bool
     {
-        $page = Page::find($pageId);
-
-        return $page->delete();
+        return $this->destroyModel($pageId);
     }
 }

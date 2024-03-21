@@ -7,6 +7,7 @@ use App\Models\Site;
 use App\Repositories\SiteRepository;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class SiteService
 {
@@ -19,7 +20,9 @@ class SiteService
 
     public function all(): JsonResource
     {
-        return $this->siteRepository->all();
+        $criteria = ['user_id' => Auth::id()];
+
+        return $this->siteRepository->all($criteria);
     }
 
     public function findById(int $id): SiteResource
@@ -29,6 +32,8 @@ class SiteService
 
     public function store(array $data): SiteResource
     {
+        $data['user_id'] = Auth::id();
+
         return $this->siteRepository->store($data);
     }
 
@@ -42,9 +47,11 @@ class SiteService
         return $this->siteRepository->destroy($siteId);
     }
 
-    public function findByCollaborator()
+    public function findByCollaborator(): JsonResource
     {
-        return $this->siteRepository->findByCollaborator();
+        $criteria = ['user_id' => Auth::id()];
+
+        return $this->siteRepository->findByCollaborator($criteria);
     }
 
     public function storeCollaborators(int $siteId, array $userIds): array

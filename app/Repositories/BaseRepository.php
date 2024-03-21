@@ -4,16 +4,15 @@ namespace App\Repositories;
 
 use App\Repositories\Interfaces\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
 
     public Model $model;
 
-    public function allModels(array $criteria = [])
+    public function allModels(array|string $relations = [], array $criteria = [], array $columns = ['*'])
     {
-        $builder = $this->model->query();
+        $builder = $this->model->query()->with($relations)->select($columns);
 
         foreach ($criteria as $key => $value) {
             $builder->where($key, $value);
@@ -22,12 +21,12 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $builder->paginate(10);
     }
 
-    public function findModel(int $modelId, array $columns = ['*'], array $relations = [])
+    public function findModel(int $modelId, array|string $relations = [], array $columns = ['*']): Model
     {
         return $this->model->select($columns)->with($relations)->findOrFail($modelId);
     }
 
-    public function storeModel(array $data): ?Model
+    public function storeModel(array $data): Model
     {
         return $this->model->create($data);
     }
@@ -36,7 +35,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         $model = $this->findModel($modelId);
 
-        return $model->update($model, $data);
+        return $model->update($data);
     }
 
     public function destroyModel(int $modelId): bool

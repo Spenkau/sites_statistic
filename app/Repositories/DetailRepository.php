@@ -5,18 +5,32 @@ namespace App\Repositories;
 use App\Http\Resources\DetailResource;
 use App\Models\Detail;
 use App\Repositories\Interfaces\DetailRepositoryInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\TransferStats;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailRepository implements DetailRepositoryInterface
+class DetailRepository extends BaseRepository implements DetailRepositoryInterface
 {
-    public function getAllDetails(): JsonResource
+    public Model $model;
+
+    public function __construct(Detail $model)
     {
-        return DetailResource::collection(Detail::query()->get());
+        $this->model = $model;
     }
 
-    public function storeJobResult(array $data): JsonResource
+    public function all(): JsonResource
     {
-        return new DetailResource(Detail::create($data));
+        $details = $this->allModels();
+
+        return DetailResource::collection($details);
+    }
+
+    public function store(array $data): JsonResource
+    {
+        $newDetail = $this->storeModel($data);
+
+        return new DetailResource($newDetail);
     }
 }

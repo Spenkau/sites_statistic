@@ -10,19 +10,19 @@ interface SiteRepositoryInterface
 {
     public function getUserId(): int;
 
-    public function all(): JsonResource;
+    public function all(array $criteria = []): JsonResource;
 
     public function findById(int $id): JsonResource;
 
-    public function store(array $data): SiteResource;
+    public function store(array $data): JsonResource;
 
-    public function update(int $siteId, array $data): SiteResource;
+    public function update(int $id, array $data): JsonResource;
 
-    public function destroy(int $siteId): ?bool;
+    public function destroy(int $id): ?bool;
 
     public function findByCollaborator();
 
-    public function storeCollaborators(int $siteId, array $userIds = []): array;
+    public function storeCollaborators(int $id, array $userIds = []): array;
 
-    public function removeCollaborator(int $siteId, int $userId): bool;
+    public function removeCollaborator(int $id, int $userId): bool;
 }

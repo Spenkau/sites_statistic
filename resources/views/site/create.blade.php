@@ -5,25 +5,41 @@
         </h2>
     </x-slot>
 
-    <form method="POST" action="{{ route('site.store') }}" class="d-flex justify-content-center align-items-center flex-column gap-5">
+    <form method="POST" action="{{ route('site.store') }}" class="m-auto w-50">
         @csrf
         @method('POST')
 
+        <!-- Name -->
         <div>
-            <label for="name">Название: </label>
-            <input type="text" placeholder="Название сайта" name="name" id="name" value="{{ old('name') }}">
+            <x-input-label for="name" :value="__('Название сайта')"/>
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
+                          autofocus/>
+            <x-input-error :messages="$errors->get('name')" class="mt-2"/>
         </div>
 
-        <div>
-            <label for="url">URL: </label>
-            <input type="text" placeholder="URL" name="url" id="url" value="{{ old('url') }}">
+        <!-- URL -->
+        <div class="mt-4">
+            <x-input-label for="url" :value="__('URL')"/>
+
+            <x-text-input id="url" class="block mt-1 w-full"
+                          type="text"
+                          name="url"
+                          required/>
+
+            <x-input-error :messages="$errors->get('url')" class="mt-2"/>
         </div>
 
-        <div>
-            <label for="comment">Комментарий: </label>
-            <textarea name="comment" id="comment" placeholder="Комментарий"></textarea>
+        <div class="mt-4">
+            <x-input-label for="comment" :value="__('Комментарий')"/>
+            <x-text-input id="comment" class="block mt-1 w-full" type="text" name="comment" :value="old('comment')"
+                          required autofocus/>
+            <x-input-error :messages="$errors->get('comment')" class="mt-2"/>
         </div>
 
-        <button type="submit">Создать</button>
+        <div class="flex items-center justify-end mt-4">
+            <button class="btn btn-dark ms-3">
+                {{ __('Создать') }}
+            </button>
+        </div>
     </form>
 </x-app-layout>

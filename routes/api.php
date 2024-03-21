@@ -16,23 +16,3 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::group(['middleware' => ['web']], function () {
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
-
-//    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
-
-    Route::middleware('auth:api')->group(function () {
-
-        Route::group(['namespace' => 'Site', 'prefix' => 'sites'], function () {
-            Route::post('', [SiteController::class, 'index']);
-            Route::post('{site}', [SiteController::class, 'show']);
-        });
-    });
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('user', [UserController::class, 'index']);
-    Route::post('add-user', [SiteController::class, 'addCollaborator']);
-    Route::delete('remove-user', [SiteController::class, 'destroyCollaborator']);
-});
