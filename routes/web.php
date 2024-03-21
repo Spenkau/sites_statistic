@@ -76,10 +76,7 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::get('test2', function () {
-    $model = ApiPoint::whereId(1)->with('api_history')->first();
-
-    return new ApiPointResource($model);
-
+    return json_encode(['code' => null]);
 });
 Route::get('test', function () {
     $url = 'https://preprod-vpdrk.hellishworld.ru/api/v2/';
