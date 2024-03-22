@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ApiPreprodServiceEnum;
 use App\Enums\ApiServiceEnum;
 use App\Http\Controllers\ApiPointController;
 use App\Http\Controllers\PageController;
@@ -26,7 +27,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 
 Route::get('/dashboard', [SiteController::class, 'index'])
@@ -76,20 +76,67 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::get('test2', function () {
-    return json_encode(['code' => null]);
+    $url = 'https://processing.hellishworld.ru/api/showcase/balance/general';
+
+    $headers = [
+        'Accept' => 'application/json',
+        'email' => 'admin@admin.com',
+        'password' => 'admin'
+    ];
+
+    $arr  = [
+        'path_params' => ['id' => 1],
+        'form_params' => [
+            'title' => 'MOSCOW123'
+        ],
+    ];
+
+    $response = Http::withHeaders($headers)->withUrlParameters($arr['path_params'] ?? [])->send('GET', $url);
+    return $response;
 });
 Route::get('test', function () {
+    function makeJob(array $service, string $serviceName, string $url, array $headers)
+    {
+        $method = $service['method'] ?? 'GET';
+        $serviceUrl = $url . $serviceName;
+        $params = $service['parameters'] ?? null;
+
+        $options = [];
+
+        if ($method == "GET") {
+            $options['query'] = $params;
+        } else if ($method == "DELETE") {
+            $serviceUrl .= '/' . $params['id'];
+        } else {
+            $options['form_params'] = $params;
+        }
+
+
+        $response = Http::withHeaders($headers)->send($method, $serviceUrl, $options);
+
+        $res = [
+            'name' => $url,
+            'url' => $serviceUrl,
+            'request_data' => ($params),
+            'response_data' => json_decode($response->body()),
+            'service' => $serviceName
+        ];
+return $res;
+//        ApiPoint::create($res);
+    }
+
+
     $url = 'https://preprod-vpdrk.hellishworld.ru/api/v2/';
 
-    $token = Http::get($url . 'login?email=danyat@test.ru&password=test')['token'];
+    $token = Http::get($url . 'login?email=danyat@test.ru&password=test')['token'] ?? null;
 
     $headers = [
         'Accept' => 'application/json',
         'Authorization' => 'Bearer ' . $token
     ];
 
-    $serviceNames = array_column(ApiServiceEnum::cases(), 'value');
-    $services = Config::get('api_v2_services');
+    $serviceNames = array_column(ApiPreprodServiceEnum::cases(), 'value');
+    $services = Config::get('api_preprod_v2_services');
 
     $responses = [];
 
@@ -98,10 +145,10 @@ Route::get('test', function () {
 
         if (empty($service['method'])) {
             foreach ($service as $subService) {
-                $responses[] = makeJob($url, $serviceName, $headers, $subService);
+                $responses[] = makeJob($subService, $serviceName, $url, $headers);
             }
         } else {
-            $responses[] = makeJob($url, $serviceName, $headers, $service);
+            $responses[] = makeJob($service, $serviceName, $url, $headers);
         }
     }
 
@@ -109,27 +156,3 @@ Route::get('test', function () {
 
 });
 
-function makeJob($url, $serviceName, $headers, $service)
-{
-    $method = $service['method'] ?? 'GET';
-    $serviceUrl = $url . $serviceName;
-    $params = $service['parameters'] ?? null;
-
-    $response = null;
-    if ($method == 'GET') {
-        $response = Http::withHeaders($headers)
-            ->get($serviceUrl, $params);
-    } else if ($method == 'POST') {
-        $response = Http::withHeaders($headers)
-            ->post($serviceUrl, $params);
-    }
-
-    return [
-        'method' => $method,
-        'name' => $url,
-        'url' => $serviceUrl,
-        'request_data' => $params,
-        'response_data' => json_decode($response->body()),
-        'service' => $serviceName
-    ];
-}

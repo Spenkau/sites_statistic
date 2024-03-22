@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\ApiPointRepository;
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -43,37 +45,25 @@ class ApiPointService
         }
     }
 
-
     public function update(array $service, string $serviceName, array $headers, string $url): void
     {
         $method = $service['method'] ?? 'GET';
         $serviceUrl = $url . $serviceName;
-        $params = $service['parameters'] ?? null;
+        $params = $service['query_params'] ?? $service['form_params'];
 
-        $response = null;
-        switch ($method) {
-            case 'GET':
-                $response = Http::withHeaders($headers)
-                    ->get($serviceUrl, $params);
-                break;
-            case 'POST':
-                $response = Http::withHeaders($headers)
-                    ->post($serviceUrl, $params);
-                break;
-            case 'PUT':
-                $response = Http::withHeaders($headers)
-                    ->put($serviceUrl, $params);
-                break;
-            case 'PATCH':
-                $response = Http::withHeaders($headers)
-                    ->patch($serviceUrl, $params);
-                break;
-            case 'DELETE':
-                $response = Http::withHeaders($headers)
-                    ->delete($serviceUrl, $params);
-                break;
+        $options = [
+            'headers' => $headers
+        ];
 
+        if ($method == "GET") {
+            $options['query'] = $service['query_params'];
+        } else if ($method == "DELETE") {
+            $serviceUrl .= '/' . $params['id'];
+        } else {
+            $options['form_params'] = $service['form_params'];
         }
+
+        $response = Http::withUrlParameters($service['path_params'] ?? [])->send($method, $serviceUrl, $options);
 
         $data = [
             'name' => $url,

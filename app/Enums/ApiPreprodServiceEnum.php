@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ApiServiceEnum: string
+enum ApiPreprodServiceEnum: string
 {
 //    case LOGIN  = 'login';
     case PRODUCTS = 'products';

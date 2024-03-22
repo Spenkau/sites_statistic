@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\UpdateApiPointDetails;
+use App\Jobs\UpdateApiPreprodDetails;
 use App\Services\ApiPointService;
 use Illuminate\Console\Command;
 
@@ -20,14 +20,14 @@ class UpdateApiPointDetailsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Update details of api point';
+    protected $description = 'Update details of api points';
 
     /**
      * Execute the console command.
      */
     public function handle(): void
     {
-        UpdateApiPointDetails::dispatch(app(ApiPointService::class));
+        UpdateApiPreprodDetails::dispatch(app(ApiPointService::class));
 
         $this->info('API points details stored successfully');
     }
