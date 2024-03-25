@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ApiProcessingServiceEnum;
 use App\Models\ApiPoint;
 use App\Models\User;
 use App\Services\ApiPointService;
@@ -39,17 +40,9 @@ class ApiPointTest extends TestCase
 
     public function test2()
     {
-        $a = [
-            'params' => [
-                'path_params' => [
-                    'id' => 1,
-                ],
-                'form_params' => [
-                    'title' => 'MOSCOW123'
-                ]
-            ],
-        ];
-        dump($a['params']['path_params']);
+        $authData = Config::get('auth_api_services')['preprod'];
+
+        dump($authData['email']);
     }
 
     public function test_api_points_can_retrieved()
@@ -104,6 +97,5 @@ class ApiPointTest extends TestCase
         $output = Artisan::output();
 
         $this->assertStringContainsString('API points details stored successfully', $output);
-
     }
 }

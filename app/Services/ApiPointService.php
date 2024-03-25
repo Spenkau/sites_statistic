@@ -67,25 +67,29 @@ class ApiPointService
             $options['path_params'] = $service['path_params'];
         }
 
-        $response = Http::withUrlParameters($service['path_params'] ?? [])->send($method, $serviceUrl, $options);
-
-        $data = [
-            'name' => $url,
-            'url' => $serviceUrl,
-            'request_data' => json_encode($options),
-            'response_data' => ($response->body()),
-            'service' => $serviceName
-        ];
-
+        $response_data = null;
         try {
-//            $newApiPoint = $this->store($data);
-            return $data;
-//            if (!empty($newApiPoint)) {
-//                $this->apiPointHistoryService->update($newApiPoint->id, $response);
-//            }
+            $response = Http::withUrlParameters($service['path_params'] ?? [])->send($method, $serviceUrl, $options);
+
+            $response_data = $response->body();
         } catch (Exception $exception) {
-            throw new Exception($exception);
+            $response_data = $exception->getMessage();
+        } finally {
+            $data = [
+                'name' => $url,
+                'url' => $serviceUrl,
+                'request_data' => json_encode($options),
+                'response_data' => $response_data,
+                'service' => $serviceName
+            ];
         }
+
+        $newApiPoint = $this->store($data);
+
+        if (!empty($newApiPoint)) {
+            $this->apiPointHistoryService->update($newApiPoint->id, $response);
+        }
+
     }
 
     public function validate(array $data): Validator
