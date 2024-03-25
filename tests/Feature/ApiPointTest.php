@@ -37,6 +37,21 @@ class ApiPointTest extends TestCase
         dump($res);
     }
 
+    public function test2()
+    {
+        $a = [
+            'params' => [
+                'path_params' => [
+                    'id' => 1,
+                ],
+                'form_params' => [
+                    'title' => 'MOSCOW123'
+                ]
+            ],
+        ];
+        dump($a['params']['path_params']);
+    }
+
     public function test_api_points_can_retrieved()
     {
         $apis = ($this->apiPointService->all());

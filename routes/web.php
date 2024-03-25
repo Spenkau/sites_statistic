@@ -1,13 +1,11 @@
 <?php
 
-use App\Enums\ApiServiceEnum;
+use App\Enums\ApiPreprodServiceEnum;
+use App\Enums\ApiProcessingServiceEnum;
 use App\Http\Controllers\ApiPointController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
-use App\Http\Controllers\UserController;
-use App\Http\Resources\ApiPointResource;
-use App\Models\ApiPoint;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 
 Route::get('/dashboard', [SiteController::class, 'index'])
@@ -75,21 +72,40 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
-Route::get('test2', function () {
-    return json_encode(['code' => null]);
+Route::get('testtest', function () {
+    $url = 'https://processing.hellishworld.ru/api/showcase/balance/general';
+
+    $headers = [
+        'Accept' => 'application/json',
+        'email' => 'admin@admin.com',
+        'password' => 'admin'
+    ];
+
+    $arr = [
+        'path_params' => ['id' => 1],
+        'form_params' => [
+            'title' => 'MOSCOW123'
+        ],
+    ];
+
+    $response = Http::withHeaders($headers)->withUrlParameters($arr['path_params'] ?? [])->send('GET', $url);
+    return $response;
 });
-Route::get('test', function () {
+
+Route::get('test2', function () {
     $url = 'https://preprod-vpdrk.hellishworld.ru/api/v2/';
 
-    $token = Http::get($url . 'login?email=danyat@test.ru&password=test')['token'];
+    $token = Http::get($url . 'login?email=danyat@test.ru&password=test')['token'] ?? null;
 
     $headers = [
         'Accept' => 'application/json',
         'Authorization' => 'Bearer ' . $token
     ];
 
-    $serviceNames = array_column(ApiServiceEnum::cases(), 'value');
-    $services = Config::get('api_v2_services');
+    $serviceNames = array_column(ApiPreprodServiceEnum::cases(), 'value');
+    $services = Config::get('api_preprod_v2_services');
+
+    $apiPointService = app(\App\Services\ApiPointService::class);
 
     $responses = [];
 
@@ -98,38 +114,56 @@ Route::get('test', function () {
 
         if (empty($service['method'])) {
             foreach ($service as $subService) {
-                $responses[] = makeJob($url, $serviceName, $headers, $subService);
+//                $responses[] = $subService['query_params'] ?? $subService['form_params'] ?? null;
+                $responses[] = $apiPointService->update($subService, $serviceName, $headers, $url);
             }
         } else {
-            $responses[] = makeJob($url, $serviceName, $headers, $service);
+//            $responses[] = $service['query_params'] ?? $service['form_params'] ?? null;
+            $responses[] = $apiPointService->update($service, $serviceName, $headers, $url);
         }
     }
 
     return $responses;
-
 });
 
-function makeJob($url, $serviceName, $headers, $service)
-{
-    $method = $service['method'] ?? 'GET';
-    $serviceUrl = $url . $serviceName;
-    $params = $service['parameters'] ?? null;
+Route::get('test', function () {
 
-    $response = null;
-    if ($method == 'GET') {
-        $response = Http::withHeaders($headers)
-            ->get($serviceUrl, $params);
-    } else if ($method == 'POST') {
-        $response = Http::withHeaders($headers)
-            ->post($serviceUrl, $params);
-    }
 
-    return [
-        'method' => $method,
-        'name' => $url,
-        'url' => $serviceUrl,
-        'request_data' => $params,
-        'response_data' => json_decode($response->body()),
-        'service' => $serviceName
-    ];
-}
+        $url = 'https://processing.hellishworld.ru/api/';
+
+        $headers = [
+            'Accept' => 'application/json',
+//        'Authorization' => 'Bearer ' . $token
+            'email' => 'admin@admin.com',
+            'password' => 'admin'
+        ];
+
+        $serviceNames = array_column(ApiProcessingServiceEnum::cases(), 'value');
+        $services = Config::get('api_processing_services');
+
+        $responses = [];
+
+        $apiPointService = app(\App\Services\ApiPointService::class);
+
+        if (count($serviceNames) == count($services)) {
+
+            foreach ($serviceNames as $serviceName) {
+
+                for ($i = 0; $i < count($services[$serviceName]); $i++) {
+                    $service = $services[$serviceName][$i];
+
+                    $responses[] = $apiPointService->update($service, $serviceName, $headers, $url);
+                }
+            }
+        }
+        return $responses;
+
+    });
+
+
+
+
+
+
+
+

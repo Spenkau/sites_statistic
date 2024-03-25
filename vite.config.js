@@ -20,3 +20,6 @@ export default defineConfig({
 // TODO сделать доступ к сайту для других пользователей
 // TODO настроить консольный роутинг
 // TODO ПОЧТУ ЧЕРЕЗ dashemail smtp протокол
+
+// QUESTIONS
+// Внедрять в джоб сервис лучше через конструктор или с помощью app(serviceName)
