@@ -4,21 +4,21 @@ namespace App\Repositories;
 
 use App\Repositories\Interfaces\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
 
     public Model $model;
 
-    public function allModels(array|string $relations = [], array $criteria = [], array $columns = ['*'])
+    public function allModels(array|string $relations = [], array $criteria = [], array $columns = ['*']): LengthAwarePaginator
     {
         $builder = $this->model->query()->with($relations)->select($columns);
 
-        foreach ($criteria as $key => $value) {
-            $builder->where($key, $value);
-        }
+        $query = $this->filterModel($builder, $criteria);
 
-        return $builder->paginate(10);
+        return $query->paginate(10);
     }
 
     public function findModel(int $modelId, array|string $relations = [], array $columns = ['*']): Model
@@ -43,5 +43,20 @@ abstract class BaseRepository implements BaseRepositoryInterface
         $model = $this->findModel($modelId);
 
         return $model->delete();
+    }
+
+    public function filterModel($query, array $criteria)
+    {
+        $textFields = ['name', 'url', 'comment', 'request_data' , 'response_data', 'service'];
+
+        foreach ($criteria as $key => $value) {
+            if (in_array($textFields, [])) {
+                $query->where($key, 'LIKE', $value);
+            } else {
+                $query->where($key, $value);
+            }
+        }
+
+        return $query;
     }
 }
