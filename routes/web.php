@@ -1,14 +1,11 @@
 <?php
 
 use App\Enums\ApiPreprodServiceEnum;
-use App\Enums\ApiServiceEnum;
+use App\Enums\ApiProcessingServiceEnum;
 use App\Http\Controllers\ApiPointController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
-use App\Http\Controllers\UserController;
-use App\Http\Resources\ApiPointResource;
-use App\Models\ApiPoint;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -75,7 +72,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
-Route::get('test2', function () {
+Route::get('testtest', function () {
     $url = 'https://processing.hellishworld.ru/api/showcase/balance/general';
 
     $headers = [
@@ -84,7 +81,7 @@ Route::get('test2', function () {
         'password' => 'admin'
     ];
 
-    $arr  = [
+    $arr = [
         'path_params' => ['id' => 1],
         'form_params' => [
             'title' => 'MOSCOW123'
@@ -94,38 +91,8 @@ Route::get('test2', function () {
     $response = Http::withHeaders($headers)->withUrlParameters($arr['path_params'] ?? [])->send('GET', $url);
     return $response;
 });
-Route::get('test', function () {
-    function makeJob(array $service, string $serviceName, string $url, array $headers)
-    {
-        $method = $service['method'] ?? 'GET';
-        $serviceUrl = $url . $serviceName;
-        $params = $service['parameters'] ?? null;
 
-        $options = [];
-
-        if ($method == "GET") {
-            $options['query'] = $params;
-        } else if ($method == "DELETE") {
-            $serviceUrl .= '/' . $params['id'];
-        } else {
-            $options['form_params'] = $params;
-        }
-
-
-        $response = Http::withHeaders($headers)->send($method, $serviceUrl, $options);
-
-        $res = [
-            'name' => $url,
-            'url' => $serviceUrl,
-            'request_data' => ($params),
-            'response_data' => json_decode($response->body()),
-            'service' => $serviceName
-        ];
-return $res;
-//        ApiPoint::create($res);
-    }
-
-
+Route::get('test2', function () {
     $url = 'https://preprod-vpdrk.hellishworld.ru/api/v2/';
 
     $token = Http::get($url . 'login?email=danyat@test.ru&password=test')['token'] ?? null;
@@ -138,6 +105,8 @@ return $res;
     $serviceNames = array_column(ApiPreprodServiceEnum::cases(), 'value');
     $services = Config::get('api_preprod_v2_services');
 
+    $apiPointService = app(\App\Services\ApiPointService::class);
+
     $responses = [];
 
     foreach ($serviceNames as $serviceName) {
@@ -145,14 +114,56 @@ return $res;
 
         if (empty($service['method'])) {
             foreach ($service as $subService) {
-                $responses[] = makeJob($subService, $serviceName, $url, $headers);
+//                $responses[] = $subService['query_params'] ?? $subService['form_params'] ?? null;
+                $responses[] = $apiPointService->update($subService, $serviceName, $headers, $url);
             }
         } else {
-            $responses[] = makeJob($service, $serviceName, $url, $headers);
+//            $responses[] = $service['query_params'] ?? $service['form_params'] ?? null;
+            $responses[] = $apiPointService->update($service, $serviceName, $headers, $url);
         }
     }
 
     return $responses;
-
 });
+
+Route::get('test', function () {
+
+
+        $url = 'https://processing.hellishworld.ru/api/';
+
+        $headers = [
+            'Accept' => 'application/json',
+//        'Authorization' => 'Bearer ' . $token
+            'email' => 'admin@admin.com',
+            'password' => 'admin'
+        ];
+
+        $serviceNames = array_column(ApiProcessingServiceEnum::cases(), 'value');
+        $services = Config::get('api_processing_services');
+
+        $responses = [];
+
+        $apiPointService = app(\App\Services\ApiPointService::class);
+
+        if (count($serviceNames) == count($services)) {
+
+            foreach ($serviceNames as $serviceName) {
+
+                for ($i = 0; $i < count($services[$serviceName]); $i++) {
+                    $service = $services[$serviceName][$i];
+
+                    $responses[] = $apiPointService->update($service, $serviceName, $headers, $url);
+                }
+            }
+        }
+        return $responses;
+
+    });
+
+
+
+
+
+
+
 
