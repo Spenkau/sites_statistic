@@ -26,6 +26,15 @@ $app = new Illuminate\Foundation\Application(
 |
 */
 
+$app->singleton(\App\Services\ApiPointService::class, function ($app) {
+    $model = new \App\Models\ApiPoint();
+    $modelHis = new \App\Models\ApiPointHistory();
+    $rep = new \App\Repositories\ApiPointRepository($model);
+    $repHis = new \App\Repositories\ApiPointHistoryRepository($modelHis);
+    $hist = new \App\Services\ApiPointHistoryService($repHis);
+    return new \App\Services\ApiPointService($rep, $hist);
+});
+
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class
