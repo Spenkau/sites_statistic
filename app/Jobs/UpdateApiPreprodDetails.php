@@ -24,6 +24,8 @@ class UpdateApiPreprodDetails implements ShouldQueue
 
     public ApiPointService $apiPointService;
 
+    public array $authData = [];
+
     private mixed $services;
 
     private array $headers;
@@ -36,16 +38,18 @@ class UpdateApiPreprodDetails implements ShouldQueue
         $this->apiPointService = $apiPointService;
 
         $this->services = Config::get('api_preprod_v2_services');
+
+        $this->authData = Config::get('auth_api_services')['preprod'];
     }
 
     public function authenticateSession(): void
     {
         $response = Http::get(static::API_PREPROD_V2_URL. 'login', [
-            'email' => env('API_PREPROD_ACCOUNT_EMAIL', 'danyat@test.ru'),
-            'password' => env('API_PREPROD_ACCOUNT_PASSWORD', 'test')
+            'email' => $this->authData['email'],
+            'password' => $this->authData['password']
         ]);
 
-        $bearerToken = $response['token'];
+        $bearerToken = $response['token'] ?? null;
 
         $this->headers = [
             'Accept' => 'application/json',
