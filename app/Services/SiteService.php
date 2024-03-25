@@ -49,7 +49,7 @@ class SiteService
 
     public function findByCollaborator(): JsonResource
     {
-        $criteria = ['user_id' => Auth::id()];
+        $criteria = ['id' => Auth::id()];
 
         return $this->siteRepository->findByCollaborator($criteria);
     }

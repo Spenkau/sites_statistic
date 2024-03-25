@@ -1,12 +1,5 @@
 <?php
 
-function payment_type(): string
-{
-    $payment_types = ['PHONE', 'QIWI', 'YA', 'WM', 'RBK', 'BANK_CARD'];
-
-    return $payment_types[random_int(0, count($payment_types) - 1)];
-}
-
 return [
     'products' => [
         'uri' => 'products',
@@ -813,11 +806,11 @@ return [
                 'code' => 0,
                 'data' => [
                     [
-                        'payment_type' => payment_type(),
+                        'payment_type' => 'PHONE',
                         'comment' => 'Мобильные платежи'
                     ],
                     [
-                        'payment_type' => payment_type(),
+                        'payment_type' => 'PHONE',
                         'comment' => 'Платежи на банковскую карту'
                     ]
                 ]
@@ -855,7 +848,7 @@ return [
         [
             'uri' => 'createMobileReplenishment',
             'method' => 'POST',
-            'form_params' => ['number' => '375291919876', 'amount' => 4, 'payment_type' => payment_type()],
+            'form_params' => ['number' => '375291919876', 'amount' => 4, 'payment_type' => 'PHONE'],
             'response' => [
                 'success' => [
                     'payment_id' => 204,

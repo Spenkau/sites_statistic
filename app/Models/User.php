@@ -64,7 +64,7 @@ class User extends Authenticatable
      * @param array $relations
      * @return BelongsToMany
      */
-    public function public_sites(array $relations = []): BelongsToMany
+    public function public_sites(string|array $relations = []): BelongsToMany
     {
         return $this->belongsToMany(Site::class, 'site_user')
             ->with($relations);

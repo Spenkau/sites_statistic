@@ -45,10 +45,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware('site.access')
         ->controller(SiteController::class)
         ->group(function () {
+            Route::get('site/party', [SiteController::class, 'findByCollaborator'])->name('site.party');
             Route::resource('site', SiteController::class);
             Route::resource('site.page', PageController::class)->middleware('site.id');
 
-            Route::get('site/party', [SiteController::class, 'findByCollaborator'])->name('site.party');
             Route::name('site.')->prefix('site/{site}')->group(function () {
                 Route::get('/add-user', 'addCollaborator')->name('add-user');
                 Route::post('/store-user', [SiteController::class, 'storeCollaborators'])->name('site.store-user');

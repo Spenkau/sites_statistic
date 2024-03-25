@@ -24,7 +24,7 @@ class ApiPointTest extends TestCase
 
     public function test()
     {
-        $services = Config::get('api_v2_services');
+        $services = Config::get('api_preprod_v2_services');
         $serviceKeys = array_keys($services);
 
         $apiPoints = ApiPoint::whereIn('service', $serviceKeys)->chunk(100)->get()->groupBy('service')->toArray();

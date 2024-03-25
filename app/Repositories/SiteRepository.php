@@ -105,9 +105,9 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
 
     public function findByCollaborator(array $criteria = []): JsonResource
     {
-        $user = User::query()->where($criteria)->get();
+        $user = User::query()->where($criteria)->first();
 
-        $sites = $user->public_sites(['pages'])->paginate(10);
+        $sites = $user->public_sites('pages')->paginate(10);
 
         return SiteResource::collection($sites);
     }
