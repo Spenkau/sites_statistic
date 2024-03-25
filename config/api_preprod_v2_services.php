@@ -9,6 +9,7 @@ function payment_type(): string
 
 return [
     'products' => [
+        'uri' => 'products',
         'method' => 'GET',
         'query_params' => [
             'type_id' => 1
@@ -95,6 +96,7 @@ return [
         ],
     ],
     'options' => [
+        'uri' => 'options',
         'method' => 'GET',
         'response' => [
             'success' => [
@@ -121,6 +123,7 @@ return [
         ]
     ],
     'buy' => [
+        'uri' => 'buy',
         'method' => 'POST',
         'query_params' => [
             'product_id' => 2000,
@@ -137,6 +140,7 @@ return [
         ],
     ],
     'orderStatus' => [
+        'uri' => 'orderStatus',
         'method' => 'GET',
         'query_params' => ['order_id' => 10],
         'response' => [
@@ -145,6 +149,7 @@ return [
         ]
     ],
     'orders' => [
+        'uri' => 'orders',
         'method' => 'GET',
         'query_params' => [
             'page' => null,
@@ -213,6 +218,7 @@ return [
         ]
     ],
     'ordersAll' => [
+        'uri' => 'ordersAll',
         'method' => 'GET',
         'query_params' => [
             'page' => 1,
@@ -283,6 +289,7 @@ return [
         ]
     ],
     'transactions' => [
+        'uri' => 'transactions',
         'method' => 'GET',
         'query_params' => [
             'page' => null,
@@ -337,6 +344,7 @@ return [
         ],
     ],
     'pull' => [
+        'uri' => 'pull',
         'method' => 'GET',
         'query_params' => [
             'id' => null,
@@ -400,6 +408,7 @@ return [
         ]
     ],
     'users' => [
+        'uri' => 'users',
         'method' => 'GET',
         'query_params' => [
             'page' => null,
@@ -443,6 +452,7 @@ return [
         ]
     ],
     'roles' => [
+        'uri' => 'roles',
         'method' => 'GET',
         'query_params' => [],
         'response' => [
@@ -469,6 +479,7 @@ return [
     ],
     'suppliers' => [
         [
+            'uri' => 'suppliers',
             'method' => 'POST',
             'form_params' => [
                 'code' => 'vpdrk',
@@ -482,6 +493,7 @@ return [
             ]
         ],
         [
+            'uri' => 'suppliers',
             'method' => 'GET',
             'query_params' => [],
             'response' => [
@@ -510,6 +522,7 @@ return [
         ]
     ],
     'balance' => [
+        'uri' => 'balance',
         'method' => 'GET',
         'query_params' => [],
         'response' => [
@@ -518,6 +531,7 @@ return [
         ]
     ],
     'type' => [
+        'uri' => 'type',
         'method' => 'GET',
         'query_params' => [],
         'response' => [
@@ -543,6 +557,7 @@ return [
         ]
     ],
     'mobileReplenishments' => [
+        'uri' => 'mobileReplenishments',
         'method' => 'GET',
         'query_params' => ['page' => null, 'date_from' => null, 'date_to' => null, 'update_from' => null, 'update_to' => null],
         'response' => [
@@ -586,6 +601,7 @@ return [
         ],
     ],
     'showcaseCompany' => [
+        'uri' => 'showcaseCompany',
         'method' => 'GET',
         'query_params' => [],
         'response' => [
@@ -605,6 +621,7 @@ return [
 
     ],
     'ndfl' => [
+        'uri' => 'ndfl',
         'method' => 'GET',
         'query_params' => [],
         'response' => [
@@ -667,6 +684,7 @@ return [
         ]
     ],
     'getAllJuridicalOrders' => [
+        'uri' => 'getAllJuridicalOrders',
         'method' => 'GET',
         'query_params' => [],
         'response' => [
@@ -711,6 +729,7 @@ return [
         ],
     ],
     'findJuridicalPerson' => [
+        'uri' => 'findJuridicalPerson',
         'method' => 'GET',
         'query_params' => ['contractor_id' => null],
         'response' => [
@@ -736,6 +755,7 @@ return [
         ]
     ],
     'createJuridicalPerson' => [
+        'uri' => 'createJuridicalPerson',
         'method' => 'POST',
         'form_params' => ['contractor_id' => fake()->numberBetween(400, 5000000), 'name' => fake()->company, 'inn' => (string)fake()->numberBetween(4546553, 2147483646)],
         'response' => [
@@ -759,6 +779,7 @@ return [
         ]
     ],
     'createJuridicalOrder' => [
+        'uri' => 'createJuridicalOrder',
         'method' => 'POST',
         'form_params' => ['contractor_id' => fake()->numberBetween(400, 5000000), 'number_order_1c' => fake()->numberBetween(400, 500000), 'created_at_1c' => date('Y-m-d h:m:s')],
         'response' => [
@@ -783,6 +804,7 @@ return [
         ]
     ],
     'getMobileReplenishmentPaymentTypes' => [
+        'uri' => 'getMobileReplenishmentPaymentTypes',
         'method' => 'GET',
         'query_params' => [],
         'response' => [
@@ -809,6 +831,7 @@ return [
     ],
     'createMobileReplenishment' => [
         [
+            'uri' => 'createMobileReplenishment',
             'method' => 'GET',
             'query_params' => ['payment_id' => null],
             'response' => [
@@ -830,6 +853,7 @@ return [
             ],
         ],
         [
+            'uri' => 'createMobileReplenishment',
             'method' => 'POST',
             'form_params' => ['number' => '375291919876', 'amount' => 4, 'payment_type' => payment_type()],
             'response' => [
