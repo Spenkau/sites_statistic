@@ -45,22 +45,26 @@ class ApiPointService
         }
     }
 
-    public function update(array $service, string $serviceName, array $headers, string $url): void
+    public function update(array $service, string $serviceName, array $headers, string $url)
     {
         $method = $service['method'] ?? 'GET';
-        $serviceUrl = $url . $serviceName;
-        $params = $service['query_params'] ?? $service['form_params'];
+        $serviceUrl = $url . $service['uri'];
 
         $options = [
             'headers' => $headers
         ];
 
-        if ($method == "GET") {
+        if ($method == "GET" && !empty($service['query_params'])) {
             $options['query'] = $service['query_params'];
-        } else if ($method == "DELETE") {
-            $serviceUrl .= '/' . $params['id'];
-        } else {
+        } else if ((
+                $method == "POST" ||
+                $method == "PUT" ||
+                $method == "PATCH") && !empty($service['form_params'])) {
             $options['form_params'] = $service['form_params'];
+        }
+
+        if (!empty($service['path_params'])) {
+            $options['path_params'] = $service['path_params'];
         }
 
         $response = Http::withUrlParameters($service['path_params'] ?? [])->send($method, $serviceUrl, $options);
@@ -68,17 +72,17 @@ class ApiPointService
         $data = [
             'name' => $url,
             'url' => $serviceUrl,
-            'request_data' => json_encode($params),
-            'response_data' => $response->body(),
+            'request_data' => json_encode($options),
+            'response_data' => ($response->body()),
             'service' => $serviceName
         ];
 
         try {
-            $newApiPoint = $this->store($data);
-
-            if (!empty($newApiPoint)) {
-                $this->apiPointHistoryService->update($newApiPoint->id, $response);
-            }
+//            $newApiPoint = $this->store($data);
+            return $data;
+//            if (!empty($newApiPoint)) {
+//                $this->apiPointHistoryService->update($newApiPoint->id, $response);
+//            }
         } catch (Exception $exception) {
             throw new Exception($exception);
         }

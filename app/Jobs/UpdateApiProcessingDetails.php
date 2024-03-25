@@ -51,10 +51,19 @@ class UpdateApiProcessingDetails implements ShouldQueue
     {
         $this->authenticateSession();
 
+        $services = $this->services;
         $serviceNames = array_column(ApiProcessingServiceEnum::cases(), 'value');
 
-//        foreach () {
-//
-//        }
+        if (count($serviceNames) == count($services)) {
+
+            foreach ($serviceNames as $serviceName) {
+
+                for ($i = 0; $i < count($services[$serviceName]); $i++) {
+                    $service = $services[$serviceName][$i];
+
+                    $this->apiPointService->update($service, $serviceName, $this->headers, static::API_PROCESSING_URL);
+                }
+            }
+        }
     }
 }
