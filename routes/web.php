@@ -6,6 +6,9 @@ use App\Http\Controllers\ApiPointController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
+use App\Http\Resources\SiteResource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +75,11 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
+Route::get('sts', function (Request $request, Builder $builder) {
+    $service = app(\App\Services\SiteService::class);
+    return $service->all();
+});
+
 Route::get('testtest', function () {
     $url = 'https://processing.hellishworld.ru/api/showcase/balance/general';
 
@@ -129,36 +137,36 @@ Route::get('test2', function () {
 Route::get('test', function () {
 
 
-        $url = 'https://processing.hellishworld.ru/api/';
+    $url = 'https://processing.hellishworld.ru/api/';
 
-        $headers = [
-            'Accept' => 'application/json',
+    $headers = [
+        'Accept' => 'application/json',
 //        'Authorization' => 'Bearer ' . $token
-            'email' => 'admin@admin.com',
-            'password' => 'admin'
-        ];
+        'email' => 'admin@admin.com',
+        'password' => 'admin'
+    ];
 
-        $serviceNames = array_column(ApiProcessingServiceEnum::cases(), 'value');
-        $services = Config::get('api_processing_services');
+    $serviceNames = array_column(ApiProcessingServiceEnum::cases(), 'value');
+    $services = Config::get('api_processing_services');
 
-        $responses = [];
+    $responses = [];
 
-        $apiPointService = app(\App\Services\ApiPointService::class);
+    $apiPointService = app(\App\Services\ApiPointService::class);
 
-        if (count($serviceNames) == count($services)) {
+    if (count($serviceNames) == count($services)) {
 
-            foreach ($serviceNames as $serviceName) {
+        foreach ($serviceNames as $serviceName) {
 
-                for ($i = 0; $i < count($services[$serviceName]); $i++) {
-                    $service = $services[$serviceName][$i];
+            for ($i = 0; $i < count($services[$serviceName]); $i++) {
+                $service = $services[$serviceName][$i];
 
-                    $responses[] = $apiPointService->update($service, $serviceName, $headers, $url);
-                }
+                $responses[] = $apiPointService->update($service, $serviceName, $headers, $url);
             }
         }
-        return $responses;
+    }
+    return $responses;
 
-    });
+});
 
 
 
