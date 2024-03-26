@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 interface ApiPointRepositoryInterface
 {
-    public function all();
+    public function all(array $criteria);
 
     public function show(int $id);
 

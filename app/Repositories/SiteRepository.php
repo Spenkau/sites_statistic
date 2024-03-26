@@ -21,21 +21,6 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
     }
 
     /**
-     * Returns current authenticated user id
-     *
-     * @return int
-     * @throws Exception
-     */
-    public function getUserId(): int
-    {
-        if (Auth::check()) {
-            return Auth::id();
-        } else {
-            throw new Exception('User is not authenticated');
-        }
-    }
-
-    /**
      * Returns user sites with pages
      *
      * @param array $criteria

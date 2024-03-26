@@ -6,6 +6,7 @@ use App\Repositories\ApiPointRepository;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -22,9 +23,11 @@ class ApiPointService
         $this->apiPointHistoryService = $apiPointHistoryService;
     }
 
-    public function all(): JsonResource
+    public function all(Request $request): JsonResource
     {
-        return $this->apiPointRepository->all();
+        $criteria = $request->all();
+
+        return $this->apiPointRepository->all($criteria);
     }
 
     public function show(int $id): JsonResource

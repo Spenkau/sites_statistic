@@ -22,9 +22,13 @@ class PageController extends Controller
         $this->pageService = $pageService;
     }
 
-    public function index()
+    public function index(int $siteId, Request $request)
     {
-        return redirect()->back();
+        $pages = $this->pageService->all($siteId, $request);
+
+        $site = $this->siteService->findById($siteId);
+
+        return view('page.index', ['pages' => $pages, 'site' => $site]);
     }
 
     public function show(int $siteId, int $pageId): View

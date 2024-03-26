@@ -21,9 +21,9 @@ class SiteController extends Controller
         $this->siteService = $siteService;
     }
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $sites = $this->siteService->all();
+        $sites = $this->siteService->all($request);
 
         return view('dashboard', ['sites' => $sites]);
     }

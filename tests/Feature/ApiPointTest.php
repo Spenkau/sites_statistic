@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use App\Enums\ApiProcessingServiceEnum;
 use App\Models\ApiPoint;
+use App\Models\Site;
 use App\Models\User;
 use App\Services\ApiPointService;
 use Illuminate\Console\Command;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
@@ -40,10 +42,13 @@ class ApiPointTest extends TestCase
 
     public function test2()
     {
-        $authData = Config::get('auth_api_services')['preprod'];
+        $res = (new Site())->getFillable();
 
-        dump($authData['email']);
+
+        dump($res);
     }
+
+
 
     public function test_api_points_can_retrieved()
     {

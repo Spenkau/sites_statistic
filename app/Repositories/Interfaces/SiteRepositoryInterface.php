@@ -8,9 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 interface SiteRepositoryInterface
 {
-    public function getUserId(): int;
-
-    public function all(array $criteria = []): JsonResource;
+    public function all(array $criteria = []);
 
     public function findById(int $id): JsonResource;
 

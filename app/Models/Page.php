@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Filters\PageFilter;
+use App\Http\Filters\SiteFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,5 +37,14 @@ class Page extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_page');
+    }
+
+    public function scopeFilter($request)
+    {
+        $query = $this::query();
+
+        $filter = new PageFilter();
+
+        return $filter->apply($query, $request);
     }
 }

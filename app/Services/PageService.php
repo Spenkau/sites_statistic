@@ -8,6 +8,7 @@ use App\Models\Page;
 use App\Models\Site;
 use App\Repositories\PageRepository;
 use App\Repositories\SiteRepository;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PageService
@@ -19,9 +20,12 @@ class PageService
         $this->pageRepository = $pageRepository;
     }
 
-    public function all(int $id): AnonymousResourceCollection
+    public function all(int $id, Request $request): AnonymousResourceCollection
     {
-        return $this->pageRepository->all($id);
+        $criteria = $request->all();
+        $criteria['site_id'] = $id;
+
+        return $this->pageRepository->all($criteria);
     }
 
     public function findOne(int $pageId): PageResource

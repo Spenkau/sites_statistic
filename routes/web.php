@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
         ->controller(SiteController::class)
         ->group(function () {
             Route::get('site/party', [SiteController::class, 'findByCollaborator'])->name('site.party');
-            Route::resource('site', SiteController::class);
+            Route::resource('site', SiteController::class)->except('show');
             Route::resource('site.page', PageController::class)->middleware('site.id');
 
             Route::name('site.')->prefix('site/{site}')->group(function () {

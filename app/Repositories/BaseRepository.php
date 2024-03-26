@@ -9,21 +9,18 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
-
     public Model $model;
 
-    public function allModels(array|string $relations = [], array $criteria = [], array $columns = ['*']): LengthAwarePaginator
+    public function allModels(array|string $relations = [], array $criteria = [])
     {
-        $builder = $this->model->query()->with($relations)->select($columns);
+        $builder = $this->filterBuilder($criteria);
 
-        $query = $this->filterModel($builder, $criteria);
-
-        return $query->paginate(10);
+        return $builder->with($relations)->paginate(10);
     }
 
-    public function findModel(int $modelId, array|string $relations = [], array $columns = ['*']): Model
+    public function findModel(int $modelId, array|string $relations = []): Model
     {
-        return $this->model->select($columns)->with($relations)->findOrFail($modelId);
+        return $this->model->with($relations)->findOrFail($modelId);
     }
 
     public function storeModel(array $data): Model
@@ -45,18 +42,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $model->delete();
     }
 
-    public function filterModel($query, array $criteria)
+    public function filterBuilder($criteria)
     {
-        $textFields = ['name', 'url', 'comment', 'request_data' , 'response_data', 'service'];
-
-        foreach ($criteria as $key => $value) {
-            if (in_array($textFields, [])) {
-                $query->where($key, 'LIKE', $value);
-            } else {
-                $query->where($key, $value);
-            }
+        if (method_exists($this->model, 'scopeFilter')) {
+            $builder = $this->model->scopeFilter($criteria);
+        } else {
+            $builder = $this->model->query();
         }
 
-        return $query;
+        return $builder;
     }
 }

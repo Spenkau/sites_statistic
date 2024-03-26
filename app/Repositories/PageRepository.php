@@ -20,11 +20,9 @@ class PageRepository extends BaseRepository implements PageRepositoryInterface
         $this->model = $model;
     }
 
-    public function all(int $id): AnonymousResourceCollection
+    public function all($criteria): AnonymousResourceCollection
     {
-        $criteria = ['site_id', $id];
-
-        $pages = $this->allModels('details', $criteria);
+        $pages = $this->allModels(['details'], $criteria);
 
         return PageResource::collection($pages);
     }
