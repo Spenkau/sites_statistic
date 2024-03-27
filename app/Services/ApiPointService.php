@@ -70,7 +70,6 @@ class ApiPointService
             $options['path_params'] = $service['path_params'];
         }
 
-        $response_data = null;
         try {
             $response = Http::withUrlParameters($service['path_params'] ?? [])->send($method, $serviceUrl, $options);
 
