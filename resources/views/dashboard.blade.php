@@ -4,15 +4,17 @@
             {{ __('Ваши сайты') }}
         </h2>
         <div>
-            <a
-                href="/site/party"
-                class="text-xl text-gray-800 dark:text-gray-200 border-gray-100 mx-3">
+            <a class="checkup btn btn-danger" disabled href="{{ route('check.site') }}">Запустить проверку сайтов</a>
+            <a class="checkup btn btn-danger" href="{{ route('check.api') }}">Запустить проверку API</a>
+        </div>
+        <div>
+            <a href="{{ route('site.party') }}" class="btn btn-primary mx-3">
                 Совместные сайты
             </a>
-            <a href="/site/create" class="text-xl text-gray-800 dark:text-gray-200 border-gray-100">Создать новый</a>
+            <a href="{{ route('site.create') }}" class="btn btn-primary">Создать новый</a>
         </div>
     </x-slot>
-
+    @if(session()->has('status')) {{ session()->get('status') }} @endif
 
     <ul class="list-unstyled m-5" id="sites-list">
         @if(empty($sites) || count($sites) <= 0)
@@ -77,15 +79,17 @@
             </div>
         @endif
     </ul>
-    <script>
-        const sitesList = document.getElementById('sites-list');
-        const deleteBtn = document.querySelector('.delete-btn');
+    @section('script')
+        <script>
+            const sitesList = document.getElementById('sites-list');
+            const deleteBtn = document.querySelector('.delete-btn');
 
-        sitesList.addEventListener('click', (event) => {
-            if (event.target.classList.contains('delete-btn')) {
-                const siteId = event.target.getAttribute('data-id');
-                axios.delete(`/site/${siteId}`);
-            }
-        })
-    </script>
+            sitesList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('delete-btn')) {
+                    const siteId = event.target.getAttribute('data-id');
+                    axios.delete(`/site/${siteId}`);
+                }
+            })
+        </script>
+    @endsection
 </x-app-layout>
