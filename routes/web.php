@@ -34,11 +34,19 @@ Route::get('/dashboard', [SiteController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::controller(\App\Http\Controllers\Controller::class)
+        ->name('check')
+        ->prefix('/check')
+        ->group(function () {
+            Route::get('/site', 'runSiteСheckup')->name('.site');
+            Route::get('/api', 'runApiCheckup')->name('.api');
+        });
+
     Route::controller(ApiPointController::class)
         ->name('api-point')
         ->prefix('/api-point')
         ->group(function () {
-            Route::get('/', 'index');
+            Route::get('/', 'index')->name('.index');
             Route::get('/{id}', 'show')->name('.show');
         });
 
