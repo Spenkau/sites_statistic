@@ -2,7 +2,6 @@
     <div class="min-vh-100">
         @include('layouts.navigation')
 
-        <!-- Page Heading -->
         @if (isset($header))
             <header class="dark-bg-gray shadow">
                 <div class="d-flex justify-content-between align-items-center py-3 px-5">
@@ -11,7 +10,6 @@
             </header>
         @endif
 
-        <!-- Page Content -->
         <main class="px-4 py-5">
             {{ $slot }}
         </main>

@@ -29,5 +29,7 @@ class UpdatePageDetailsCommand extends Command
     public function handle(): void
     {
         UpdatePageDetails::dispatch(app(DetailService::class));
+
+        $this->info('Pages details stored successfully');
     }
 }

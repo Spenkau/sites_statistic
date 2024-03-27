@@ -7,6 +7,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
 use App\Http\Resources\SiteResource;
+use App\Models\Page;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -84,8 +85,9 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::get('sts', function (Request $request, Builder $builder) {
-    $service = app(\App\Services\SiteService::class);
-    return $service->all();
+    $service = app(\App\Services\DetailService::class);
+
+    return $service->updateDetails(Page::find(2));
 });
 
 Route::get('testtest', function () {

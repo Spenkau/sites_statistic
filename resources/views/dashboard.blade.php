@@ -14,17 +14,23 @@
             <a href="{{ route('site.create') }}" class="btn btn-primary">Создать новый</a>
         </div>
     </x-slot>
-    @if(session()->has('status')) {{ session()->get('status') }} @endif
+
+    <x-filter-form :fields="[
+            ['name' => 'name', 'label' => 'Название сайта', 'type' => 'text'],
+            ['name' => 'url', 'label' => 'URL сайта', 'type' => 'text'],
+            ['name' => 'comment', 'label' => 'Комментарий', 'type' => 'text'],
+            ['name' => 'created_at', 'label' => 'Дата создания', 'type' => 'datetime-local'],
+        ]">
+    </x-filter-form>
 
     <ul class="list-unstyled m-5" id="sites-list">
-        @if(empty($sites) || count($sites) <= 0)
-            <li><h1>По вашему запросу ничего не найдено</h1></li>
-        @else
+        @if(!empty($sites) && count($sites) > 0)
             @foreach($sites as $site)
                 <li class="position-relative d-flex border-dark border-1 rounded-3 flex-column gap-3 mb-4 p-4">
                     <div class="d-flex justify-content-between">
-                        <a class="text-dark" href="{{ route('site.page.index', $site->id) }}">{{ $site->id }}
-                            | {{ $site->name }}</a>
+                        <a class="text-dark" href="{{ route('site.page.index', $site->id) }}">
+                            {{ $site->id }} | {{ $site->name }}
+                        </a>
                         <span class="p-4">Дата создания: {{ $site->created_at }}</span>
                     </div>
                     <p>
@@ -56,7 +62,6 @@
                             @endforeach
                         </ul>
                     @endif
-
                     <div class="position-absolute" style="bottom: 20px; right: 20px;">
                         <a
                             class="link-dark"
@@ -77,6 +82,8 @@
                 {{ $sites->appends(request()->query())->links() }}
                 {{--        {{ $sites->links('layouts.pagination') }}--}}
             </div>
+        @else
+            <li><h1>По вашему запросу ничего не найдено</h1></li>
         @endif
     </ul>
     @section('script')

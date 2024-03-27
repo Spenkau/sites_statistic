@@ -24,6 +24,14 @@
 
     <hr>
 
+    <x-filter-form :fields="[
+            ['name' => 'url', 'label' => 'URL страницы', 'type' => 'text'],
+            ['name' => 'threshold_speed', 'label' => 'Пороговая скорость', 'type' => 'number'],
+            ['name' => 'comment', 'label' => 'Комментарий', 'type' => 'text'],
+            ['name' => 'created_at', 'label' => 'Дата создания', 'type' => 'datetime-local'],
+        ]">
+    </x-filter-form>
+
     @if(isset($pages) && count($pages) > 0)
         <ul class="list-group">
             Страницы:
@@ -32,11 +40,10 @@
                     <p>URL: {{ $page->url }}</p>
                     <p>Порог: <code>{{ $page->threshold_speed }}</code> миллисекунд</p>
                     <p>
-                        <span class="fw-bold">
-                            Комментарий:
-                        </span>
+                        Комментарий:
                         {{ strlen($page->comment) > 40 ? mb_substr($page->comment, 0, 40) . '...' : $page->comment}}
                     </p>
+                    <p>Дата создания: {{ $page->created_at }}</p>
                     <a class="link-dark" href="{{ route('site.page.show', ['site' => $site, 'page' => $page]) }}">
                         Перейти к деталям</a>
                 </li>

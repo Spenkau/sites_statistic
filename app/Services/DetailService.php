@@ -8,7 +8,10 @@ use App\Repositories\DetailRepository;
 use App\Repositories\UserRepository;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\TransferStats;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -28,47 +31,54 @@ class DetailService
         return Page::query()->get();
     }
 
-    public function store($data)
+    public function store($data): ?JsonResource
     {
-        $request = $this->validateDetail($data);
-
-        if ($request->fails()) {
-            $data['error'] = $request->errors();
-
-            return null;
-        } else {
-            $detail = $request->validated();
-
-            return $this->detailRepository->store($detail);
-        }
+        return $this->detailRepository->store($data);
     }
 
     public function updateDetails($page)
     {
         $data = [];
+        $data['page_id'] = $page->id;
 
         try {
-            $response = Http::get($page->url);
-
-            $data['response_time'] = $response->transferStats->getTransferTime();
-            $data['status_code'] = $response->status();
-            $data['page_id'] = $page->id;
-
-            $response->throw();
-        } catch (\Throwable $exception) {
+            Http::retry(3, 100, function ($exception) {
+                return $exception instanceof ConnectException;
+            })
+                ->get($page->url)
+                ->throw(function ($response, $e) use (&$data) {
+                    $data['status_code'] = $response->status();
+                    $data['response_time'] = $response->transferStats->getTransferTime();
+                    $data['error'] = $e->getMessage();
+                });
+        } catch (\GuzzleHttp\Exception\RequestException $exception) {
+            $data['status_code'] = 500;
             $data['error'] = $exception->getMessage();
-        } finally {
-            $this->store($data);
         }
+
+        return $data;
+//        try {
+//            $response = Http::get($page->url);
+//
+//            $data['response_time'] = $response->transferStats->getTransferTime();
+//            $data['status_code'] = $response->status();
+//
+//            $response->throw();
+//        } catch (\Throwable $exception) {
+//            $data['error'] = $exception->getMessage();
+//        } finally {
+//            return $data;
+//        }
     }
 
-    public function validateDetail(array $data): Validator
-    {
-        return ValidatorFacade::make($data, [
-            'page_id' => 'required|numeric',
-            'status_code' => 'required|numeric',
-            'response_time' => 'required|numeric',
-            'error' => 'nullable'
-        ]);
-    }
+//    public function validateDetail(array $data): Validator
+//    {
+//        return ValidatorFacade::make($data, [
+//            'page_id' => 'required|numeric',
+//            'status_code' => 'required|numeric',
+//            'response_time' => 'required|numeric',
+//            'error' => 'nullable'
+//        ]);
+//    }
 }
+// TODO дочинить это
