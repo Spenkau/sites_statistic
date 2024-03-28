@@ -13,15 +13,15 @@ class Controller extends BaseController
 
     public function runSiteСheckup()
     {
-        Artisan::command('update:page-details', function () {});
+        Artisan::call('update:page-details');
 
-        return redirect()->back();
+        return response()->json(['message' => 'Проверка страниц пройдена!']);
     }
 
     public function runApiCheckup()
     {
-        Artisan::command('update:api-point-details', function () {});
+        Artisan::call('update:api-point-details');
 
-        return redirect()->back();
+        return response()->json(['message' => 'Проверка API пройдена!']);
     }
 }

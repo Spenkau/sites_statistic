@@ -2,20 +2,13 @@
 
 namespace App\Services;
 
-use App\Enums\NotificationEnum;
 use App\Models\Page;
 use App\Repositories\DetailRepository;
-use App\Repositories\UserRepository;
-use Exception;
-use GuzzleHttp\Client;
+use App\Repositories\PageRepository;
 use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\TransferStats;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Client\Response;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator as ValidatorFacade;
-use Illuminate\Validation\Validator;
 
 class DetailService
 {
@@ -41,34 +34,43 @@ class DetailService
         $data = [];
         $data['page_id'] = $page->id;
 
+//        try {
+//            $response = Http::retry(3, 100, function ($exception) {
+//                return $exception instanceof ConnectException;
+//            })
+//                ->get($page->url);
+//
+//            if ($response->successful()) {
+//                $data['status_code']= $response->status();
+//                $data['response_time'] = $response->transferStats->getTransferTime();
+//            } else {
+//                $response->onError(function ($error) use (&$data) {
+//                    $data['error'] = $error;
+//                    $data['status_code'] = $error->getStatusCode();
+//                });
+//            }
+//        } catch (\Throwable $exception) {
+//            $data['response_time'] ?? $data['response_time'] = 0;
+//            $data['status_code'] ?? $data['status_code'] = 0;
+//            $data['error'] = $exception->getMessage();
+//        }
+//
+//        return $data;
         try {
-            Http::retry(3, 100, function ($exception) {
-                return $exception instanceof ConnectException;
-            })
-                ->get($page->url)
-                ->throw(function ($response, $e) use (&$data) {
-                    $data['status_code'] = $response->status();
-                    $data['response_time'] = $response->transferStats->getTransferTime();
-                    $data['error'] = $e->getMessage();
-                });
-        } catch (\GuzzleHttp\Exception\RequestException $exception) {
-            $data['status_code'] = 500;
+            $response = Http::get($page->url);
+
+            $data['response_time'] = $response->transferStats->getTransferTime();
+            $data['status_code'] = $response->status();
+
+            $response->throw();
+        } catch (\Throwable $exception) {
+            $data['response_time'] ?? $data['response_time'] = 0;
+            $data['status_code'] ?? $data['status_code'] = 0;
+
             $data['error'] = $exception->getMessage();
         }
 
-        return $data;
-//        try {
-//            $response = Http::get($page->url);
-//
-//            $data['response_time'] = $response->transferStats->getTransferTime();
-//            $data['status_code'] = $response->status();
-//
-//            $response->throw();
-//        } catch (\Throwable $exception) {
-//            $data['error'] = $exception->getMessage();
-//        } finally {
-//            return $data;
-//        }
+        $this->store($data);
     }
 
 //    public function validateDetail(array $data): Validator
@@ -81,4 +83,3 @@ class DetailService
 //        ]);
 //    }
 }
-// TODO дочинить это

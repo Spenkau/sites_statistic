@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class Site extends Model
 {
@@ -43,7 +44,7 @@ class Site extends Model
 
     public function scopeFilter($request)
     {
-        $query = $this::query();
+        $query = $this::query()->where('user_id', Auth::id());
 
         $filter = new SiteFilter();
 

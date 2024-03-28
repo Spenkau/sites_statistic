@@ -10,6 +10,8 @@ use App\Services\SiteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class SiteController extends Controller
@@ -18,20 +20,20 @@ class SiteController extends Controller
 
     public function __construct(SiteService $siteService)
     {
+        $this->authorizeResource(Site::class, 'site');
+
         $this->siteService = $siteService;
     }
 
     public function index(Request $request): View
     {
-        $sites = $this->siteService->all($request);
+        $sites = $this->siteService->paginated($request);
 
         return view('dashboard', ['sites' => $sites]);
     }
 
-    public function show(int $siteId): View
+    public function show(Site $site): View
     {
-        $site = $this->siteService->findById($siteId);
-
         return view('site.show', ['site' => $site]);
     }
 
@@ -54,31 +56,23 @@ class SiteController extends Controller
 
     }
 
-    public function edit(int $siteId): View
+    public function edit(Site $site): View
     {
-        $site = $this->siteService->findById($siteId);
-
         return view('site.edit', ['site' => $site]);
     }
 
-    public function update(int $siteId, UpdateRequest $request): RedirectResponse
+    public function update(Site $site, UpdateRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
-        $updatedSite = $this->siteService->update($siteId, $data);
+        $this->siteService->update($site->id, $data);
 
-        return redirect()->to('/dashboard')->with(['updatedSite' => $updatedSite]);
+        return redirect()->to('/dashboard');
     }
 
-    public function destroy(int $siteId)
+    public function destroy(Site $site)
     {
-        try {
-            $this->siteService->destroy($siteId);
-
-            return response()->json(['message' => 'Сайт удалён']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Произошла ошибка при удалении сайта' . $e]);
-        }
+        $this->siteService->destroy($site->id);
     }
 
     public function findByCollaborator()
@@ -88,9 +82,9 @@ class SiteController extends Controller
         return view('site.party', ['sites' => $sites]);
     }
 
-    public function addCollaborator(int $siteId): View
+    public function addCollaborator(Site $site): View
     {
-        $site = $this->siteService->findById($siteId);
+        $site = $this->siteService->findById($site->id);
 
         return view('site.add_user', ['site' => $site]);
     }

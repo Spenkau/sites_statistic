@@ -3,9 +3,9 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Ваши сайты') }}
         </h2>
-        <div>
-            <a class="checkup btn btn-danger" disabled href="{{ route('check.site') }}">Запустить проверку сайтов</a>
-            <a class="checkup btn btn-danger" href="{{ route('check.api') }}">Запустить проверку API</a>
+        <div id="checkup_section">
+            <button class="checkup btn btn-danger" data-route="site" href="{{ route('check.site') }}">Запустить проверку сайтов <span></span></button>
+            <button class="checkup btn btn-danger" data-route="api" href="{{ route('check.api') }}">Запустить проверку API <span></span></button>
         </div>
         <div>
             <a href="{{ route('site.party') }}" class="btn btn-primary mx-3">
@@ -90,13 +90,60 @@
         <script>
             const sitesList = document.getElementById('sites-list');
             const deleteBtn = document.querySelector('.delete-btn');
+            const checkBtns = document.querySelectorAll('.checkup');
+            const checkupBlock = document.getElementById('checkup_section');
 
             sitesList.addEventListener('click', (event) => {
                 if (event.target.classList.contains('delete-btn')) {
                     const siteId = event.target.getAttribute('data-id');
-                    axios.delete(`/site/${siteId}`);
+                    axios.delete(`/site/${siteId}`)
+                        .then(() => alert('Сайт удален. Обновите страницу'));
                 }
             })
+
+            checkupBlock.addEventListener('click', (event) => {
+                if (event.target.classList.contains('checkup')) {
+                    const button = event.target;
+                    const route = event.target.getAttribute('data-route')
+                    checkup(button, route);
+                }
+            })
+
+            function checkup(button, route) {
+                button.disabled = true;
+                const countdownElement = button.firstElementChild;
+                showCountdown(countdownElement);
+
+
+                fetch(`check/${route}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                    .then(res => res.json())
+                    .then((data) => {
+                        alert(data.message);
+
+                        setTimeout(() => {
+                            button.disabled = false;
+                        }, 10000)
+                    })
+            }
+
+            function showCountdown(countdownElement) {
+                let countdown = 10;
+                const intervalId = setInterval(() => {
+                    if (countdown > 0) {
+                        countdownElement.innerText = `(${countdown})`;
+                    } else {
+                        countdownElement.innerText = '';
+                        clearInterval(intervalId);
+                    }
+                    countdown--;
+                }, 1000);
+            }
         </script>
     @endsection
 </x-app-layout>

@@ -15,4 +15,5 @@
         </main>
     </div>
     @yield('script')
+    @yield('addon-script')
 </x-html-layout>

@@ -34,6 +34,19 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
     }
 
     /**
+     * Returns user sites with pages
+     *
+     * @param array $criteria
+     * @return JsonResource
+     */
+    public function paginated(array $criteria = []): JsonResource
+    {
+        $sites = $this->paginatedModels('pages', $criteria);
+
+        return SiteResource::collection($sites);
+    }
+
+    /**
      * Returns Site model in SiteResource
      *
      * @param int $id

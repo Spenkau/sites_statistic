@@ -8,8 +8,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
 use App\Http\Resources\SiteResource;
 use App\Models\Page;
+use App\Models\Site;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -39,8 +41,8 @@ Route::middleware('auth')->group(function () {
         ->name('check')
         ->prefix('/check')
         ->group(function () {
-            Route::get('/site', 'runSiteСheckup')->name('.site');
-            Route::get('/api', 'runApiCheckup')->name('.api');
+            Route::post('/site', 'runSiteСheckup')->name('.site');
+            Route::post('/api', 'runApiCheckup')->name('.api');
         });
 
     Route::controller(ApiPointController::class)
@@ -51,18 +53,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}', 'show')->name('.show');
         });
 
-    Route::middleware('site.access')
-        ->controller(SiteController::class)
-        ->group(function () {
-            Route::get('site/party', [SiteController::class, 'findByCollaborator'])->name('site.party');
-            Route::resource('site', SiteController::class)->except('show');
-            Route::resource('site.page', PageController::class)->middleware('site.id');
+    Route::name('site.')->prefix('site/')->group(function () {
+        Route::get('/party', [SiteController::class, 'findByCollaborator'])->name('party');
+        Route::get('{site}/add-user', [SiteController::class, 'addCollaborator'])->name('add-user');
+        Route::post('{site}/store-user', [SiteController::class, 'storeCollaborators'])->name('store-user');
+    });
 
-            Route::name('site.')->prefix('site/{site}')->group(function () {
-                Route::get('/add-user', 'addCollaborator')->name('add-user');
-                Route::post('/store-user', [SiteController::class, 'storeCollaborators'])->name('site.store-user');
-            });
-        });
+    Route::resource('site', SiteController::class);
+    Route::resource('site.page', PageController::class)->middleware('site.id');
 
 
 //    Route::get('user', [UserController::class, 'index'])->name('user');
@@ -85,9 +83,13 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::get('sts', function (Request $request, Builder $builder) {
-    $service = app(\App\Services\DetailService::class);
+    $service = app(\App\Services\SiteService::class);
 
-    return $service->updateDetails(Page::find(2));
+//    $query = Site::where('user_id', 15)->get();
+//return $query;
+    return $service->all($request);
+//    return $service->test();
+//    return (new Page())->getFillable();
 });
 
 Route::get('testtest', function () {

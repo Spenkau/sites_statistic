@@ -33,7 +33,7 @@
     </form>
 </div>
 
-@section('script')
+@section('addon-script')
     <script>
         const formContainer = document.getElementById('filters-container');
         const form = document.getElementById('filters-form');

@@ -52,4 +52,9 @@ class PageRepository extends BaseRepository implements PageRepositoryInterface
     {
         return $this->destroyModel($pageId);
     }
+
+    public function getModel()
+    {
+        return $this->model;
+    }
 }

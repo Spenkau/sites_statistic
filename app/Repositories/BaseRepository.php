@@ -15,6 +15,13 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         $builder = $this->filterBuilder($criteria);
 
+        return $builder->with($relations)->get();
+    }
+
+    public function paginatedModels(array|string $relations = [], array $criteria = [])
+    {
+        $builder = $this->filterBuilder($criteria);
+
         return $builder->with($relations)->paginate(10);
     }
 
@@ -47,7 +54,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
         if (method_exists($this->model, 'scopeFilter')) {
             $builder = $this->model->scopeFilter($criteria);
         } else {
-            $builder = $this->model->query();
+            $builder = $this->model->query()->where('user_id', $criteria['user_id']);
         }
 
         return $builder;

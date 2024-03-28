@@ -27,6 +27,14 @@ class SiteService
         return $this->siteRepository->all($criteria);
     }
 
+    public function paginated(Request $request): JsonResource
+    {
+        $criteria = $request->all();
+        $criteria['user_id'] = Auth::id();
+
+        return $this->siteRepository->paginated($criteria);
+    }
+
     public function findById(int $id): SiteResource
     {
         return $this->siteRepository->findById($id);

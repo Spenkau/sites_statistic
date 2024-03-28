@@ -18,7 +18,7 @@ class ApiPointController extends Controller
 
     public function index(Request $request)
     {
-        $apiPoints = $this->apiPointService->all($request);
+        $apiPoints = $this->apiPointService->paginated($request);
 
         return view('api_point.index', ['apiPoints' => $apiPoints]);
     }

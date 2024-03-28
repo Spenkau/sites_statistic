@@ -27,6 +27,13 @@ class DetailRepository extends BaseRepository implements DetailRepositoryInterfa
         return DetailResource::collection($details);
     }
 
+    public function paginated(): JsonResource
+    {
+        $details = $this->paginatedModels();
+
+        return DetailResource::collection($details);
+    }
+
     public function store(array $data): JsonResource
     {
         $newDetail = $this->storeModel($data);

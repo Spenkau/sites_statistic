@@ -30,6 +30,13 @@ class ApiPointService
         return $this->apiPointRepository->all($criteria);
     }
 
+    public function paginated(Request $request)
+    {
+        $criteria = $request->all();
+
+        return $this->apiPointRepository->paginated($criteria);
+    }
+
     public function show(int $id): JsonResource
     {
         return $this->apiPointRepository->show($id);

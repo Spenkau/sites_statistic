@@ -42,7 +42,7 @@
                     @endif
 
                     <div class="position-absolute" style="bottom: 20px; right: 20px;">
-                        <a class="link-dark" href="{{ route('site.page.edit', [$site->id, $page->id]) }}" style="margin-right: 10px;">Изменить</a>
+                        <a class="link-dark" href="{{ route('site.edit', [$site->id]) }}" style="margin-right: 10px;">Изменить</a>
                         <input type="hidden" value="{{ $site->id }}" id="site_id">
                         <button
                             class="delete-btn link-dark"
