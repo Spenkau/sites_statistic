@@ -14,30 +14,39 @@
             </form>
         </div>
     </x-slot>
-    <h1>ID: {{ $page->id }}</h1>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="text-center">ID: {{ $page->id }}</h1>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">URL: <a href="{{ $page->url }}">{{ $page->url }}</a></li>
+                    <li class="list-group-item">Порог: {{ $page->threshold_speed }} миллисекунд</li>
+                    <li class="list-group-item">Комментарий: {{ $page->comment }}</li>
+                </ul>
+            </div>
+        </div>
 
-    <ul class="list-unstyled">
-        <li>URL: <a href="{{ $page->url }}">{{ $page->url }}</a></li>
-        <li>Порог: {{ $page->threshold_speed }} миллисекунд</li>
-        <li>Комментарий: {{ $page->comment }}</li>
-    </ul>
+        <div class="mt-5">
+            @foreach($page->details as $key => $details)
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <p class="mb-0">Проверка №{{ $key + 1 }} от {{ $details->created_at }}</p>
+                    </div>
+                    <div class="card-body">
+                        <p>Статус-код: {{ $details->status_code }}</p>
+                        <p class="{{ $details->response_time < $page->threshold_speed ? 'text-danger' : 'text-success'}}">
+                            Время отклика: {{ $details->response_time }}
+                        </p>
+                        @if(isset($details->error))
+                            <p>Ошибка:</p>
+                            <pre><code>{{ $details->error }}</code></pre>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
 
-    <ul class="list-unstyled">
-        @foreach($page->details as $key => $details)
-            <li>
-                <p>Проверка №{{ $key + 1 }} от {{ $details->created_at }}</p>
-
-<pre>
-Статус-код: {{ $details->status_code }}
-<span class="{{ $details->response_time > $page->threshold_speed ? 'bg-danger' : 'bg-success'}} text-white p-1">
-    Время отклика: {{ $details->response_time }}
-</span>
-@if(isset($details->error))
-    {{ $details->error }}
-@endif
-</pre>
-
-            </li>
-        @endforeach
-    </ul>
 </x-app-layout>

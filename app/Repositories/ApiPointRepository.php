@@ -17,11 +17,19 @@ class ApiPointRepository extends BaseRepository implements ApiPointRepositoryInt
         $this->model = $model;
     }
 
-    public function all()
+    public function all(array $criteria)
     {
         $relations = ['api_history'];
 
-        return ApiPointResource::collection($this->allModels($relations));
+        return ApiPointResource::collection($this->paginatedModels($relations, $criteria));
+    }
+
+    public function paginated(array $criteria)
+    {
+        $relations = ['api_history'];
+
+        return ApiPointResource::collection($this->paginatedModels($relations, $criteria));
+
     }
 
     public function show(int $id): JsonResource

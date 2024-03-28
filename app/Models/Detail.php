@@ -12,7 +12,14 @@ class Detail extends Model
 
     protected $table = 'details';
 
-    protected $guarded = false;
+    protected $fillable = [
+        'page_id',
+        'status_code',
+        'response_time',
+        'error',
+        'created_at',
+        'updated_at'
+    ];
 
     public function page(): BelongsTo
     {

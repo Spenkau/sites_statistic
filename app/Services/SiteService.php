@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use App\Repositories\SiteRepository;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -18,11 +19,20 @@ class SiteService
         $this->siteRepository = $siteRepository;
     }
 
-    public function all(): JsonResource
+    public function all(Request $request): JsonResource
     {
-        $criteria = ['user_id' => Auth::id()];
+        $criteria = $request->all();
+        $criteria['user_id'] = Auth::id();
 
         return $this->siteRepository->all($criteria);
+    }
+
+    public function paginated(Request $request): JsonResource
+    {
+        $criteria = $request->all();
+        $criteria['user_id'] = Auth::id();
+
+        return $this->siteRepository->paginated($criteria);
     }
 
     public function findById(int $id): SiteResource
@@ -49,7 +59,7 @@ class SiteService
 
     public function findByCollaborator(): JsonResource
     {
-        $criteria = ['user_id' => Auth::id()];
+        $criteria = ['id' => Auth::id()];
 
         return $this->siteRepository->findByCollaborator($criteria);
     }

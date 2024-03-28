@@ -19,6 +19,7 @@ class UpdateApiProcessingDetails implements ShouldQueue
 
     const API_PROCESSING_URL = 'https://processing.hellishworld.ru/api/';
 
+    public array $authData = [];
     public ApiPointService $apiPointService;
 
     private mixed $services;
@@ -32,15 +33,17 @@ class UpdateApiProcessingDetails implements ShouldQueue
     {
         $this->apiPointService = $apiPointService;
 
-        $this->services = Config::get('api_v2_services');
+        $this->services = Config::get('api_processing_services');
+
+        $this->authData = Config::get('auth_api_services')['processing'];
     }
 
     public function authenticateSession(): void
     {
         $this->headers = [
             'Accept' => 'application/json',
-            'email' => env('API_PROCESSING_ACCOUNT_EMAIL', 'admin@admin.com'),
-            'password' => env('API_PROCESSING_ACCOUNT_PASSWORD', 'admin')
+            'email' => $this->authData['email'],
+            'password' => $this->authData['password']
         ];
     }
 

@@ -16,15 +16,9 @@ class ApiPointController extends Controller
         $this->apiPointService = $apiPointService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-//        $apiPoints = $this->apiPointService->all();
-
-        $services = Config::get('api_v2_services');
-        $serviceKeys = array_keys($services);
-
-        $apiPoints = ApiPoint::whereIn('service', $serviceKeys)->chunk(100)->get()->groupBy('service')->toArray();
-
+        $apiPoints = $this->apiPointService->paginated($request);
 
         return view('api_point.index', ['apiPoints' => $apiPoints]);
     }

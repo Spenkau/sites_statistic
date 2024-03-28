@@ -6,6 +6,12 @@ use App\Http\Controllers\ApiPointController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
+use App\Http\Resources\SiteResource;
+use App\Models\Page;
+use App\Models\Site;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -31,26 +37,30 @@ Route::get('/dashboard', [SiteController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::controller(\App\Http\Controllers\Controller::class)
+        ->name('check')
+        ->prefix('/check')
+        ->group(function () {
+            Route::post('/site', 'runSiteСheckup')->name('.site');
+            Route::post('/api', 'runApiCheckup')->name('.api');
+        });
+
     Route::controller(ApiPointController::class)
         ->name('api-point')
         ->prefix('/api-point')
         ->group(function () {
-            Route::get('/', 'index');
+            Route::get('/', 'index')->name('.index');
             Route::get('/{id}', 'show')->name('.show');
         });
 
-    Route::middleware('site.access')
-        ->controller(SiteController::class)
-        ->group(function () {
-            Route::resource('site', SiteController::class);
-            Route::resource('site.page', PageController::class)->middleware('site.id');
+    Route::name('site.')->prefix('site/')->group(function () {
+        Route::get('/party', [SiteController::class, 'findByCollaborator'])->name('party');
+        Route::get('{site}/add-user', [SiteController::class, 'addCollaborator'])->name('add-user');
+        Route::post('{site}/store-user', [SiteController::class, 'storeCollaborators'])->name('store-user');
+    });
 
-            Route::get('site/party', [SiteController::class, 'findByCollaborator'])->name('site.party');
-            Route::name('site.')->prefix('site/{site}')->group(function () {
-                Route::get('/add-user', 'addCollaborator')->name('add-user');
-                Route::post('/store-user', [SiteController::class, 'storeCollaborators'])->name('site.store-user');
-            });
-        });
+    Route::resource('site', SiteController::class);
+    Route::resource('site.page', PageController::class)->middleware('site.id');
 
 
 //    Route::get('user', [UserController::class, 'index'])->name('user');
@@ -71,6 +81,16 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+
+Route::get('sts', function (Request $request, Builder $builder) {
+    $service = app(\App\Services\SiteService::class);
+
+//    $query = Site::where('user_id', 15)->get();
+//return $query;
+    return $service->all($request);
+//    return $service->test();
+//    return (new Page())->getFillable();
+});
 
 Route::get('testtest', function () {
     $url = 'https://processing.hellishworld.ru/api/showcase/balance/general';
@@ -129,36 +149,36 @@ Route::get('test2', function () {
 Route::get('test', function () {
 
 
-        $url = 'https://processing.hellishworld.ru/api/';
+    $url = 'https://processing.hellishworld.ru/api/';
 
-        $headers = [
-            'Accept' => 'application/json',
+    $headers = [
+        'Accept' => 'application/json',
 //        'Authorization' => 'Bearer ' . $token
-            'email' => 'admin@admin.com',
-            'password' => 'admin'
-        ];
+        'email' => 'admin@admin.com',
+        'password' => 'admin'
+    ];
 
-        $serviceNames = array_column(ApiProcessingServiceEnum::cases(), 'value');
-        $services = Config::get('api_processing_services');
+    $serviceNames = array_column(ApiProcessingServiceEnum::cases(), 'value');
+    $services = Config::get('api_processing_services');
 
-        $responses = [];
+    $responses = [];
 
-        $apiPointService = app(\App\Services\ApiPointService::class);
+    $apiPointService = app(\App\Services\ApiPointService::class);
 
-        if (count($serviceNames) == count($services)) {
+    if (count($serviceNames) == count($services)) {
 
-            foreach ($serviceNames as $serviceName) {
+        foreach ($serviceNames as $serviceName) {
 
-                for ($i = 0; $i < count($services[$serviceName]); $i++) {
-                    $service = $services[$serviceName][$i];
+            for ($i = 0; $i < count($services[$serviceName]); $i++) {
+                $service = $services[$serviceName][$i];
 
-                    $responses[] = $apiPointService->update($service, $serviceName, $headers, $url);
-                }
+                $responses[] = $apiPointService->update($service, $serviceName, $headers, $url);
             }
         }
-        return $responses;
+    }
+    return $responses;
 
-    });
+});
 
 
 

@@ -18,13 +18,15 @@ class CheckSiteAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $siteId = $request->route('site');
-        $site = Site::find($siteId);
-        $userId = Auth::id();
-
-        if ($site && ($siteId == $userId || $site->users->contains($userId))) {
-            return $next($request);
-        }
+//        $siteId = $request->route('site');
+//        $site = Site::find($siteId);
+//
+//        $userId = $request->user();
+//
+//        if ($site && ($siteId == $userId || $site->users->contains($userId))) {
+//            return $next($request);
+//        }
+//
         return $next($request);
     }
 }

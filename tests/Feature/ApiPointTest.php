@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ApiProcessingServiceEnum;
 use App\Models\ApiPoint;
+use App\Models\Site;
 use App\Models\User;
 use App\Services\ApiPointService;
 use Illuminate\Console\Command;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
@@ -23,7 +26,7 @@ class ApiPointTest extends TestCase
 
     public function test()
     {
-        $services = Config::get('api_v2_services');
+        $services = Config::get('api_preprod_v2_services');
         $serviceKeys = array_keys($services);
 
         $apiPoints = ApiPoint::whereIn('service', $serviceKeys)->chunk(100)->get()->groupBy('service')->toArray();
@@ -39,18 +42,13 @@ class ApiPointTest extends TestCase
 
     public function test2()
     {
-        $a = [
-            'params' => [
-                'path_params' => [
-                    'id' => 1,
-                ],
-                'form_params' => [
-                    'title' => 'MOSCOW123'
-                ]
-            ],
-        ];
-        dump($a['params']['path_params']);
+        $res = (new Site())->getFillable();
+
+
+        dump($res);
     }
+
+
 
     public function test_api_points_can_retrieved()
     {
@@ -104,6 +102,5 @@ class ApiPointTest extends TestCase
         $output = Artisan::output();
 
         $this->assertStringContainsString('API points details stored successfully', $output);
-
     }
 }

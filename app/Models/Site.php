@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Http\Filters\BaseFilter;
+use App\Http\Filters\SiteFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class Site extends Model
 {
@@ -14,7 +18,14 @@ class Site extends Model
 
     protected $table = 'sites';
 
-    protected $guarded = false;
+    protected $fillable = [
+        'name',
+        'url',
+        'comment',
+        'user_id',
+        'created_at',
+        'updated_at'
+    ];
 
     public function pages(): HasMany
     {
@@ -29,5 +40,14 @@ class Site extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'site_user');
+    }
+
+    public function scopeFilter($request)
+    {
+        $query = $this::query()->where('user_id', Auth::id());
+
+        $filter = new SiteFilter();
+
+        return $filter->apply($query, $request);
     }
 }

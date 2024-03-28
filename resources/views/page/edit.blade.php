@@ -12,9 +12,6 @@
         @csrf
         @method('PUT')
 
-
-
-        <!-- URL -->
         <div class="mt-4">
             <x-input-label for="url" :value="__('URL')"/>
             <x-text-input id="url" class="block mt-1 w-full"
@@ -26,7 +23,6 @@
             <x-input-error :messages="$errors->get('url')" class="mt-2"/>
         </div>
 
-        <!-- URL -->
         <div>
             <x-input-label for="threshold_speed" :value="__('Порог')"/>
             <x-text-input

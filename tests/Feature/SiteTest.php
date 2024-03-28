@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Site;
 use App\Models\User;
+use App\Repositories\SiteRepository;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -61,6 +62,15 @@ class SiteTest extends TestCase
         ]);
 
         Site::factory(10)->create();
+    }
+
+    public function test_filters()
+    {
+        $stringFields = ['name', 'title', 'url', 'comment', 'request_data', 'response_data'];
+
+
+        $res = in_array('name', $stringFields);
+        dump($res);
     }
 
     /**

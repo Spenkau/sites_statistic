@@ -2443,167 +2443,1280 @@ return [
             ]
         ],
     ],
-//    'OrderItemsDatas' => [
-//        'uri' => 'address',
-//        'method' => 'GET',
-//        'query_params' => [
-//            'page' => 1,
-//            'limit' => 5
-//        ],
-//        'response' => [
-//            'success' => [
-//                'success' => true,
-//                'data' => [
-//                    [
-//                        'id' => 1,
-//                        'title' => 'Москва'
-//                    ]
-//                ]
-//            ],
-//            'error' => [
-//                'success' => false,
-//                'message' => 'Unauthorized'
-//            ]
-//        ]
-//    ],
-//    'Products' => [
-//        'uri' => 'address',
-//        'method' => 'GET',
-//        'query_params' => [
-//            'page' => 1,
-//            'limit' => 5
-//        ],
-//        'response' => [
-//            'success' => [
-//                'success' => true,
-//                'data' => [
-//                    [
-//                        'id' => 1,
-//                        'title' => 'Москва'
-//                    ]
-//                ]
-//            ],
-//            'error' => [
-//                'success' => false,
-//                'message' => 'Unauthorized'
-//            ]
-//        ]
-//    ],
-//    'ProductsDatas' => [
-//        'uri' => 'address',
-//        'method' => 'GET',
-//        'query_params' => [
-//            'page' => 1,
-//            'limit' => 5
-//        ],
-//        'response' => [
-//            'success' => [
-//                'success' => true,
-//                'data' => [
-//                    [
-//                        'id' => 1,
-//                        'title' => 'Москва'
-//                    ]
-//                ]
-//            ],
-//            'error' => [
-//                'success' => false,
-//                'message' => 'Unauthorized'
-//            ]
-//        ]
-//    ],
-//    'ProductsPrices' => [
-//        'uri' => 'address',
-//        'method' => 'GET',
-//        'query_params' => [
-//            'page' => 1,
-//            'limit' => 5
-//        ],
-//        'response' => [
-//            'success' => [
-//                'success' => true,
-//                'data' => [
-//                    [
-//                        'id' => 1,
-//                        'title' => 'Москва'
-//                    ]
-//                ]
-//            ],
-//            'error' => [
-//                'success' => false,
-//                'message' => 'Unauthorized'
-//            ]
-//        ]
-//    ],
-//    'ProductsUserSettings' => [
-//        'uri' => 'address',
-//        'method' => 'GET',
-//        'query_params' => [
-//            'page' => 1,
-//            'limit' => 5
-//        ],
-//        'response' => [
-//            'success' => [
-//                'success' => true,
-//                'data' => [
-//                    [
-//                        'id' => 1,
-//                        'title' => 'Москва'
-//                    ]
-//                ]
-//            ],
-//            'error' => [
-//                'success' => false,
-//                'message' => 'Unauthorized'
-//            ]
-//        ]
-//    ],
-//    'PullCards' => [
-//        'uri' => 'address',
-//        'method' => 'GET',
-//        'query_params' => [
-//            'page' => 1,
-//            'limit' => 5
-//        ],
-//        'response' => [
-//            'success' => [
-//                'success' => true,
-//                'data' => [
-//                    [
-//                        'id' => 1,
-//                        'title' => 'Москва'
-//                    ]
-//                ]
-//            ],
-//            'error' => [
-//                'success' => false,
-//                'message' => 'Unauthorized'
-//            ]
-//        ]
-//    ],
-//    'PullGenerates' => [
-//        'uri' => 'address',
-//        'method' => 'GET',
-//        'query_params' => [
-//            'page' => 1,
-//            'limit' => 5
-//        ],
-//        'response' => [
-//            'success' => [
-//                'success' => true,
-//                'data' => [
-//                    [
-//                        'id' => 1,
-//                        'title' => 'Москва'
-//                    ]
-//                ]
-//            ],
-//            'error' => [
-//                'success' => false,
-//                'message' => 'Unauthorized'
-//            ]
-//        ]
-//    ],
+    'OrderItemsDatas' => [
+        [
+            'uri' => 'order/item/data',
+            'method' => 'GET',
+            'query_params' => [
+                'page' => 1,
+                'limit' => 5
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            'id' => 1,
+                            "order_item_id" => 1,
+                            "name" => "Name",
+                            "slug" => "Slug",
+                            "value" => 1
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'order/item/data',
+            'method' => 'POST',
+            'form_params' => [
+                'order_item_id' => 1,
+                'name' => "NAME",
+                'slug' => 'name',
+                'value' => 1
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            'id' => 1,
+                            "order_item_id" => 1,
+                            "name" => "NAME",
+                            "slug" => "Slug",
+                            "value" => 1
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'order/item/data/{id}',
+            'method' => 'GET',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            'id' => 1,
+                            "order_item_id" => 1,
+                            "name" => "NAME",
+                            "slug" => "Slug",
+                            "value" => 1
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'order/item/data/{id}',
+            'method' => 'PUT',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'form_params' => [
+                'id' => 1,
+                'order_item_id' => 1,
+                'name' => "NAME",
+                'slug' => 'name',
+                'value' => 1
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => "1"
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'order/item/data/{id}',
+            'method' => 'DELETE',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+    ],
+    'Products' => [
+        [
+            'uri' => 'product',
+            'method' => 'GET',
+            'query_params' => [
+                'page' => 1,
+                'limit' => 5
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    "data" => [
+                        "items" => [
+                            [
+                                "id" => 1,
+                                "name" => "Универсальная карта",
+                                "slug" => "universalnaya-karta",
+                                "description" => "null",
+                                "type" => "1",
+                                "priority" => 0,
+                                "markup" => [
+                                    "string"
+                                ],
+                                "data" => [
+                                    "string"
+                                ],
+                                "prices" => [
+                                    [
+                                        "value" => 100,
+                                        "min_value" => null,
+                                        "max_value" => null,
+                                        "step_value" => null
+                                    ]
+                                ],
+                                "images" => [
+                                    [
+                                        "main" => "https://vpodarok.ru/image.png",
+                                        "other" => [
+                                            "string"
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "meta" => [
+                            "per_page" => 15,
+                            "current_page" => 1,
+                            "last_page" => 10,
+                            "from" => 1,
+                            "to" => 15,
+                            "total" => 150
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product',
+            'method' => 'POST',
+            'form_params' => [
+                "id" => 1,
+                "name" => "Универсальная карта",
+                "slug" => "universalnaya-karta",
+                "description" => "null",
+                "type" => "1",
+                "priority" => 0,
+                "data" => [
+                    'name' => 'on_main',
+                    'value' => 1
+                ]
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    "data" => [
+                        [
+                            "id" => 1,
+                            "name" => "Универсальная карта",
+                            "slug" => "universalnaya-karta",
+                            "description" => "null",
+                            "type" => "1",
+                            "priority" => 0,
+                            "markup" => [
+                                "string"
+                            ],
+                            "data" => [
+                                "string"
+                            ],
+                            "prices" => [
+                                [
+                                    "value" => 100,
+                                    "min_value" => null,
+                                    "max_value" => null,
+                                    "step_value" => null
+                                ]
+                            ],
+                            "images" => [
+                                [
+                                    "main" => "https://vpodarok.ru/image.png",
+                                    "other" => [
+                                        "string"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/{id}',
+            'method' => 'GET',
+            'path_params' => [
+                "id" => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    "data" => [
+                        [
+                            "id" => 1,
+                            "name" => "Универсальная карта",
+                            "slug" => "universalnaya-karta",
+                            "description" => "null",
+                            "type" => "1",
+                            "priority" => 0,
+                            "markup" => [
+                                "string"
+                            ],
+                            "data" => [
+                                "string"
+                            ],
+                            "prices" => [
+                                [
+                                    "value" => 100,
+                                    "min_value" => null,
+                                    "max_value" => null,
+                                    "step_value" => null
+                                ]
+                            ],
+                            "images" => [
+                                [
+                                    "main" => "https://vpodarok.ru/image.png",
+                                    "other" => [
+                                        "string"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/{id}',
+            'method' => 'PUT',
+            'path_params' => [
+                "id" => 1,
+            ],
+            'form_params' => [
+                "id" => 1,
+                "name" => "Универсальная карта",
+                "slug" => "universalnaya-karta",
+                "description" => "null",
+                "type" => "1",
+                "priority" => 0,
+                "data" => [
+                    'name' => 'on_main',
+                    'value' => 1
+                ]
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    "data" => 1
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/{id}',
+            'method' => 'DELETE',
+            'path_params' => [
+                "id" => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    "data" => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/{id}/uploadImage',
+            'method' => 'POST',
+            'form_params' => [
+                "id" => 1,
+                'image' => "https://vpodarok.ru/image.png"
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    "data" => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/{id}/product',
+            'method' => 'POST',
+            'form_params' => [
+                "name" => "Универсальная карта",
+                "image" => "https://vpodarok.ru/image.png",
+                "prices" => [
+                    [
+                        "value" => 100,
+                        "min_value" => null,
+                        "max_value" => null,
+                        "step_value" => null
+                    ]
+                ]
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    "data" => [
+                        "id" => 1,
+                        "name" => "Универсальная карта",
+                        "slug" => "universalnaya-karta",
+                        "description" => "null",
+                        "type" => "1",
+                        "priority" => 0,
+                        "markup" => [
+                            "string"
+                        ],
+                        "data" => [
+                            "string"
+                        ],
+                        "prices" => [
+                            [
+                                "value" => 100,
+                                "min_value" => null,
+                                "max_value" => null,
+                                "step_value" => null
+                            ]
+                        ],
+                        "images" => [
+                            [
+                                "main" => "https://vpodarok.ru/image.png",
+                                "other" => [
+                                    "string"
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+    ],
+    'ProductsDatas' => [
+        [
+            'uri' => 'product/data',
+            'method' => 'GET',
+            'query_params' => [
+                'page' => 1,
+                'limit' => 5
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            'id' => 1,
+                            'product_id' => 1,
+                            'name' => "Name",
+                            'value' => 1000
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/data',
+            'method' => 'POST',
+            'form_params' => [
+                'product_id' => 1,
+                'name' => "Name",
+                'value' => 1000
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        'id' => 1,
+                        'product_id' => 1,
+                        'name' => "Name",
+                        'value' => 1000
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/data/{id}',
+            'method' => 'POST',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        'id' => 1,
+                        'product_id' => 1,
+                        'name' => "Name",
+                        'value' => 1000
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/data/{id}',
+            'method' => 'PUT',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'form_params' => [
+                'product_id' => 1,
+                'name' => "Name",
+                'value' => 1000
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => 1
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/data/{id}',
+            'method' => 'DELETE',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+    ],
+    'ProductsPrices' => [
+        [
+            'uri' => 'product/price',
+            'method' => 'GET',
+            'query_params' => [
+                'page' => 1,
+                'limit' => 5
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            "id" => 1,
+                            "product_id" => 1,
+                            "supplier_id" => 1,
+                            "currency_id" => 1,
+                            "value" => 100,
+                            "min_value" => 1,
+                            "max_value" => 10,
+                            "step_value" => 1,
+                            "created_at" => "2021-05-20 12:00:00",
+                            "updated_at" => "2021-05-20 12:00:00"
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/price',
+            'method' => 'POST',
+            'form_params' => [
+                "id" => 1,
+                "product_id" => 1,
+                "supplier_id" => 1,
+                "currency_id" => 1,
+                "value" => 100,
+                "min_value" => 1,
+                "max_value" => 10,
+                "step_value" => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => 1
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/price/{id}',
+            'method' => 'GET',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        "id" => 1,
+                        "product_id" => 1,
+                        "supplier_id" => 1,
+                        "currency_id" => 1,
+                        "value" => 100,
+                        "min_value" => 1,
+                        "max_value" => 10,
+                        "step_value" => 1,
+                        "created_at" => "2021-05-20 12:00:00",
+                        "updated_at" => "2021-05-20 12:00:00"
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/price/{id}',
+            'method' => 'GET',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        "id" => 1,
+                        "product_id" => 1,
+                        "supplier_id" => 1,
+                        "currency_id" => 1,
+                        "value" => 100,
+                        "min_value" => 1,
+                        "max_value" => 10,
+                        "step_value" => 1,
+                        "created_at" => "2021-05-20 12:00:00",
+                        "updated_at" => "2021-05-20 12:00:00"
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/price/{id}',
+            'method' => 'PUT',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'form_params' => [
+                "id" => 1,
+                "product_id" => 1,
+                "supplier_id" => 1,
+                "currency_id" => 1,
+                "value" => 100,
+                "min_value" => 1,
+                "max_value" => 10,
+                "step_value" => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        "id" => 1,
+                        "product_id" => 1,
+                        "supplier_id" => 1,
+                        "currency_id" => 1,
+                        "value" => 100,
+                        "min_value" => 1,
+                        "max_value" => 10,
+                        "step_value" => 1,
+                        "created_at" => "2021-05-20 12:00:00",
+                        "updated_at" => "2021-05-20 12:00:00"
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/price/{id}',
+            'method' => 'DELETE',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/price/sync',
+            'method' => 'DELETE',
+            'form_params' => [
+                "product_id" => 1,
+                "supplier_id" => 1,
+                "currency_id" => 1,
+                "value" => 100,
+                "min_value" => 1,
+                "max_value" => 10,
+                "step_value" => 1,],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+    ],
+    'ProductsUserSettings' => [
+        [
+            'uri' => 'product/user/setting',
+            'method' => 'GET',
+            'query_params' => [
+                'page' => 1,
+                'limit' => 5
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            "id" => 1,
+                            "product_id" => 1,
+                            "user_id" => 1,
+                            "space_item_id" => 1,
+                            "supplier_id" => 1,
+                            "template" => "default",
+                            "paper" => "portrait",
+                            "markup_type" => 1,
+                            "markup_value" => 1,
+                            "nominal_in_pull" => false
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/user/setting',
+            'method' => 'POST',
+            'form_params' => [
+                "id" => 1,
+                "product_id" => 1,
+                "user_id" => 1,
+                "space_item_id" => 1,
+                "supplier_id" => 1,
+                "template" => "default",
+                "paper" => "portrait",
+                "markup_type" => 1,
+                "markup_value" => 1,
+                "nominal_in_pull" => false
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        "id" => 1,
+                        "product_id" => 1,
+                        "user_id" => 1,
+                        "space_item_id" => 1,
+                        "supplier_id" => 1,
+                        "template" => "default",
+                        "paper" => "portrait",
+                        "markup_type" => 1,
+                        "markup_value" => 1,
+                        "nominal_in_pull" => false
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/user/setting/{id}',
+            'method' => 'GET',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        "id" => 1,
+                        "product_id" => 1,
+                        "user_id" => 1,
+                        "space_item_id" => 1,
+                        "supplier_id" => 1,
+                        "template" => "default",
+                        "paper" => "portrait",
+                        "markup_type" => 1,
+                        "markup_value" => 1,
+                        "nominal_in_pull" => false
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/user/setting/{id}',
+            'method' => 'PUT',
+            'form_params' => [
+                "id" => 1,
+                "product_id" => 1,
+                "user_id" => 1,
+                "space_item_id" => 1,
+                "supplier_id" => 1,
+                "template" => "default",
+                "paper" => "portrait",
+                "markup_type" => 1,
+                "markup_value" => 1,
+                "nominal_in_pull" => false
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        "id" => 1,
+                        "product_id" => 1,
+                        "user_id" => 1,
+                        "space_item_id" => 1,
+                        "supplier_id" => 1,
+                        "template" => "default",
+                        "paper" => "portrait",
+                        "markup_type" => 1,
+                        "markup_value" => 1,
+                        "nominal_in_pull" => false
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'product/user/setting/{id}',
+            'method' => 'PUT',
+            'path_params' => [
+                "id" => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+    ],
+    'PullCards' => [
+        [
+            'uri' => 'pull/card/disable',
+            'method' => 'PATCH',
+            'form_params' => [
+                'number' => '1',
+                'code' => '1',
+                'product_id' => 1
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        "card_number" => "1",
+                        "additional_number" => "1",
+                        "card_code" => "1",
+                        "nominal" => 1,
+                        "product_id" => 1
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/card',
+            'method' => 'GET',
+            'query_params' => [
+                'page' => 1,
+                'limit' => 5
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            "id" => 1,
+                            "number" => 1,
+                            "additional_number" => 123,
+                            "code" => 123,
+                            "nominal" => 100,
+                            "reserved_at" => "12.12.2012",
+                            "activation_date" => "12.12.2012",
+                            "expires_date" => "12.12.2012",
+                            "disable_date" => "12.12.2012",
+                            "product_id" => 1,
+                            "status" => 1,
+                            "currency_id" => 1,
+                            "comment" => "Comment",
+                            "supplier_id" => 1,
+                            "external_id" => 1,
+                            "transaction_id" => 1,
+                            "company_text" => "Text"
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/card',
+            'method' => 'POST',
+            'form_params' => [
+                "id" => 1,
+                "number" => "1481225562",
+                "additional_number" => 123,
+                "code" => 123,
+                "nominal" => 100,
+                "reserved_at" => "12.12.2012",
+                "activation_date" => "12.12.2012",
+                "expires_date" => "12.12.2012",
+                "disable_date" => "12.12.2012",
+                "product_id" => 1,
+                "status" => 1,
+                "currency_id" => 1,
+                "comment" => "Comment",
+                "supplier_id" => 1,
+                "user_id" => 1,
+                "external_id" => 1,
+                "transaction_id" => 1,
+                "company_text" => "Text",
+                "spaces" => [
+                    [
+                        "space" => "showcase",
+                        "space_item_id" => 123
+                    ]
+                ]
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            "id" => 1,
+                            "number" => 1,
+                            "additional_number" => 123,
+                            "code" => 123,
+                            "nominal" => 100,
+                            "reserved_at" => "12.12.2012",
+                            "activation_date" => "12.12.2012",
+                            "expires_date" => "12.12.2012",
+                            "disable_date" => "12.12.2012",
+                            "product_id" => 1,
+                            "status" => 1,
+                            "currency_id" => 1,
+                            "comment" => "Comment",
+                            "supplier_id" => 1,
+                            "external_id" => 1,
+                            "transaction_id" => 1,
+                            "company_text" => "Text"
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/card/{id}',
+            'method' => 'GET',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            "id" => 1,
+                            "number" => 1,
+                            "additional_number" => 123,
+                            "code" => 123,
+                            "nominal" => 100,
+                            "reserved_at" => "12.12.2012",
+                            "activation_date" => "12.12.2012",
+                            "expires_date" => "12.12.2012",
+                            "disable_date" => "12.12.2012",
+                            "product_id" => 1,
+                            "status" => 1,
+                            "currency_id" => 1,
+                            "comment" => "Comment",
+                            "supplier_id" => 1,
+                            "external_id" => 1,
+                            "transaction_id" => 1,
+                            "company_text" => "Text"
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/card/{id}',
+            'method' => 'PUT',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'form_params' => [
+                "id" => 1,
+                "number" => "1481225562",
+                "additional_number" => 123,
+                "code" => 123,
+                "nominal" => 100,
+                "reserved_at" => "12.12.2012",
+                "activation_date" => "12.12.2012",
+                "expires_date" => "12.12.2012",
+                "disable_date" => "12.12.2012",
+                "product_id" => 1,
+                "status" => 1,
+                "currency_id" => 1,
+                "comment" => "Comment",
+                "supplier_id" => 1,
+                "user_id" => 1,
+                "external_id" => 1,
+                "transaction_id" => 1,
+                "company_text" => "Text",
+                "spaces" => [
+                    [
+                        "space" => "showcase",
+                        "space_item_id" => 123
+                    ]
+                ]
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => '1'
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/card/{id}',
+            'method' => 'DELETE',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/card/generate',
+            'method' => 'POST',
+            'form_params' => [
+                'space_item_id' => 1,
+                'pull_cards' => [
+                    [
+                        'number' => "546255427",
+                        "code" => "1234",
+                        "product_id" => 10
+                    ]
+                ]
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        "id" => 1,
+                        "name" => "Name",
+                        "path" => "Path",
+                        "path_type" => "1"
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+    ],
+    'PullGenerates' => [
+        [
+            'uri' => 'pull/generate',
+            'method' => 'GET',
+            'query_params' => [
+                'page' => 1,
+                'limit' => 5
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                        [
+                            "id" => 1,
+                            "pull_card_id" => 1,
+                            "pull_generate_group_id" => 1,
+                            "path" => "1",
+                            "comment" => "1",
+                            "type_barcode" => "1"
+                        ]
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/generate',
+            'method' => 'POST',
+            'form_params' => [
+                "pull_card_id" => 1,
+                "pull_generate_group_id" => 1,
+                "path" => "1",
+                "comment" => "1",
+                "type_barcode" => "1"
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                            "id" => 1,
+                            "pull_card_id" => 1,
+                            "pull_generate_group_id" => 1,
+                            "path" => "1",
+                            "comment" => "1",
+                            "type_barcode" => "1"
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/generate/{id}',
+            'method' => 'GET',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => [
+                            "id" => 1,
+                            "pull_card_id" => 1,
+                            "pull_generate_group_id" => 1,
+                            "path" => "1",
+                            "comment" => "1",
+                            "type_barcode" => "1"
+                    ]
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/generate/{id}',
+            'method' => 'PUT',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'form_params' => [
+                "pull_card_id" => 1,
+                "pull_generate_group_id" => 1,
+                "path" => "1",
+                "comment" => "1",
+                "type_barcode" => "1"
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => '1'
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/generate/{id}',
+            'method' => 'DELETE',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => true
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/generate/{id}/pdf',
+            'method' => 'GET',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'query_params' => [
+                'hash' => ''
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => []
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+        [
+            'uri' => 'pull/generate/{id}/template',
+            'method' => 'GET',
+            'path_params' => [
+                'id' => 1,
+            ],
+            'query_params' => [
+                'hash' => ''
+            ],
+            'response' => [
+                'success' => [
+                    'success' => true,
+                    'data' => []
+                ],
+                'error' => [
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]
+            ]
+        ],
+    ],
 //    'PullGenerateGroups' => [
 //        'uri' => 'address',
 //        'method' => 'GET',

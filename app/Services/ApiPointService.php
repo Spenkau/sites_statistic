@@ -6,6 +6,7 @@ use App\Repositories\ApiPointRepository;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -22,9 +23,18 @@ class ApiPointService
         $this->apiPointHistoryService = $apiPointHistoryService;
     }
 
-    public function all(): JsonResource
+    public function all(Request $request): JsonResource
     {
-        return $this->apiPointRepository->all();
+        $criteria = $request->all();
+
+        return $this->apiPointRepository->all($criteria);
+    }
+
+    public function paginated(Request $request)
+    {
+        $criteria = $request->all();
+
+        return $this->apiPointRepository->paginated($criteria);
     }
 
     public function show(int $id): JsonResource
@@ -67,25 +77,28 @@ class ApiPointService
             $options['path_params'] = $service['path_params'];
         }
 
-        $response = Http::withUrlParameters($service['path_params'] ?? [])->send($method, $serviceUrl, $options);
-
-        $data = [
-            'name' => $url,
-            'url' => $serviceUrl,
-            'request_data' => json_encode($options),
-            'response_data' => ($response->body()),
-            'service' => $serviceName
-        ];
-
         try {
-//            $newApiPoint = $this->store($data);
-            return $data;
-//            if (!empty($newApiPoint)) {
-//                $this->apiPointHistoryService->update($newApiPoint->id, $response);
-//            }
+            $response = Http::withUrlParameters($service['path_params'] ?? [])->send($method, $serviceUrl, $options);
+
+            $response_data = $response->body();
         } catch (Exception $exception) {
-            throw new Exception($exception);
+            $response_data = $exception->getMessage();
+        } finally {
+            $data = [
+                'name' => $url,
+                'url' => $serviceUrl,
+                'request_data' => json_encode($options),
+                'response_data' => $response_data,
+                'service' => $serviceName
+            ];
         }
+
+        $newApiPoint = $this->store($data);
+
+        if (!empty($newApiPoint)) {
+            $this->apiPointHistoryService->update($newApiPoint->id, $response);
+        }
+
     }
 
     public function validate(array $data): Validator

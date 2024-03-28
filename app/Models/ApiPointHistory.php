@@ -12,7 +12,13 @@ class ApiPointHistory extends Model
 
     protected $table = 'api_points_history';
 
-    protected $guarded = false;
+    protected $fillable = [
+        'api_point_id',
+        'status_code',
+        'response_time',
+        'created_at',
+        'updated_at'
+    ];
 
     public function api_point(): BelongsTo
     {

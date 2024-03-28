@@ -21,21 +21,6 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
     }
 
     /**
-     * Returns current authenticated user id
-     *
-     * @return int
-     * @throws Exception
-     */
-    public function getUserId(): int
-    {
-        if (Auth::check()) {
-            return Auth::id();
-        } else {
-            throw new Exception('User is not authenticated');
-        }
-    }
-
-    /**
      * Returns user sites with pages
      *
      * @param array $criteria
@@ -44,6 +29,19 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
     public function all(array $criteria = []): JsonResource
     {
         $sites = $this->allModels('pages', $criteria);
+
+        return SiteResource::collection($sites);
+    }
+
+    /**
+     * Returns user sites with pages
+     *
+     * @param array $criteria
+     * @return JsonResource
+     */
+    public function paginated(array $criteria = []): JsonResource
+    {
+        $sites = $this->paginatedModels('pages', $criteria);
 
         return SiteResource::collection($sites);
     }
@@ -105,9 +103,9 @@ class SiteRepository extends BaseRepository implements SiteRepositoryInterface
 
     public function findByCollaborator(array $criteria = []): JsonResource
     {
-        $user = User::query()->where($criteria)->get();
+        $user = User::query()->where($criteria)->first();
 
-        $sites = $user->public_sites(['pages'])->paginate(10);
+        $sites = $user->public_sites('pages')->paginate(10);
 
         return SiteResource::collection($sites);
     }

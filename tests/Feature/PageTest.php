@@ -89,6 +89,13 @@ class PageTest extends TestCase
 
         $site = $user->personal_sites()->first();
 
+        Page::create([
+            'url' => fake()->url,
+            'threshold_speed' => fake()->numberBetween(200, 10000),
+            'site_id' => $site->id,
+            'comment' => fake()->text
+        ]);
+
         $page = $site->pages()->first();
 
         $response = $this->followingRedirects()
